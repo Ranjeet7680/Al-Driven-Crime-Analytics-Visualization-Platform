@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CrimeScope AI 2.0 — Smart Policing Platform | Karnataka</title>
+  <link rel="icon" type="image/png" href="logo.png"/>
+  <meta name="description" content="AI-Powered Crime Intelligence Platform for Smart Cities, Law Enforcement, and Public Safety. Predicting crime before it happens."/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- ===================== LOADING SCREEN ===================== -->
+<div id="loading-screen" class="loading-screen">
+  <div class="loading-content">
+    <div class="loading-logo-wrap">
+      <img src="logo.png" alt="CrimeScope AI" class="loading-logo" />
+    </div>
+    <div class="loading-brand">
+      <span class="lb-crime">Crime</span><span class="lb-scope">Scope</span>
+      <span class="lb-ai">AI 2.0</span>
+    </div>
+    <div class="loading-tagline">PREDICT · PREVENT · PROTECT</div>
+    <div class="loading-bar-wrap">
+      <div class="loading-bar" id="loading-bar"></div>
+    </div>
+    <div class="loading-status" id="loading-status">Initializing AI Systems...</div>
+    <div class="loading-dots"><span></span><span></span><span></span></div>
+  </div>
+  <div class="loading-corner-tl"></div>
+  <div class="loading-corner-br"></div>
+</div>
+
+<!-- ===================== LANDING PAGE ===================== -->
+<div id="landing-page" class="landing-page">
+  <canvas id="neural-canvas"></canvas>
+
+  <!-- Top Nav -->
+  <nav class="landing-nav">
+    <div class="landing-logo">
+      <img src="logo.png" alt="CrimeScope AI" class="nav-logo-img" />
+      <span>CrimeScope <span class="brand-ai">AI</span></span>
+    </div>
+    <div class="landing-nav-links">
+      <a href="#" onclick="scrollToSection('features')">Features</a>
+      <a href="#" onclick="scrollToSection('stats-section')">Statistics</a>
+      <a href="#" onclick="scrollToSection('team-section')">Team</a>
+      <button class="nav-cta" onclick="enterDashboard()">Launch Platform →</button>
+      <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle-landing" title="Toggle Day/Night">
+        <span class="theme-icon-sun">☀️</span>
+        <span class="theme-icon-moon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge"><span class="badge-pulse"></span> Live Crime Intelligence · Karnataka 2025</div>
+    <h1 class="hero-title">
+      Predicting Crime<br/>
+      <span class="hero-gradient">Before It Happens</span>
+    </h1>
+    <p class="hero-subtitle">AI-Powered Crime Intelligence Platform for Smart Cities, Law Enforcement, and Public Safety. Powered by real Karnataka Police data.</p>
+    <div class="hero-buttons">
+      <button class="btn-primary" onclick="enterDashboard()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Explore Dashboard
+      </button>
+      <button class="btn-secondary" onclick="enterDashboard(); setTimeout(()=>showPage('ai-prediction'),300)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        View AI Predictions
+      </button>
+      <button class="btn-ghost" onclick="scrollToSection('features')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Watch Demo
+      </button>
+    </div>
+
+    <!-- Floating stat cards -->
+    <div class="floating-cards">
+      <div class="float-card fc1"><div class="fc-val">138,666</div><div class="fc-lbl">IPC Crimes 2025</div><div class="fc-change red">▲ 4.2%</div></div>
+      <div class="float-card fc2"><div class="fc-val">89%</div><div class="fc-lbl">AI Accuracy</div><div class="fc-change green">↑ Model v2.1</div></div>
+      <div class="float-card fc3"><div class="fc-val">37</div><div class="fc-lbl">Districts Monitored</div><div class="fc-change blue">● Live</div></div>
+      <div class="float-card fc4"><div class="fc-val">24/7</div><div class="fc-lbl">Real-Time Alerts</div><div class="fc-change purple">⚡ Active</div></div>
+    </div>
+  </section>
+
+  <!-- Live Ticker -->
+  <div class="stats-ticker">
+    <div class="ticker-label">LIVE STATS</div>
+    <div class="ticker-track" id="ticker-track">
+      <span>🔴 Murder: 1,210 cases</span><span>🟡 Theft: 20,531 cases</span><span>🔴 Fatal Accidents: 11,408</span><span>🟠 Molestation: 5,840</span><span>🟡 Cheating: 5,839</span><span>🔴 Kidnapping: 4,209</span><span>🟢 Dacoity: 143 (↓8.4%)</span><span>🟠 Cruelty by Husband: 2,830</span><span>🔴 Bengaluru City: 37,181 crimes</span><span>🟡 Two-Wheeler Theft: 8,860</span>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <section class="features-section" id="features">
+    <div class="section-label">🧠 AI CAPABILITIES</div>
+    <h2 class="features-title">Intelligence That Goes Beyond Charts</h2>
+    <p class="features-sub">Our AI platform combines real crime data with advanced machine learning to deliver actionable law enforcement intelligence.</p>
+    <div class="features-grid">
+      <div class="feat-card" onclick="enterDashboard(); setTimeout(()=>showPage('ai-prediction'),300)">
+        <div class="feat-icon" style="background:rgba(168,85,247,0.15);border-color:rgba(168,85,247,0.3)">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <h3>Crime Prediction Engine</h3>
+        <p>Predict crime type, location, and timing 24 hours to 30 days ahead with 89% confidence.</p>
+        <div class="feat-tag">AI · 89% Accuracy</div>
+      </div>
+      <div class="feat-card" onclick="enterDashboard(); setTimeout(()=>showPage('heatmap'),300)">
+        <div class="feat-icon" style="background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.3)">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h3>AI Crime Hotspot Map</h3>
+        <p>Interactive Karnataka map with real-time risk zones from Safe (green) to Critical (red).</p>
+        <div class="feat-tag">Geospatial · Live</div>
+      </div>
+      <div class="feat-card" onclick="enterDashboard(); setTimeout(()=>showPage('ai-assistant'),300)">
+        <div class="feat-icon" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.3)">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <h3>AI Copilot Assistant</h3>
+        <p>Ask anything — "Which district is safest?" — and get instant AI-powered answers with data.</p>
+        <div class="feat-tag">NLP · Voice Enabled</div>
+      </div>
+      <div class="feat-card" onclick="enterDashboard(); setTimeout(()=>showPage('alerts'),300)">
+        <div class="feat-icon" style="background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.3)">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </div>
+        <h3>Real-Time Alert Center</h3>
+        <p>Instant crime surge notifications, anomaly alerts, and emergency broadcasts for any district.</p>
+        <div class="feat-tag">Real-Time · 24/7</div>
+      </div>
+      <div class="feat-card" onclick="enterDashboard(); setTimeout(()=>showPage('simulator'),300)">
+        <div class="feat-icon" style="background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.3)">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14"/><path d="M4.93 4.93a10 10 0 000 14.14"/></svg>
+        </div>
+        <h3>Crime Digital Twin</h3>
+        <p>Simulate patrol deployments, festival scenarios, and policy changes before implementation.</p>
+        <div class="feat-tag">Simulation · Digital Twin</div>
+      </div>
+      <div class="feat-card" onclick="enterDashboard(); setTimeout(()=>showPage('explainability'),300)">
+        <div class="feat-icon" style="background:rgba(236,72,153,0.15);border-color:rgba(236,72,153,0.3)">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+        </div>
+        <h3>AI Explainability</h3>
+        <p>Transparent AI — see exactly why predictions were made with confidence factors and evidence.</p>
+        <div class="feat-tag">XAI · Transparent</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Stats Section -->
+  <section class="stats-section" id="stats-section">
+    <div class="section-label">📊 KARNATAKA 2025</div>
+    <h2 class="features-title">Powered by Real Police Data</h2>
+    <div class="big-stats-grid">
+      <div class="big-stat"><div class="bstat-val">202,533</div><div class="bstat-lbl">Total Crimes Recorded</div></div>
+      <div class="big-stat"><div class="bstat-val">37</div><div class="bstat-lbl">Districts Analyzed</div></div>
+      <div class="big-stat"><div class="bstat-val">76+</div><div class="bstat-lbl">Crime Categories</div></div>
+      <div class="big-stat"><div class="bstat-val">89%</div><div class="bstat-lbl">Prediction Accuracy</div></div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section class="team-section" id="team-section">
+    <div class="section-label">👨‍💻 OUR TEAM</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:8px">
+      <img src="innovator_logo.png" alt="Innovator Team" style="width:56px;height:56px;object-fit:contain;border-radius:10px"/>
+      <h2 class="features-title" style="margin-bottom:0">INNOVATOR TEAM</h2>
+    </div>
+    <p class="features-sub">A passionate team of engineers, designers, and data scientists building the future of public safety.</p>
+    <div class="team-grid">
+      <div class="team-card leader">
+        <div class="team-avatar">RK</div>
+        <div class="team-role-badge">Team Leader</div>
+        <h3 class="team-name">Ranjeet Kumar</h3>
+        <div class="team-role">AI/ML Development · System Architecture · Full Stack</div>
+        <a href="mailto:rajranjeet7680@gmail.com" class="team-email">📧 rajranjeet7680@gmail.com</a>
+        <div class="team-tags"><span>AI/ML</span><span>Architecture</span><span>Full Stack</span></div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">SH</div>
+        <h3 class="team-name">Shashank H E</h3>
+        <div class="team-role">Data Analytics · Dashboard Dev · Visualization</div>
+        <a href="mailto:heshashank789@gmail.com" class="team-email">📧 heshashank789@gmail.com</a>
+        <div class="team-tags"><span>Data Analytics</span><span>Visualization</span></div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">BK</div>
+        <h3 class="team-name">Bharath Kumar</h3>
+        <div class="team-role">Backend Development · API Integration · Database</div>
+        <a href="mailto:nagamallibharath@gmail.com" class="team-email">📧 nagamallibharath@gmail.com</a>
+        <div class="team-tags"><span>Backend</span><span>API</span><span>Database</span></div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">BS</div>
+        <h3 class="team-name">Bawadharani Sree R</h3>
+        <div class="team-role">Research · Documentation · Data Processing · Testing</div>
+        <a href="mailto:bawadharanisree@gmail.com" class="team-email">📧 bawadharanisree@gmail.com</a>
+        <div class="team-tags"><span>Research</span><span>Testing</span></div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">VB</div>
+        <h3 class="team-name">Vivek Boini</h3>
+        <div class="team-role">Frontend Development · UI/UX Design · User Experience</div>
+        <a href="mailto:vivekboini15@gmail.com" class="team-email">📧 vivekboini15@gmail.com</a>
+        <div class="team-tags"><span>Frontend</span><span>UI/UX</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="landing-footer">
+    <div class="footer-logo">CrimeScope <span class="brand-ai">AI</span> 2.0</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin:14px 0">
+      <img src="innovator_logo.png" alt="Innovator Team" style="width:44px;height:44px;object-fit:contain;border-radius:8px"/>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;letter-spacing:0.1em;background:linear-gradient(90deg,#3b82f6,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent">INNOVATOR TEAM</span>
+    </div>
+    <div class="footer-sub">Datathon 2026 · Karnataka Smart Policing Platform · Built with ❤️ for public safety</div>
+    <button class="btn-primary" onclick="enterDashboard()" style="margin-top:20px">Launch Platform →</button>
+  </footer>
+</div>
+
+<!-- ===================== MAIN APP ===================== -->
+<div id="main-app" class="main-app hidden">
+  <div class="bg-grid"></div>
+  <div class="bg-orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><img src="logo.png" alt="CrimeScope AI" style="width:36px;height:36px;object-fit:contain;border-radius:8px"/></div>
+      <div class="logo-text"><span class="logo-main">CrimeScope</span><span class="logo-sub">AI 2.0</span></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="#" class="nav-item" id="nav-overview" onclick="showPage('overview')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Overview</a>
+      <a href="#" class="nav-item" id="nav-heatmap" onclick="showPage('heatmap')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Crime Heatmap</a>
+      <a href="#" class="nav-item" id="nav-district" onclick="showPage('district')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/></svg>District Analysis</a>
+      <a href="#" class="nav-item" id="nav-crime-types" onclick="showPage('crime-types')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Crime Categories</a>
+      <a href="#" class="nav-item" id="nav-trends" onclick="showPage('trends')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Trends</a>
+      <a href="#" class="nav-item" id="nav-vulnerable" onclick="showPage('vulnerable')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Vulnerable Groups</a>
+      <div class="nav-section-label" style="margin-top:12px">🤖 AI Features</div>
+      <a href="#" class="nav-item" id="nav-ai-prediction" onclick="showPage('ai-prediction')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>AI Prediction Engine<span class="nav-badge">AI</span></a>
+      <a href="#" class="nav-item" id="nav-ai-assistant" onclick="showPage('ai-assistant')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>AI Copilot<span class="nav-badge new">NEW</span></a>
+      <a href="#" class="nav-item" id="nav-alerts" onclick="showPage('alerts')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>Alert Center<span class="alert-dot-nav"></span></a>
+      <a href="#" class="nav-item" id="nav-simulator" onclick="showPage('simulator')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>Digital Twin Sim<span class="nav-badge">SIM</span></a>
+      <a href="#" class="nav-item" id="nav-explainability" onclick="showPage('explainability')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>AI Explainability</a>
+      <div class="nav-section-label" style="margin-top:12px">Info</div>
+      <a href="#" class="nav-item" id="nav-team" onclick="showPage('team')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Our Team</a>
+      <a href="#" class="nav-item" onclick="document.getElementById('landing-page').classList.remove('hidden'); document.getElementById('main-app').classList.add('hidden')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Welcome Page</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="data-badge"><span class="badge-dot"></span>Karnataka 2025 · Live</div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" onclick="toggleSidebar()" id="menu-btn"><span></span><span></span><span></span></button>
+        <div class="page-title" id="page-title">Dashboard Overview</div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-stat"><span class="tstat-val">138,666</span><span class="tstat-lbl">IPC Crimes 2025</span></div>
+        <div class="topbar-stat"><span class="tstat-val" id="alert-count-top">12</span><span class="tstat-lbl">Active Alerts</span></div>
+        <button class="voice-btn" id="voice-btn" onclick="toggleVoice()" title="Voice Command"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4m-4 0h8"/></svg></button>
+        <button class="theme-toggle-app" onclick="toggleTheme()" id="theme-toggle-app" title="Toggle Day/Night Mode">
+        <span class="tgl-track">
+          <span class="tgl-thumb"></span>
+        </span>
+        <span class="tgl-sun">☀️</span>
+        <span class="tgl-moon">🌙</span>
+      </button>
+      <div class="live-badge"><span class="live-dot"></span>LIVE</div>
+      </div>
+    </header>
+
+    <div class="pages-container">
+
+      <!-- PAGE: OVERVIEW -->
+      <section class="page active" id="page-overview">
+        <div class="kpi-grid" id="kpi-grid">
+          <div class="kpi-card" style="--accent:#a855f7"><div class="kpi-icon" style="background:rgba(168,85,247,0.15)"><svg width="22" height="22" fill="none" stroke="#a855f7" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg></div><div class="kpi-body"><div class="kpi-val" data-target="138666">0</div><div class="kpi-label">Total IPC/BNS Crimes</div><div class="kpi-change up">▲ 4.2% vs 2024</div></div></div>
+          <div class="kpi-card" style="--accent:#3b82f6"><div class="kpi-icon" style="background:rgba(59,130,246,0.15)"><svg width="22" height="22" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="kpi-body"><div class="kpi-val" data-target="63867">0</div><div class="kpi-label">SLL Crimes</div><div class="kpi-change down">▼ 2.1% vs 2024</div></div></div>
+          <div class="kpi-card" style="--accent:#f59e0b"><div class="kpi-icon" style="background:rgba(245,158,11,0.15)"><svg width="22" height="22" fill="none" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="kpi-body"><div class="kpi-val" data-target="37181">0</div><div class="kpi-label">Bengaluru City</div><div class="kpi-change up">Highest District</div></div></div>
+          <div class="kpi-card" style="--accent:#10b981"><div class="kpi-icon" style="background:rgba(16,185,129,0.15)"><svg width="22" height="22" fill="none" stroke="#10b981" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="kpi-body"><div class="kpi-val" data-target="72">0</div><div class="kpi-label">Crime Resolution Rate %</div><div class="kpi-change down">▲ +3% improved</div></div></div>
+          <div class="kpi-card" style="--accent:#ef4444"><div class="kpi-icon" style="background:rgba(239,68,68,0.15)"><svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div><div class="kpi-body"><div class="kpi-val" data-target="11408">0</div><div class="kpi-label">Fatal Road Accidents</div><div class="kpi-change up">▲ 1.3% vs 2024</div></div></div>
+          <div class="kpi-card" style="--accent:#ec4899"><div class="kpi-icon" style="background:rgba(236,72,153,0.15)"><svg width="22" height="22" fill="none" stroke="#ec4899" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><div class="kpi-body"><div class="kpi-val" data-target="68">0</div><div class="kpi-label">Women Safety Index</div><div class="kpi-change neutral">Out of 100</div></div></div>
+        </div>
+        <div class="charts-row">
+          <div class="chart-card wide"><div class="chart-header"><div><div class="chart-title">Top 10 Districts — Crime Volume</div><div class="chart-subtitle">IPC/BNS Crimes 2025</div></div><div class="chart-controls"><button class="ctrl-btn active" onclick="updateDistrictChart('ipc',this)">IPC</button><button class="ctrl-btn" onclick="updateDistrictChart('sll',this)">SLL</button><button class="ctrl-btn" onclick="updateDistrictChart('total',this)">Total</button></div></div><div class="chart-wrap"><canvas id="districtChart"></canvas></div></div>
+          <div class="chart-card"><div class="chart-header"><div><div class="chart-title">Crime Category Breakdown</div><div class="chart-subtitle">Major IPC crime heads 2025</div></div></div><div class="chart-wrap"><canvas id="crimeDonut"></canvas></div></div>
+        </div>
+        <div class="charts-row">
+          <div class="chart-card"><div class="chart-header"><div><div class="chart-title">Monthly Trend</div><div class="chart-subtitle">Dec 2025 comparison</div></div></div><div class="chart-wrap"><canvas id="monthlyChart"></canvas></div></div>
+          <div class="chart-card wide"><div class="chart-header"><div><div class="chart-title">Crime Severity Heatmap</div><div class="chart-subtitle">Volume by category</div></div></div><div class="chart-wrap" style="overflow-x:auto"><canvas id="heatmapChart"></canvas></div></div>
+        </div>
+        <div class="ai-banner"><div class="ai-banner-icon"><svg width="24" height="24" fill="none" stroke="#a855f7" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div class="ai-banner-text"><strong>AI Insight:</strong> Bengaluru City accounts for <span class="highlight">26.8%</span> of all Karnataka IPC crimes. Two-wheeler theft (<span class="highlight">8,860 cases</span>) is the most prevalent sub-category. Road accidents on Other Roads lead fatally with <span class="highlight">4,097 deaths</span>.</div><button class="ai-banner-btn" onclick="showPage('ai-prediction')">View AI Predictions →</button></div>
+      </section>
+
+      <!-- PAGE: HEATMAP -->
+      <section class="page" id="page-heatmap">
+        <div class="section-header"><h1 class="section-title">AI Crime Hotspot Map</h1><p class="section-sub">Karnataka district-wise crime intensity — real 2025 data</p></div>
+        <div class="heatmap-controls">
+          <div class="hmap-filter-group">
+            <span class="hmap-label">Risk Layer:</span>
+            <button class="hmap-btn active" onclick="setHeatLayer('ipc',this)">IPC Crimes</button>
+            <button class="hmap-btn" onclick="setHeatLayer('sll',this)">SLL Crimes</button>
+            <button class="hmap-btn" onclick="setHeatLayer('risk',this)">Risk Score</button>
+          </div>
+          <div class="legend-wrap">
+            <span class="legend-item"><span class="leg-dot" style="background:#10b981"></span>Safe</span>
+            <span class="legend-item"><span class="leg-dot" style="background:#f59e0b"></span>Moderate</span>
+            <span class="legend-item"><span class="leg-dot" style="background:#f97316"></span>High Risk</span>
+            <span class="legend-item"><span class="leg-dot" style="background:#ef4444"></span>Critical</span>
+          </div>
+        </div>
+        <div class="heatmap-layout">
+          <div class="map-container">
+            <div class="map-title-overlay">Karnataka, India</div>
+            <canvas id="karnatakaMap" width="520" height="600"></canvas>
+            <div id="map-tooltip" class="map-tooltip hidden"></div>
+          </div>
+          <div class="map-sidebar">
+            <div class="map-panel"><h3 class="map-panel-title">📍 Selected District</h3><div id="selected-district-info"><div class="no-selection">Click a district on the map</div></div></div>
+            <div class="map-panel"><h3 class="map-panel-title">🏆 Top 5 Risk Districts</h3><div id="top-risk-list"></div></div>
+            <div class="map-panel"><h3 class="map-panel-title">✅ Safest Districts</h3><div id="safe-list"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGE: DISTRICT -->
+      <section class="page" id="page-district">
+        <div class="section-header"><h1 class="section-title">District-wise Analysis</h1><p class="section-sub">Karnataka 2025 — All Ranges & Commissionerates</p></div>
+        <div class="range-filter" id="range-filter-btns">
+          <button class="range-btn active" onclick="filterRange('all',this)">All Districts</button>
+          <button class="range-btn" onclick="filterRange('Commissionerates',this)">Commissionerates</button>
+          <button class="range-btn" onclick="filterRange('Central Range',this)">Central</button>
+          <button class="range-btn" onclick="filterRange('Eastern Range',this)">Eastern</button>
+          <button class="range-btn" onclick="filterRange('Western Range',this)">Western</button>
+          <button class="range-btn" onclick="filterRange('Northern Range',this)">Northern</button>
+          <button class="range-btn" onclick="filterRange('North Eastern Range',this)">NE Range</button>
+          <button class="range-btn" onclick="filterRange('Southern Range',this)">Southern</button>
+          <button class="range-btn" onclick="filterRange('Ballari Range',this)">Ballari</button>
+        </div>
+        <div class="charts-row">
+          <div class="chart-card wide2"><div class="chart-header"><div><div class="chart-title">IPC vs SLL by District</div><div class="chart-subtitle">Comparative stacked</div></div></div><div class="chart-wrap tall"><canvas id="districtStackedChart"></canvas></div></div>
+          <div class="chart-card"><div class="chart-header"><div><div class="chart-title">Range Share</div></div></div><div class="chart-wrap"><canvas id="rangePieChart"></canvas></div></div>
+        </div>
+        <div class="table-card">
+          <div class="table-header"><div class="chart-title">District Crime Rankings</div><input type="text" class="table-search" placeholder="Search district..." oninput="filterTable(this.value)" id="districtSearch"/></div>
+          <div class="table-wrap"><table class="crime-table"><thead><tr><th>District</th><th>Range</th><th onclick="sortDistricts('ipc')">IPC/BNS ↕</th><th onclick="sortDistricts('sll')">SLL ↕</th><th onclick="sortDistricts('total')">Total ↕</th><th>Share</th><th>Risk</th></tr></thead><tbody id="districtTableBody"></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- PAGE: CRIME TYPES -->
+      <section class="page" id="page-crime-types">
+        <div class="section-header"><h1 class="section-title">Crime Category Explorer</h1><p class="section-sub">IPC/BNS 2025 breakdown by major heads</p></div>
+        <div class="charts-row">
+          <div class="chart-card wide"><div class="chart-header"><div><div class="chart-title">Top Crime Categories</div><div class="chart-subtitle">Volume by IPC head</div></div></div><div class="chart-wrap tall"><canvas id="categoryBarChart"></canvas></div></div>
+          <div class="chart-card"><div class="chart-header"><div><div class="chart-title">Murder Causes</div></div></div><div class="chart-wrap"><canvas id="murderChart"></canvas></div></div>
+        </div>
+        <div class="charts-row">
+          <div class="chart-card"><div class="chart-header"><div><div class="chart-title">Theft Sub-categories</div></div></div><div class="chart-wrap"><canvas id="theftChart"></canvas></div></div>
+          <div class="chart-card wide"><div class="chart-header"><div><div class="chart-title">Road Accident Analysis</div><div class="chart-subtitle">Fatal vs Non-Fatal</div></div></div><div class="chart-wrap"><canvas id="accidentChart"></canvas></div></div>
+        </div>
+      </section>
+
+      <!-- PAGE: TRENDS -->
+      <section class="page" id="page-trends">
+        <div class="section-header"><h1 class="section-title">Crime Trends & Patterns</h1><p class="section-sub">Month-over-month and year-over-year analysis</p></div>
+        <div class="charts-row">
+          <div class="chart-card wide2"><div class="chart-header"><div><div class="chart-title">Monthly Crime Radar</div><div class="chart-subtitle">Dec 2025 multi-period comparison</div></div></div><div class="chart-wrap"><canvas id="trendRadarChart"></canvas></div></div>
+          <div class="chart-card"><div class="chart-header"><div><div class="chart-title">YTD Change Indicators</div></div></div><div class="kpi-mini-grid" id="ytdGrid"></div></div>
+        </div>
+        <div class="charts-row">
+          <div class="chart-card wide2"><div class="chart-header"><div><div class="chart-title">Cumulative 2025 vs 2024</div></div></div><div class="chart-wrap"><canvas id="trendLineChart"></canvas></div></div>
+          <div class="chart-card"><div class="chart-header"><div><div class="chart-title">Biggest Movers</div><div class="chart-subtitle">% change vs 2024</div></div></div><div class="chart-wrap"><canvas id="moversChart"></canvas></div></div>
+        </div>
+      </section>
+
+      <!-- PAGE: VULNERABLE -->
+      <section class="page" id="page-vulnerable">
+        <div class="section-header"><h1 class="section-title">Vulnerable Groups Analysis</h1><p class="section-sub">Crimes against Women, Children, and SC/ST communities</p></div>
+        <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr)">
+          <div class="kpi-card" style="--accent:#ec4899"><div class="kpi-icon" style="background:rgba(236,72,153,0.15)"><svg width="22" height="22" fill="none" stroke="#ec4899" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><div class="kpi-body"><div class="kpi-val" data-target="9000">0</div><div class="kpi-label">Crimes Against Women</div><div class="kpi-change up">2025 Total</div></div></div>
+          <div class="kpi-card" style="--accent:#f59e0b"><div class="kpi-icon" style="background:rgba(245,158,11,0.15)"><svg width="22" height="22" fill="none" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="kpi-body"><div class="kpi-val" data-target="4650">0</div><div class="kpi-label">Crimes Against Children</div><div class="kpi-change neutral">2025 Total</div></div></div>
+          <div class="kpi-card" style="--accent:#8b5cf6"><div class="kpi-icon" style="background:rgba(139,92,246,0.15)"><svg width="22" height="22" fill="none" stroke="#8b5cf6" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="kpi-body"><div class="kpi-val" data-target="1200">0</div><div class="kpi-label">SC/ST Crimes</div><div class="kpi-change up">2025 Total</div></div></div>
+        </div>
+        <div class="charts-row">
+          <div class="chart-card wide"><div class="chart-header"><div><div class="chart-title">Crimes Against Women 2024 vs 2025</div></div></div><div class="chart-wrap"><canvas id="womenChart"></canvas></div></div>
+          <div class="chart-card"><div class="chart-header"><div><div class="chart-title">Children Crimes</div></div></div><div class="chart-wrap"><canvas id="childrenChart"></canvas></div></div>
+        </div>
+        <div class="charts-row">
+          <div class="chart-card"><div class="chart-header"><div><div class="chart-title">SC/ST Distribution</div></div></div><div class="chart-wrap"><canvas id="scstChart"></canvas></div></div>
+          <div class="chart-card wide"><div class="chart-header"><div><div class="chart-title">Domestic Violence & Dowry</div></div></div><div class="chart-wrap"><canvas id="domesticChart"></canvas></div></div>
+        </div>
+      </section>
+
+      <!-- PAGE: AI PREDICTION ENGINE -->
+      <section class="page" id="page-ai-prediction">
+        <div class="section-header"><h1 class="section-title">🧠 AI Crime Prediction Engine</h1><p class="section-sub">Machine learning forecasts powered by Karnataka 2025 data</p></div>
+        <div class="prediction-controls">
+          <div class="pred-ctrl-label">Forecast Horizon:</div>
+          <button class="pred-btn active" onclick="setPredHorizon('24h',this)">Next 24 Hours</button>
+          <button class="pred-btn" onclick="setPredHorizon('7d',this)">Next Week</button>
+          <button class="pred-btn" onclick="setPredHorizon('30d',this)">Next Month</button>
+        </div>
+        <div id="prediction-cards-grid" class="prediction-cards-grid"></div>
+        <div class="charts-row" style="margin-top:24px">
+          <div class="chart-card wide"><div class="chart-header"><div><div class="chart-title">AI Risk Forecast — Next 30 Days</div><div class="chart-subtitle">Predicted crime trajectory with confidence bands</div></div></div><div class="chart-wrap"><canvas id="forecastChart"></canvas></div></div>
+          <div class="chart-card"><div class="chart-header"><div><div class="chart-title">Risk Score by District</div><div class="chart-subtitle">Composite AI risk index</div></div></div><div class="chart-wrap"><canvas id="riskChart"></canvas></div></div>
+        </div>
+        <div class="vulnerability-index-section">
+          <h3 class="vi-title">📊 Vulnerability Index by District</h3>
+          <div id="vulnerability-grid" class="vulnerability-grid"></div>
+        </div>
+      </section>
+
+      <!-- PAGE: AI ASSISTANT -->
+      <section class="page" id="page-ai-assistant">
+        <div class="section-header"><h1 class="section-title">🤖 AI Crime Copilot</h1><p class="section-sub">Ask anything about Karnataka crime data — powered by real statistics</p></div>
+        <div class="chat-layout">
+          <div class="chat-container" id="chat-container">
+            <div class="chat-messages" id="chat-messages">
+              <div class="chat-msg bot">
+                <div class="bot-avatar">AI</div>
+                <div class="msg-bubble bot-bubble">
+                  <p>👋 Welcome! I'm the <strong>CrimeScope AI Copilot</strong>, trained on Karnataka's 2025 crime data.</p>
+                  <p style="margin-top:8px">I can help you analyze <strong>138,666 IPC crimes</strong> across <strong>37 districts</strong>. Try asking:</p>
+                  <div class="suggestion-chips" id="suggestion-chips">
+                    <button class="chip" onclick="sendChat('Which district is safest?')">Which district is safest?</button>
+                    <button class="chip" onclick="sendChat('Why are theft cases increasing?')">Why is theft increasing?</button>
+                    <button class="chip" onclick="sendChat('Show top 5 dangerous areas')">Top 5 dangerous areas</button>
+                    <button class="chip" onclick="sendChat('Bengaluru crime summary')">Bengaluru crime summary</button>
+                    <button class="chip" onclick="sendChat('Women safety analysis')">Women safety analysis</button>
+                    <button class="chip" onclick="sendChat('Predict next month crimes')">Predict next month</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="chat-input-area">
+              <div class="voice-indicator" id="voice-indicator"><span></span><span></span><span></span><span></span><span></span> Listening...</div>
+              <div class="chat-input-wrap">
+                <input type="text" id="chat-input" class="chat-input" placeholder="Ask about crime data, districts, predictions..." onkeydown="if(event.key==='Enter')sendChat()" />
+                <button class="chat-voice-btn" onclick="toggleChatVoice()" id="chat-voice-btn" title="Voice input"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4m-4 0h8"/></svg></button>
+                <button class="chat-send-btn" onclick="sendChat()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+              </div>
+            </div>
+          </div>
+          <div class="chat-info-panel">
+            <div class="info-card"><h4>📊 Data Coverage</h4><div class="info-stat"><span>138,666</span><small>IPC Crimes</small></div><div class="info-stat"><span>37</span><small>Districts</small></div><div class="info-stat"><span>76+</span><small>Crime Types</small></div></div>
+            <div class="info-card"><h4>🔍 Try Asking</h4><ul class="query-list"><li onclick="sendChat('Which crimes are rising fastest?')">→ Which crimes are rising fastest?</li><li onclick="sendChat('Compare Bengaluru and Mysuru')">→ Compare Bengaluru vs Mysuru</li><li onclick="sendChat('Road accident hotspots')">→ Road accident hotspots</li><li onclick="sendChat('Missing children statistics')">→ Missing children stats</li><li onclick="sendChat('Cyber crime analysis')">→ Cyber crime analysis</li></ul></div>
+            <div class="info-card voice-info-card"><h4>🎙️ Voice Commands</h4><p>Click the microphone button and speak your query naturally.</p><button class="voice-demo-btn" onclick="toggleChatVoice()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4m-4 0h8"/></svg> Start Voice</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGE: ALERTS -->
+      <section class="page" id="page-alerts">
+        <div class="section-header"><h1 class="section-title">🚨 Real-Time Alert Center</h1><p class="section-sub">Live crime intelligence, anomaly detection, and emergency notifications</p></div>
+        <div class="alert-header-bar">
+          <div class="alert-counts">
+            <div class="alert-count critical"><span id="cnt-critical">4</span><small>Critical</small></div>
+            <div class="alert-count high"><span id="cnt-high">5</span><small>High</small></div>
+            <div class="alert-count medium"><span id="cnt-medium">3</span><small>Medium</small></div>
+          </div>
+          <div class="alert-controls">
+            <button class="alert-filter active" onclick="filterAlerts('all',this)">All</button>
+            <button class="alert-filter" onclick="filterAlerts('critical',this)">Critical</button>
+            <button class="alert-filter" onclick="filterAlerts('anomaly',this)">Anomaly</button>
+            <button class="alert-filter" onclick="filterAlerts('accident',this)">Accidents</button>
+            <button class="alert-btn-refresh" onclick="refreshAlerts()">⟳ Refresh</button>
+          </div>
+        </div>
+        <div id="alerts-feed" class="alerts-feed"></div>
+        <div class="charts-row" style="margin-top:16px">
+          <div class="chart-card wide"><div class="chart-header"><div><div class="chart-title">Anomaly Detection — Crime Spike Pattern</div><div class="chart-subtitle">Statistical deviation from baseline</div></div></div><div class="chart-wrap"><canvas id="anomalyChart"></canvas></div></div>
+          <div class="chart-card"><div class="chart-header"><div><div class="chart-title">Alert Type Distribution</div></div></div><div class="chart-wrap"><canvas id="alertDonut"></canvas></div></div>
+        </div>
+      </section>
+
+      <!-- PAGE: SIMULATOR -->
+      <section class="page" id="page-simulator">
+        <div class="section-header"><h1 class="section-title">🎮 Crime Digital Twin Simulator</h1><p class="section-sub">Simulate patrol deployments, events, and policy changes — see predicted crime impact in real time</p></div>
+        <div class="simulator-layout">
+          <div class="sim-controls-panel">
+            <div class="sim-section-title">🎚️ Control Variables</div>
+            <div class="sim-control-group">
+              <label class="sim-label">Police Patrol Coverage <span id="patrol-val" class="sim-val">65%</span></label>
+              <input type="range" id="patrol-slider" class="sim-slider" min="0" max="100" value="65" oninput="updateSimulator()"/>
+            </div>
+            <div class="sim-control-group">
+              <label class="sim-label">Festival / Public Event <span id="festival-val" class="sim-val">Off</span></label>
+              <input type="range" id="festival-slider" class="sim-slider" min="0" max="100" value="0" oninput="updateSimulator()"/>
+            </div>
+            <div class="sim-control-group">
+              <label class="sim-label">Street Lighting Coverage <span id="lighting-val" class="sim-val">70%</span></label>
+              <input type="range" id="lighting-slider" class="sim-slider" min="0" max="100" value="70" oninput="updateSimulator()"/>
+            </div>
+            <div class="sim-control-group">
+              <label class="sim-label">CCTV Density <span id="cctv-val" class="sim-val">50%</span></label>
+              <input type="range" id="cctv-slider" class="sim-slider" min="0" max="100" value="50" oninput="updateSimulator()"/>
+            </div>
+            <div class="sim-control-group">
+              <label class="sim-label">Unemployment Rate <span id="unemployment-val" class="sim-val">7%</span></label>
+              <input type="range" id="unemployment-slider" class="sim-slider" min="0" max="30" value="7" oninput="updateSimulator()"/>
+            </div>
+            <div class="sim-control-group">
+              <label class="sim-label">Population Density <span id="pop-val" class="sim-val">Medium</span></label>
+              <input type="range" id="pop-slider" class="sim-slider" min="0" max="100" value="50" oninput="updateSimulator()"/>
+            </div>
+            <button class="sim-reset-btn" onclick="resetSimulator()">↺ Reset to Defaults</button>
+            <button class="sim-apply-btn" onclick="applyScenario()">⚡ Apply Scenario</button>
+          </div>
+          <div class="sim-results-panel">
+            <div class="sim-section-title">📊 Predicted Impact</div>
+            <div class="sim-output-grid" id="sim-output-grid"></div>
+            <div class="chart-card" style="margin-top:16px"><div class="chart-header"><div><div class="chart-title">Crime Projection</div><div class="chart-subtitle">Simulated vs baseline</div></div></div><div class="chart-wrap"><canvas id="simChart"></canvas></div></div>
+          </div>
+        </div>
+        <div class="preset-scenarios">
+          <div class="preset-title">📦 Quick Scenarios</div>
+          <div class="preset-grid">
+            <button class="preset-btn" onclick="applyPreset('festival')">🎊 Festival Season</button>
+            <button class="preset-btn" onclick="applyPreset('maxPatrol')">🚔 Max Patrol Deploy</button>
+            <button class="preset-btn" onclick="applyPreset('techCity')">🏙️ Smart City Upgrade</button>
+            <button class="preset-btn" onclick="applyPreset('highRisk')">⚠️ High Risk Scenario</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGE: AI EXPLAINABILITY -->
+      <section class="page" id="page-explainability">
+        <div class="section-header"><h1 class="section-title">🔬 AI Explainability Center</h1><p class="section-sub">Understand exactly why our AI makes each prediction — transparent, auditable, trustworthy</p></div>
+        <div class="explain-layout">
+          <div class="explain-selector">
+            <div class="sim-section-title">Select a Prediction to Explain</div>
+            <div class="explain-options" id="explain-options"></div>
+          </div>
+          <div class="explain-detail" id="explain-detail"></div>
+        </div>
+        <div class="charts-row" style="margin-top:24px">
+          <div class="chart-card wide"><div class="chart-header"><div><div class="chart-title">Feature Importance — Theft Prediction</div><div class="chart-subtitle">Top factors driving the model's decision</div></div></div><div class="chart-wrap"><canvas id="featureImportanceChart"></canvas></div></div>
+          <div class="chart-card"><div class="chart-header"><div><div class="chart-title">Model Confidence Distribution</div></div></div><div class="chart-wrap"><canvas id="confidenceChart"></canvas></div></div>
+        </div>
+      </section>
+
+      <!-- PAGE: TEAM -->
+      <section class="page" id="page-team">
+        <div class="section-header"><h1 class="section-title">👨‍💻 Meet Our Team</h1><p class="section-sub">The minds behind CrimeScope AI 2.0 — Datathon 2026</p></div>
+        <div class="team-grid-app" id="team-grid-app"></div>
+        <div class="methodology-banner">
+          <h3>🏆 Datathon 2026 · Government Smart Policing Challenge</h3>
+          <p>CrimeScope AI is built on real Karnataka Police crime data (2025), processed and analyzed using advanced statistical methods and machine learning models to create actionable intelligence for law enforcement.</p>
+          <div class="method-tags"><span>Machine Learning</span><span>Predictive Analytics</span><span>NLP</span><span>Geospatial AI</span><span>Real-time Processing</span><span>XAI</span></div>
+        </div>
+      </section>
+
+    </div><!-- end pages-container -->
+  </main>
+</div><!-- end main-app -->
+
+<div id="voice-modal" class="voice-modal hidden">
+  <div class="voice-modal-inner">
+    <div class="voice-waves"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="voice-modal-title">Listening...</div>
+    <div class="voice-modal-sub">Speak your command</div>
+    <div class="voice-transcript" id="voice-transcript"></div>
+    <button onclick="stopVoice()">✕ Cancel</button>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
