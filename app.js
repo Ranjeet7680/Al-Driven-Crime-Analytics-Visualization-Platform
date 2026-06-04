@@ -52,6 +52,11 @@ function toggleTheme() {
       try { ch.update('none'); } catch(e) {}
     });
   }
+  // Redraw the heatmap canvas with new theme colors
+  const heatPage = document.getElementById('page-heatmap');
+  if (heatPage && heatPage.classList.contains('active')) {
+    setTimeout(() => drawKarnatakaMap(), 50);
+  }
 }
 
 function applyStoredTheme() {
@@ -117,12 +122,58 @@ function initNeuralCanvas() {
 }
 
 function scrollToSection(id) {
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  const el = document.getElementById(id);
+  if (!el) return;
+  const lp = document.getElementById('landing-page');
+  const nav = document.querySelector('.landing-nav');
+  const navH = nav ? nav.offsetHeight : 65;
+
+  if (lp) {
+    const lpRect = lp.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    const scrollTop = lp.scrollTop + (elRect.top - lpRect.top) - navH - 8;
+    lp.scrollTo({ top: scrollTop, behavior: 'smooth' });
+  } else {
+    const top = el.getBoundingClientRect().top + window.scrollY - navH - 8;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+
+  // Highlight active nav link
+  const idMap = { 'features':'lnk-features', 'stats-section':'lnk-stats', 'team-section':'lnk-team' };
+  document.querySelectorAll('.landing-nav-links a').forEach(a => a.classList.remove('nav-active'));
+  const activeLink = document.getElementById(idMap[id]);
+  if (activeLink) activeLink.classList.add('nav-active');
+
+  // Remove hash from URL (file:// protocol safety)
+  setTimeout(() => {
+    if (window.location.hash) {
+      history.replaceState(null, '', window.location.pathname);
+    }
+  }, 50);
 }
+
+// Navbar scrolled state — watch landing-page container
+(function setupNavScroll() {
+  function attachNavScroll() {
+    const lp = document.getElementById('landing-page');
+    const nav = document.querySelector('.landing-nav');
+    if (!lp || !nav) return;
+    lp.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', lp.scrollTop > 40);
+    });
+  }
+  // Try immediately and also after DOM ready
+  attachNavScroll();
+  document.addEventListener('DOMContentLoaded', attachNavScroll);
+})();
 
 function enterDashboard() {
   document.getElementById('landing-page').classList.add('hidden');
   document.getElementById('main-app').classList.remove('hidden');
+  // Clean URL hash to avoid 'file://' security warnings
+  if (window.location.hash) {
+    history.replaceState(null, '', window.location.pathname);
+  }
   setTimeout(() => { showPage('overview'); }, 100);
 }
 
@@ -157,8 +208,40 @@ function showPage(name) {
 }
 
 function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
+  const sidebar = document.getElementById('sidebar');
+  const menuBtn = document.getElementById('menu-btn');
+  const isMobile = window.innerWidth <= 900;
+  if (isMobile) {
+    sidebar.classList.toggle('collapsed');
+    // Show/hide backdrop
+    const backdrop = document.getElementById('sidebar-backdrop');
+    if (backdrop) backdrop.classList.toggle('visible', !sidebar.classList.contains('collapsed'));
+  } else {
+    sidebar.classList.toggle('collapsed');
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+      mainContent.style.marginLeft = sidebar.classList.contains('collapsed') ? '64px' : '';
+    }
+  }
+  if (menuBtn) menuBtn.classList.toggle('open');
 }
+
+function closeSidebarMobile() {
+  const sidebar = document.getElementById('sidebar');
+  const menuBtn = document.getElementById('menu-btn');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  if (sidebar && !sidebar.classList.contains('collapsed')) {
+    sidebar.classList.add('collapsed');
+    if (menuBtn) menuBtn.classList.remove('open');
+    if (backdrop) backdrop.classList.remove('visible');
+  }
+}
+
+function setMobActive(el) {
+  document.querySelectorAll('.mob-nav-item').forEach(i => i.classList.remove('active'));
+  if (el) el.classList.add('active');
+}
+
 
 // ===================== COUNTER ANIMATION =====================
 function animateCounter(el, target) {
@@ -312,137 +395,242 @@ function getRiskColor(ratio) {
 
 function drawKarnatakaMap() {
   const canvas = document.getElementById('karnatakaMap');
-  if (!canvas) return;
+  if (!canvas || canvas.tagName !== 'CANVAS') return;
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   ctx.clearRect(0, 0, W, H);
 
-  // Draw background shape (simplified Karnataka outline)
-  ctx.beginPath();
-  ctx.roundRect(30, 30, W-60, H-60, 20);
-  ctx.fillStyle = 'rgba(255,255,255,0.02)';
-  ctx.fill();
-  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
-  ctx.lineWidth = 1;
-  ctx.stroke();
+  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
 
-  // Draw grid lines
-  for (let i=0; i<8; i++) {
-    ctx.beginPath(); ctx.strokeStyle='rgba(255,255,255,0.03)'; ctx.lineWidth=1;
-    ctx.moveTo(30+(i*(W-60)/7),30); ctx.lineTo(30+(i*(W-60)/7),H-30); ctx.stroke();
-    ctx.moveTo(30,30+(i*(H-60)/7)); ctx.lineTo(W-30,30+(i*(H-60)/7)); ctx.stroke();
+  // Background
+  const bgGrad = ctx.createLinearGradient(0, 0, W, H);
+  if (isDark) {
+    bgGrad.addColorStop(0, '#0d1117');
+    bgGrad.addColorStop(1, '#111827');
+  } else {
+    bgGrad.addColorStop(0, '#f0f4ff');
+    bgGrad.addColorStop(1, '#e8edf5');
+  }
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid lines
+  ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.04)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 12; i++) {
+    ctx.beginPath(); ctx.moveTo(i*(W/12), 0); ctx.lineTo(i*(W/12), H); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, i*(H/12)); ctx.lineTo(W, i*(H/12)); ctx.stroke();
   }
 
-  const districts = CRIME_DATA.districts.filter(d=>d.name!=='STATE');
-  const values = districts.map(d=>getDistrictValue(d));
+  // Karnataka outline (simplified polygon boundary)
+  const outline = [
+    [0.12,0.08],[0.28,0.04],[0.42,0.06],[0.58,0.05],[0.72,0.12],[0.82,0.18],
+    [0.92,0.28],[0.96,0.40],[0.94,0.55],[0.88,0.65],[0.82,0.72],[0.76,0.80],
+    [0.68,0.92],[0.58,0.97],[0.46,0.98],[0.36,0.94],[0.28,0.88],[0.18,0.82],
+    [0.08,0.76],[0.04,0.64],[0.02,0.50],[0.04,0.35],[0.08,0.22],[0.12,0.08]
+  ];
+
+  // Draw Karnataka outline glow
+  ctx.beginPath();
+  outline.forEach(([x,y],i) => { i===0 ? ctx.moveTo(x*W, y*H) : ctx.lineTo(x*W, y*H); });
+  ctx.closePath();
+  ctx.strokeStyle = isDark ? 'rgba(168,85,247,0.25)' : 'rgba(124,58,237,0.2)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = isDark ? 'rgba(168,85,247,0.04)' : 'rgba(124,58,237,0.03)';
+  ctx.fill();
+
+  // State/region boundary lines (simulated district borders)
+  const regionBorders = [
+    [[0.2,0.48],[0.38,0.42],[0.52,0.38],[0.68,0.35]],
+    [[0.52,0.38],[0.55,0.58],[0.52,0.72]],
+    [[0.38,0.42],[0.38,0.58],[0.36,0.74]],
+    [[0.2,0.48],[0.22,0.62],[0.2,0.78]],
+    [[0.14,0.30],[0.38,0.28],[0.52,0.38]],
+  ];
+  ctx.setLineDash([4, 6]);
+  ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+  ctx.lineWidth = 1;
+  regionBorders.forEach(pts => {
+    ctx.beginPath();
+    pts.forEach(([x,y],i) => i===0 ? ctx.moveTo(x*W,y*H) : ctx.lineTo(x*W,y*H));
+    ctx.stroke();
+  });
+  ctx.setLineDash([]);
+
+  const districts = CRIME_DATA.districts.filter(d => d.name !== 'STATE');
+  const values = districts.map(d => getDistrictValue(d));
   const maxVal = Math.max(...values);
 
-  // Draw connection lines (subtle)
-  DISTRICT_POSITIONS.forEach((p,i) => {
-    if(i % 5 === 0 && i+1 < DISTRICT_POSITIONS.length) {
-      const q = DISTRICT_POSITIONS[i+1];
-      const dist = CRIME_DATA.districts.find(d=>d.name===p.name);
-      if(!dist) return;
-      const ratio = getDistrictValue(dist)/maxVal;
+  // Draw subtle connection network
+  DISTRICT_POSITIONS.forEach((p, i) => {
+    DISTRICT_POSITIONS.slice(i+1, i+3).forEach(q => {
+      const dp = CRIME_DATA.districts.find(d => d.name === p.name);
+      if (!dp) return;
+      const ratio = getDistrictValue(dp) / maxVal;
       ctx.beginPath();
-      ctx.strokeStyle = `rgba(168,85,247,${ratio*0.08})`;
-      ctx.lineWidth=1;
-      ctx.moveTo(p.x*(W-60)+30, p.y*(H-60)+30);
-      ctx.lineTo(q.x*(W-60)+30, q.y*(H-60)+30);
+      ctx.strokeStyle = isDark
+        ? `rgba(168,85,247,${ratio * 0.06})`
+        : `rgba(124,58,237,${ratio * 0.05})`;
+      ctx.lineWidth = 0.5;
+      ctx.moveTo(p.x*(W-80)+40, p.y*(H-80)+40);
+      ctx.lineTo(q.x*(W-80)+40, q.y*(H-80)+40);
       ctx.stroke();
-    }
+    });
   });
 
-  // Draw districts
+  // Draw district nodes
   DISTRICT_POSITIONS.forEach(pos => {
     const dist = CRIME_DATA.districts.find(d => d.name === pos.name);
     if (!dist) return;
     const val = getDistrictValue(dist);
     const ratio = val / maxVal;
-    const {color} = getRiskColor(ratio);
-    const x = pos.x * (W-60) + 30;
-    const y = pos.y * (H-60) + 30;
-    const r = Math.max(8, Math.min(26, 8 + ratio * 22));
+    const { color, label } = getRiskColor(ratio);
+    const x = pos.x * (W-80) + 40;
+    const y = pos.y * (H-80) + 40;
+    const r = Math.max(9, Math.min(30, 9 + ratio * 26));
 
-    // Glow effect
-    const gradient = ctx.createRadialGradient(x, y, 0, x, y, r*2.5);
-    gradient.addColorStop(0, color + '40');
-    gradient.addColorStop(1, 'transparent');
-    ctx.beginPath(); ctx.arc(x, y, r*2.5, 0, Math.PI*2);
-    ctx.fillStyle = gradient; ctx.fill();
+    // Outer glow rings for critical/high risk
+    if (ratio > 0.4) {
+      const rings = ratio > 0.7 ? 3 : 2;
+      for (let ri = rings; ri >= 1; ri--) {
+        ctx.beginPath();
+        ctx.arc(x, y, r * (1.5 + ri * 0.7), 0, Math.PI * 2);
+        ctx.strokeStyle = color + Math.round((0.08 / ri) * 255).toString(16).padStart(2,'0');
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
 
-    // Circle
-    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2);
-    ctx.fillStyle = color + 'cc'; ctx.fill();
-    ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.stroke();
+    // Radial gradient fill
+    const grad = ctx.createRadialGradient(x - r*0.3, y - r*0.3, 0, x, y, r * 2.2);
+    grad.addColorStop(0, color + 'dd');
+    grad.addColorStop(0.6, color + '88');
+    grad.addColorStop(1, 'transparent');
+    ctx.beginPath(); ctx.arc(x, y, r * 2.2, 0, Math.PI * 2);
+    ctx.fillStyle = grad; ctx.fill();
 
-    // Label for major districts
-    if (ratio > 0.25 || dist.name === 'Bengaluru City') {
-      ctx.font = `bold ${dist.name==='Bengaluru City'?11:9}px Inter`;
-      ctx.fillStyle = '#f1f5f9';
+    // Main circle
+    const nodeGrad = ctx.createRadialGradient(x - r*0.25, y - r*0.25, r*0.1, x, y, r);
+    nodeGrad.addColorStop(0, color + 'ff');
+    nodeGrad.addColorStop(1, color + 'aa');
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = nodeGrad; ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = ratio > 0.4 ? 1.5 : 1; ctx.stroke();
+
+    // Inner highlight dot
+    ctx.beginPath(); ctx.arc(x - r*0.28, y - r*0.28, r*0.22, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.fill();
+
+    // Labels for prominent districts
+    const isMajor = ratio > 0.28 || dist.name === 'Bengaluru City' || dist.name === 'Mysuru City';
+    if (isMajor) {
+      const shortName = dist.name.replace(' City','').replace(' Dist','').split(' ')[0];
+      const fontSize = dist.name === 'Bengaluru City' ? 12 : 10;
+      ctx.font = `bold ${fontSize}px Inter, sans-serif`;
       ctx.textAlign = 'center';
-      const shortName = dist.name.split(' ')[0];
-      ctx.fillText(shortName, x, y+r+12);
+      // Text shadow
+      ctx.fillStyle = isDark ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.8)';
+      ctx.fillText(shortName, x+1, y + r + 14);
+      ctx.fillStyle = isDark ? '#f1f5f9' : '#0f172a';
+      ctx.fillText(shortName, x, y + r + 13);
+
+      // Crime count for top districts
+      if (ratio > 0.5) {
+        ctx.font = `500 9px Inter, sans-serif`;
+        ctx.fillStyle = isDark ? 'rgba(241,245,249,0.6)' : 'rgba(15,23,42,0.6)';
+        ctx.fillText(val.toLocaleString('en-IN'), x, y + r + 24);
+      }
     }
   });
 
   // Highlight selected
   if (selectedDistrict) {
-    const pos = DISTRICT_POSITIONS.find(p=>p.name===selectedDistrict.name);
-    if(pos) {
-      const x=pos.x*(W-60)+30, y=pos.y*(H-60)+30;
-      ctx.beginPath(); ctx.arc(x,y,30,0,Math.PI*2);
-      ctx.strokeStyle='#fff'; ctx.lineWidth=2.5; ctx.setLineDash([6,3]); ctx.stroke();
+    const pos = DISTRICT_POSITIONS.find(p => p.name === selectedDistrict.name);
+    if (pos) {
+      const x = pos.x*(W-80)+40, y = pos.y*(H-80)+40;
+      ctx.beginPath(); ctx.arc(x, y, 36, 0, Math.PI*2);
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2.5;
+      ctx.setLineDash([6,3]); ctx.stroke();
       ctx.setLineDash([]);
     }
   }
 
+  // Compass rose in bottom-left
+  const cx = 52, cy = H - 52;
+  ctx.font = 'bold 10px Inter, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.4)';
+  ctx.fillText('N', cx, cy - 18);
+  ctx.fillText('S', cx, cy + 24);
+  ctx.fillText('W', cx - 20, cy + 4);
+  ctx.fillText('E', cx + 20, cy + 4);
+  ctx.beginPath();
+  ctx.moveTo(cx, cy-14); ctx.lineTo(cx-5, cy+5); ctx.lineTo(cx, cy+2); ctx.lineTo(cx+5, cy+5); ctx.closePath();
+  ctx.fillStyle = isDark ? 'rgba(168,85,247,0.7)' : 'rgba(124,58,237,0.6)';
+  ctx.fill();
+
+  // Scale bar
+  ctx.fillStyle = isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.3)';
+  ctx.fillRect(W-110, H-28, 80, 3);
+  ctx.font = '9px Inter, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('~400 km', W-70, H-14);
+
   // Setup hover/click
   canvas.onmousemove = (e) => {
     const rect = canvas.getBoundingClientRect();
-    const mx = (e.clientX-rect.left)*(W/rect.width);
-    const my = (e.clientY-rect.top)*(H/rect.height);
+    const scaleX = W / rect.width, scaleY = H / rect.height;
+    const mx = (e.clientX - rect.left) * scaleX;
+    const my = (e.clientY - rect.top) * scaleY;
     const tooltip = document.getElementById('map-tooltip');
     let found = false;
     DISTRICT_POSITIONS.forEach(pos => {
-      const dist = CRIME_DATA.districts.find(d=>d.name===pos.name);
-      if(!dist) return;
-      const x=pos.x*(W-60)+30, y=pos.y*(H-60)+30;
-      const ratio=getDistrictValue(dist)/maxVal;
-      const r=Math.max(8,Math.min(26,8+ratio*22));
-      const dx=mx-x,dy=my-y;
-      if(Math.sqrt(dx*dx+dy*dy)<r+4) {
-        found=true;
-        const {color,label}=getRiskColor(ratio);
+      const dist = CRIME_DATA.districts.find(d => d.name === pos.name);
+      if (!dist) return;
+      const x = pos.x*(W-80)+40, y = pos.y*(H-80)+40;
+      const ratio = getDistrictValue(dist)/maxVal;
+      const r = Math.max(9, Math.min(30, 9 + ratio * 26));
+      const dx = mx - x, dy = my - y;
+      if (Math.sqrt(dx*dx+dy*dy) < r + 8) {
+        found = true;
+        const { color, label } = getRiskColor(ratio);
         tooltip.classList.remove('hidden');
-        tooltip.style.left=(e.clientX-rect.left+10)+'px';
-        tooltip.style.top=(e.clientY-rect.top-10)+'px';
-        tooltip.innerHTML=`<div style="font-weight:700;color:#f1f5f9;margin-bottom:6px">${dist.name}</div>
-          <div style="font-size:11px;color:${color};font-weight:700;margin-bottom:8px">● ${label} Risk</div>
-          <div style="font-size:12px;color:#94a3b8">IPC: <strong style="color:#f1f5f9">${dist.ipc.toLocaleString('en-IN')}</strong></div>
-          <div style="font-size:12px;color:#94a3b8">SLL: <strong style="color:#f1f5f9">${dist.sll.toLocaleString('en-IN')}</strong></div>
-          <div style="font-size:12px;color:#94a3b8">Total: <strong style="color:#f1f5f9">${(dist.ipc+dist.sll).toLocaleString('en-IN')}</strong></div>`;
+        tooltip.style.left = (e.clientX - rect.left + 12) + 'px';
+        tooltip.style.top = (e.clientY - rect.top - 10) + 'px';
+        tooltip.innerHTML = `<div style="font-weight:700;font-size:13px;margin-bottom:5px">${dist.name}</div>
+          <div style="font-size:11px;color:${color};font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color}"></span>${label} Risk</div>
+          <div style="font-size:12px;color:var(--txt2);margin-bottom:2px">IPC/BNS: <strong style="color:var(--txt)">${dist.ipc.toLocaleString('en-IN')}</strong></div>
+          <div style="font-size:12px;color:var(--txt2);margin-bottom:2px">SLL: <strong style="color:var(--txt)">${dist.sll.toLocaleString('en-IN')}</strong></div>
+          <div style="font-size:12px;color:var(--txt2)">Total: <strong style="color:var(--txt)">${(dist.ipc+dist.sll).toLocaleString('en-IN')}</strong></div>`;
       }
     });
-    if(!found) { tooltip.classList.add('hidden'); canvas.style.cursor='crosshair'; }
-    else canvas.style.cursor='pointer';
+    if (!found) { tooltip.classList.add('hidden'); canvas.style.cursor = 'crosshair'; }
+    else canvas.style.cursor = 'pointer';
   };
 
   canvas.onclick = (e) => {
-    const rect=canvas.getBoundingClientRect();
-    const mx=(e.clientX-rect.left)*(W/rect.width), my=(e.clientY-rect.top)*(H/rect.height);
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W / rect.width, scaleY = H / rect.height;
+    const mx = (e.clientX - rect.left) * scaleX;
+    const my = (e.clientY - rect.top) * scaleY;
     DISTRICT_POSITIONS.forEach(pos => {
-      const dist=CRIME_DATA.districts.find(d=>d.name===pos.name);
-      if(!dist) return;
-      const x=pos.x*(W-60)+30,y=pos.y*(H-60)+30;
-      const ratio=getDistrictValue(dist)/maxVal;
-      const r=Math.max(8,Math.min(26,8+ratio*22));
-      if(Math.sqrt((mx-x)**2+(my-y)**2)<r+4) { selectedDistrict=dist; showDistrictInfo(dist); drawKarnatakaMap(); }
+      const dist = CRIME_DATA.districts.find(d => d.name === pos.name);
+      if (!dist) return;
+      const x = pos.x*(W-80)+40, y = pos.y*(H-80)+40;
+      const ratio = getDistrictValue(dist)/maxVal;
+      const r = Math.max(9, Math.min(30, 9 + ratio * 26));
+      if (Math.sqrt((mx-x)**2 + (my-y)**2) < r + 8) {
+        selectedDistrict = dist;
+        showDistrictInfo(dist);
+        drawKarnatakaMap();
+      }
     });
   };
 }
 
 function showDistrictInfo(dist) {
+
   const val=getDistrictValue(dist), max=Math.max(...CRIME_DATA.districts.map(d=>getDistrictValue(d)));
   const ratio=val/max;
   const {color,label}=getRiskColor(ratio);
@@ -1301,4 +1489,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Check hash or start landing
   const isApp = window.location.hash === '#app';
   if(isApp) enterDashboard();
+
+  // ---- GLOBAL: Prevent all href="#" links from jumping to top ----
+  document.addEventListener('click', function(e) {
+    const a = e.target.closest('a[href="#"]');
+    if (a) e.preventDefault();
+  }, true); // capture phase — fires before onclick
 });
