@@ -1604,28 +1604,12 @@ function handleEmailAuth(event) {
   submitBtn.disabled = true;
   submitBtn.innerHTML = `<span class="typing-indicator" style="display:inline-flex;align-items:center;gap:3px;justify-content:center"><span></span><span></span><span></span></span> ${isSignUpMode ? 'Registering...' : 'Signing in...'}`;
 
-  const isLocalFile = window.location.protocol === 'file:';
   const isFirebaseLoaded = typeof window.signInWithEmail === 'function' && typeof window.signUpWithEmail === 'function';
 
-  if (isLocalFile || !isFirebaseLoaded) {
-    console.log("Local or offline environment mock email auth bypass.");
-    setTimeout(() => {
-      submitBtn.disabled = false;
-      submitBtn.textContent = originalText;
-      
-      const mockUser = {
-        displayName: email.split('@')[0],
-        email: email,
-        photoURL: "https://www.w3schools.com/howto/img_avatar.png"
-      };
-      
-      currentUser = mockUser;
-      document.getElementById('user-display-name').textContent = mockUser.displayName;
-      document.getElementById('user-display-email').textContent = mockUser.email;
-      document.getElementById('user-avatar').src = mockUser.photoURL;
-      
-      enterDashboard();
-    }, 1000);
+  if (!isFirebaseLoaded) {
+    alert("Firebase Auth is loading or failed to connect. Please check your internet connection.");
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
     return;
   }
 
@@ -1641,39 +1625,17 @@ function handleEmailAuth(event) {
     })
     .catch((error) => {
       console.error("Email authentication failed:", error);
-      if (error.code === 'auth/operation-not-supported-in-this-environment' || error.code === 'auth/unauthorized-domain') {
-        console.warn("Firebase Auth environment error. Bypassing with mock account...");
-        setTimeout(() => {
-          submitBtn.disabled = false;
-          submitBtn.textContent = originalText;
-          
-          const mockUser = {
-            displayName: email.split('@')[0],
-            email: email,
-            photoURL: "https://www.w3schools.com/howto/img_avatar.png"
-          };
-          currentUser = mockUser;
-          document.getElementById('user-display-name').textContent = mockUser.displayName;
-          document.getElementById('user-display-email').textContent = mockUser.email;
-          document.getElementById('user-avatar').src = mockUser.photoURL;
-          
-          enterDashboard();
-        }, 800);
-      } else {
-        alert("Authentication Error: " + error.message);
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-      }
+      alert("Authentication Error: " + error.message);
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
     });
 }
 
 function handleSignIn() {
-  const isLocalFile = window.location.protocol === 'file:';
   const isFirebaseLoaded = typeof window.signInWithGoogle === 'function';
 
-  if (isLocalFile || !isFirebaseLoaded) {
-    console.log("Local execution or offline detected. Using local authentication bypass.");
-    triggerMockSignIn();
+  if (!isFirebaseLoaded) {
+    alert("Firebase Auth is loading or failed to connect. Please check your internet connection.");
     return;
   }
 
@@ -1688,46 +1650,16 @@ function handleSignIn() {
     })
     .catch((error) => {
       console.error("Login failed:", error);
-      if (error.code === 'auth/operation-not-supported-in-this-environment' || error.code === 'auth/unauthorized-domain') {
-        console.warn("Firebase Auth environment error. Redirecting to mock login bypass...");
-        triggerMockSignIn();
-      } else {
-        alert("Authentication failed: " + error.message);
-        btn.disabled = false;
-        btn.innerHTML = originalContent;
-      }
+      alert("Authentication failed: " + error.message);
+      btn.disabled = false;
+      btn.innerHTML = originalContent;
     });
 }
 
-function triggerMockSignIn() {
-  const btn = document.getElementById('btn-google-signin');
-  const originalContent = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = `<span class="typing-indicator" style="display:inline-flex;align-items:center;gap:3px;justify-content:center"><span></span><span></span><span></span></span> Bypass active...`;
-  
-  setTimeout(() => {
-    const mockUser = {
-      displayName: "Datathon Innovator",
-      email: "innovator@datathon.com",
-      photoURL: "https://storage.googleapis.com/vision-hack2skill-production/innovator/USER00666542/1780112526828-1779253126220GeminiGeneratedImageq5xor9q5xor9q5xo1.webp"
-    };
-    
-    currentUser = mockUser;
-    document.getElementById('user-display-name').textContent = mockUser.displayName;
-    document.getElementById('user-display-email').textContent = mockUser.email;
-    document.getElementById('user-avatar').src = mockUser.photoURL;
-    
-    btn.disabled = false;
-    btn.innerHTML = originalContent;
-    enterDashboard();
-  }, 1000);
-}
-
 function handleSignOut() {
-  const isLocalFile = window.location.protocol === 'file:';
   const isFirebaseLoaded = typeof window.signOutFromFirebase === 'function';
 
-  if (isLocalFile || !isFirebaseLoaded || (currentUser && currentUser.email === 'innovator@datathon.com') || (currentUser && currentUser.photoURL === "https://www.w3schools.com/howto/img_avatar.png")) {
+  if (!isFirebaseLoaded) {
     currentUser = null;
     document.getElementById('user-display-name').textContent = "Guest User";
     document.getElementById('user-display-email').textContent = "";
