@@ -1,5 +1,5 @@
 /* ---- LIGHT THEME OVERRIDES ---- */
-[data-theme="light"] {
+:root[data-theme="light"] {
   --bg: #f0f4f8;
   --bg-panel: #e8edf5;
   --bg-card: #ffffff;
@@ -8,6 +8,7 @@
   --border: rgba(0,0,0,0.08);
   --border-a: rgba(79,70,229,0.35);
   --txt: #0f172a;
+  --txt1: #0f172a;
   --txt2: #334155;
   --txt3: #64748b;
   --purple: #7c3aed;
@@ -769,7 +770,7 @@
   --bg: #080b14; --bg-panel: #0d1117; --bg-card: #111827;
   --bg-card-h: #161f2e; --bg-side: #0a0e1a;
   --border: rgba(255,255,255,0.07); --border-a: rgba(168,85,247,0.3);
-  --txt: #f1f5f9; --txt2: #94a3b8; --txt3: #475569;
+  --txt: #f1f5f9; --txt1: #f1f5f9; --txt2: #94a3b8; --txt3: #475569;
   --purple: #a855f7; --blue: #3b82f6; --green: #10b981;
   --amber: #f59e0b; --red: #ef4444; --pink: #ec4899;
   --cyan: #06b6d4; --orange: #f97316; --violet: #8b5cf6;
@@ -1806,7 +1807,25 @@ button{font-family:inherit;cursor:pointer}
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
 }
 [data-theme="light"] .user-dropdown {
-  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  background: #ffffff !important;
+  border-color: rgba(0,0,0,0.08) !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+}
+[data-theme="light"] .user-name {
+  color: #0f172a !important;
+}
+[data-theme="light"] .user-email {
+  color: #64748b !important;
+}
+[data-theme="light"] .dropdown-divider {
+  border-top-color: rgba(0,0,0,0.08) !important;
+}
+[data-theme="light"] .dropdown-item {
+  color: #334155 !important;
+}
+[data-theme="light"] .dropdown-item:hover {
+  background: rgba(239,68,68,0.06) !important;
+  color: #dc2626 !important;
 }
 .user-dropdown.hidden {
   opacity: 0; transform: scale(0.95); visibility: hidden; pointer-events: none;
