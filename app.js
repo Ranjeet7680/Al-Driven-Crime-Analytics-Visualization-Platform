@@ -1569,37 +1569,84 @@ function closeDemoModal(event) {
 }
 
 function handleSignIn() {
-  if (window.signInWithGoogle) {
-    const btn = document.getElementById('btn-google-signin');
-    const originalContent = btn.innerHTML;
-    btn.disabled = true;
-    btn.innerHTML = `<span class="typing-indicator" style="display:inline-flex;align-items:center;gap:3px;justify-content:center"><span></span><span></span><span></span></span> Signing in...`;
-    
-    window.signInWithGoogle()
-      .then((result) => {
-        console.log("Logged in successfully:", result.user);
-      })
-      .catch((error) => {
-        console.error("Login failed:", error);
-        alert("Authentication failed. Please verify your settings and try again.");
+  const isLocalFile = window.location.protocol === 'file:';
+  const isFirebaseLoaded = typeof window.signInWithGoogle === 'function';
+
+  if (isLocalFile || !isFirebaseLoaded) {
+    console.log("Local execution or offline detected. Using local authentication bypass.");
+    triggerMockSignIn();
+    return;
+  }
+
+  const btn = document.getElementById('btn-google-signin');
+  const originalContent = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<span class="typing-indicator" style="display:inline-flex;align-items:center;gap:3px;justify-content:center"><span></span><span></span><span></span></span> Signing in...`;
+  
+  window.signInWithGoogle()
+    .then((result) => {
+      console.log("Logged in successfully:", result.user);
+    })
+    .catch((error) => {
+      console.error("Login failed:", error);
+      if (error.code === 'auth/operation-not-supported-in-this-environment' || error.code === 'auth/unauthorized-domain') {
+        console.warn("Firebase Auth environment error. Redirecting to mock login bypass...");
+        triggerMockSignIn();
+      } else {
+        alert("Authentication failed: " + error.message);
         btn.disabled = false;
         btn.innerHTML = originalContent;
-      });
-  } else {
-    console.error("Firebase Auth sign-in method not loaded.");
-  }
+      }
+    });
+}
+
+function triggerMockSignIn() {
+  const btn = document.getElementById('btn-google-signin');
+  const originalContent = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<span class="typing-indicator" style="display:inline-flex;align-items:center;gap:3px;justify-content:center"><span></span><span></span><span></span></span> Bypass active...`;
+  
+  setTimeout(() => {
+    const mockUser = {
+      displayName: "Datathon Innovator",
+      email: "innovator@datathon.com",
+      photoURL: "https://storage.googleapis.com/vision-hack2skill-production/innovator/USER00666542/1780112526828-1779253126220GeminiGeneratedImageq5xor9q5xor9q5xo1.webp"
+    };
+    
+    currentUser = mockUser;
+    document.getElementById('user-display-name').textContent = mockUser.displayName;
+    document.getElementById('user-display-email').textContent = mockUser.email;
+    document.getElementById('user-avatar').src = mockUser.photoURL;
+    
+    btn.disabled = false;
+    btn.innerHTML = originalContent;
+    enterDashboard();
+  }, 1000);
 }
 
 function handleSignOut() {
-  if (window.signOutFromFirebase) {
-    window.signOutFromFirebase()
-      .then(() => {
-        console.log("Logged out successfully");
-      })
-      .catch((error) => {
-        console.error("Logout failed:", error);
-      });
+  const isLocalFile = window.location.protocol === 'file:';
+  const isFirebaseLoaded = typeof window.signOutFromFirebase === 'function';
+
+  if (isLocalFile || !isFirebaseLoaded || (currentUser && currentUser.email === 'innovator@datathon.com')) {
+    currentUser = null;
+    document.getElementById('user-display-name').textContent = "Guest User";
+    document.getElementById('user-display-email').textContent = "";
+    document.getElementById('user-avatar').src = "https://www.w3schools.com/howto/img_avatar.png";
+    
+    document.getElementById('main-app').classList.add('hidden');
+    document.getElementById('login-page').classList.add('hidden');
+    document.getElementById('landing-page').classList.remove('hidden');
+    return;
   }
+
+  window.signOutFromFirebase()
+    .then(() => {
+      console.log("Logged out successfully");
+    })
+    .catch((error) => {
+      console.error("Logout failed:", error);
+    });
 }
 
 function toggleUserMenu() {
