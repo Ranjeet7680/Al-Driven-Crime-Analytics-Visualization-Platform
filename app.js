@@ -1552,20 +1552,13 @@ function initTeam() {
     </div>`).join('');
 }
 
-// ===================== DEMO MODAL AND AUTH HANDLERS =====================
+// ===================== DEMO SECTION AND AUTH HANDLERS =====================
 function openDemoModal() {
-  document.getElementById('demo-modal').classList.remove('hidden');
+  scrollToSection('demo-section');
 }
 
 function closeDemoModal(event) {
   if (event) event.stopPropagation();
-  document.getElementById('demo-modal').classList.add('hidden');
-  const iframe = document.querySelector('#demo-modal iframe');
-  if (iframe) {
-    const src = iframe.src;
-    iframe.src = '';
-    iframe.src = src;
-  }
 }
 
 let isSignUpMode = false;

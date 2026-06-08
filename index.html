@@ -47,6 +47,7 @@
     </div>
     <div class="landing-nav-links">
       <a href="#features" onclick="event.preventDefault();scrollToSection('features')" id="lnk-features">Features</a>
+      <a href="#demo-section" onclick="event.preventDefault();scrollToSection('demo-section')" id="lnk-demo">Demo</a>
       <a href="#stats-section" onclick="event.preventDefault();scrollToSection('stats-section')" id="lnk-stats">Statistics</a>
       <a href="#team-section" onclick="event.preventDefault();scrollToSection('team-section')" id="lnk-team">Team</a>
       <button class="nav-cta" onclick="enterDashboard()">Launch Platform →</button>
@@ -74,7 +75,7 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
         View AI Predictions
       </button>
-      <button class="btn-ghost" onclick="openDemoModal()">
+      <button class="btn-ghost" onclick="scrollToSection('demo-section')">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         Watch Demo
       </button>
@@ -150,6 +151,18 @@
         <h3>AI Explainability</h3>
         <p>Transparent AI — see exactly why predictions were made with confidence factors and evidence.</p>
         <div class="feat-tag">XAI · Transparent</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo Section -->
+  <section class="demo-section" id="demo-section">
+    <div class="section-label">📺 VIDEO DEMO</div>
+    <h2 class="features-title">See CrimeScope AI 2.0 In Action</h2>
+    <p class="features-sub">Watch our comprehensive video walkthrough demonstrating prediction engines, chatbot operations, and heatmaps.</p>
+    <div class="demo-video-container">
+      <div class="demo-video-wrapper">
+        <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7468196938115428353?collapsed=1" height="541" width="504" frameborder="0" allowfullscreen="" title="Embedded post"></iframe>
       </div>
     </div>
   </section>
@@ -711,16 +724,7 @@
   </div>
 </div>
 
-<!-- ===================== DEMO VIDEO MODAL ===================== -->
-<div id="demo-modal" class="voice-modal hidden" onclick="closeDemoModal(event)">
-  <div class="voice-modal-inner" style="max-width: 560px; padding: 24px; position: relative;" onclick="event.stopPropagation()">
-    <button onclick="closeDemoModal()" style="position: absolute; top: 12px; right: 12px; background: transparent; border: none; color: var(--txt3); font-size: 20px; cursor: pointer; padding: 4px; z-index: 10;">✕</button>
-    <div class="voice-modal-title" style="margin-bottom: 16px;">CrimeScope AI 2.0 Demo</div>
-    <div style="display: flex; justify-content: center; align-items: center; background: #000; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
-      <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7468196938115428353?collapsed=1" height="541" width="504" frameborder="0" allowfullscreen="" title="Embedded post" style="border: none; max-width: 100%;"></iframe>
-    </div>
-  </div>
-</div>
+<!-- Demo modal removed as it is now a native welcome page section -->
 
 <!-- ===== SIDEBAR BACKDROP (mobile touch-close) ===== -->
 <div id="sidebar-backdrop" class="sidebar-backdrop" onclick="closeSidebarMobile()"></div>
