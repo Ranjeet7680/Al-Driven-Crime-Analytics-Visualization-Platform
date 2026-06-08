@@ -4,6 +4,7 @@
   "description": "<div align=\"center\">",
   "main": "app.js",
   "scripts": {
+    "start": "npx http-server ./ -p 3000",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
