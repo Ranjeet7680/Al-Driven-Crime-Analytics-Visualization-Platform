@@ -167,14 +167,30 @@ function scrollToSection(id) {
   document.addEventListener('DOMContentLoaded', attachNavScroll);
 })();
 
+let currentUser = null;
+
 function enterDashboard() {
-  document.getElementById('landing-page').classList.add('hidden');
-  document.getElementById('main-app').classList.remove('hidden');
-  // Clean URL hash to avoid 'file://' security warnings
-  if (window.location.hash) {
-    history.replaceState(null, '', window.location.pathname);
+  if (currentUser) {
+    document.getElementById('landing-page').classList.add('hidden');
+    document.getElementById('login-page').classList.add('hidden');
+    document.getElementById('main-app').classList.remove('hidden');
+    // Clean URL hash to avoid 'file://' security warnings
+    if (window.location.hash) {
+      history.replaceState(null, '', window.location.pathname);
+    }
+    setTimeout(() => { showPage('overview'); }, 100);
+  } else {
+    // Redirect to login page
+    document.getElementById('landing-page').classList.add('hidden');
+    document.getElementById('main-app').classList.add('hidden');
+    document.getElementById('login-page').classList.remove('hidden');
   }
-  setTimeout(() => { showPage('overview'); }, 100);
+}
+
+function goBackToWelcome() {
+  document.getElementById('login-page').classList.add('hidden');
+  document.getElementById('main-app').classList.add('hidden');
+  document.getElementById('landing-page').classList.remove('hidden');
 }
 
 // ===================== PAGE NAVIGATION =====================
@@ -1057,6 +1073,20 @@ function getAIResponse(query) {
   return chatKnowledge.defaultReply(query);
 }
 
+let shouldSpeakResponse = false;
+
+function speakText(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    let cleanText = text.replace(/<\/?[^>]+(>|$)/g, "");
+    cleanText = cleanText.replace(/&nbsp;/g, " ");
+    cleanText = cleanText.replace(/&[a-z0-9#]+;/gi, "");
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang = 'en-IN';
+    window.speechSynthesis.speak(utterance);
+  }
+}
+
 function sendChat(text) {
   const input = document.getElementById('chat-input');
   const msg = text || input.value.trim();
@@ -1075,7 +1105,13 @@ function sendChat(text) {
   setTimeout(() => {
     const typingEl = document.getElementById(typingId);
     if (typingEl) typingEl.remove();
-    addChatMessage(getAIResponse(msg), 'bot');
+    const reply = getAIResponse(msg);
+    addChatMessage(reply, 'bot');
+    
+    if (shouldSpeakResponse) {
+      speakText(reply);
+      shouldSpeakResponse = false;
+    }
   }, 900 + Math.random() * 600);
 }
 
@@ -1090,7 +1126,6 @@ function addChatMessage(content, role) {
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
 }
-
 // Voice for chat
 let chatRecognition = null;
 function toggleChatVoice() {
@@ -1106,7 +1141,13 @@ function toggleChatVoice() {
   chatRecognition.onresult = (e) => {
     const transcript = Array.from(e.results).map(r=>r[0].transcript).join('');
     document.getElementById('chat-input').value = transcript;
-    if (e.results[e.results.length-1].isFinal) { sendChat(transcript); chatRecognition=null; btn.classList.remove('active'); ind.classList.remove('active'); }
+    if (e.results[e.results.length-1].isFinal) { 
+      shouldSpeakResponse = true;
+      sendChat(transcript); 
+      chatRecognition=null; 
+      btn.classList.remove('active'); 
+      ind.classList.remove('active'); 
+    }
   };
   chatRecognition.onend = () => { chatRecognition=null; btn.classList.remove('active'); ind.classList.remove('active'); };
   chatRecognition.start();
@@ -1128,13 +1169,46 @@ function toggleVoice() {
     if (e.results[e.results.length-1].isFinal) {
       stopVoice();
       const q = transcript.toLowerCase();
-      if (q.includes('heatmap') || q.includes('map')) showPage('heatmap');
-      else if (q.includes('predict')) showPage('ai-prediction');
-      else if (q.includes('alert')) showPage('alerts');
-      else if (q.includes('district')) showPage('district');
-      else if (q.includes('team')) showPage('team');
-      else if (q.includes('chat') || q.includes('assistant')) { showPage('ai-assistant'); setTimeout(()=>sendChat(transcript),400); }
-      else { showPage('ai-assistant'); setTimeout(()=>sendChat(transcript),400); }
+      shouldSpeakResponse = true;
+      
+      if (q.includes('heatmap') || q.includes('map')) {
+        showPage('heatmap');
+        speakText("Opening Crime Hotspot Map");
+      } else if (q.includes('predict') || q.includes('forecast')) {
+        showPage('ai-prediction');
+        speakText("Opening AI Prediction Engine");
+      } else if (q.includes('alert') || q.includes('notification')) {
+        showPage('alerts');
+        speakText("Opening Alert Center");
+      } else if (q.includes('district') || q.includes('ranking')) {
+        showPage('district');
+        speakText("Opening District-wise Analysis");
+      } else if (q.includes('trend') || q.includes('pattern')) {
+        showPage('trends');
+        speakText("Opening Trends and Patterns");
+      } else if (q.includes('vulnerable') || q.includes('women') || q.includes('children')) {
+        showPage('vulnerable');
+        speakText("Opening Vulnerable Groups Analysis");
+      } else if (q.includes('category') || q.includes('type') || q.includes('head')) {
+        showPage('crime-types');
+        speakText("Opening Crime Category Explorer");
+      } else if (q.includes('simulator') || q.includes('digital twin') || q.includes('sim')) {
+        showPage('simulator');
+        speakText("Opening Digital Twin Simulator");
+      } else if (q.includes('explain') || q.includes('xai') || q.includes('why')) {
+        showPage('explainability');
+        speakText("Opening AI Explainability Dashboard");
+      } else if (q.includes('team') || q.includes('innovator') || q.includes('author')) {
+        showPage('team');
+        speakText("Showing Innovator Team page");
+      } else if (q.includes('overview') || q.includes('dashboard') || q.includes('main')) {
+        showPage('overview');
+        speakText("Opening Dashboard Overview");
+      } else {
+        showPage('ai-assistant');
+        speakText("Routing query to AI Copilot");
+        setTimeout(() => sendChat(transcript), 400);
+      }
     }
   };
   globalRecognition.onend = stopVoice;
@@ -1478,6 +1552,70 @@ function initTeam() {
     </div>`).join('');
 }
 
+// ===================== DEMO MODAL AND AUTH HANDLERS =====================
+function openDemoModal() {
+  document.getElementById('demo-modal').classList.remove('hidden');
+}
+
+function closeDemoModal(event) {
+  if (event) event.stopPropagation();
+  document.getElementById('demo-modal').classList.add('hidden');
+  const iframe = document.querySelector('#demo-modal iframe');
+  if (iframe) {
+    const src = iframe.src;
+    iframe.src = '';
+    iframe.src = src;
+  }
+}
+
+function handleSignIn() {
+  if (window.signInWithGoogle) {
+    const btn = document.getElementById('btn-google-signin');
+    const originalContent = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<span class="typing-indicator" style="display:inline-flex;align-items:center;gap:3px;justify-content:center"><span></span><span></span><span></span></span> Signing in...`;
+    
+    window.signInWithGoogle()
+      .then((result) => {
+        console.log("Logged in successfully:", result.user);
+      })
+      .catch((error) => {
+        console.error("Login failed:", error);
+        alert("Authentication failed. Please verify your settings and try again.");
+        btn.disabled = false;
+        btn.innerHTML = originalContent;
+      });
+  } else {
+    console.error("Firebase Auth sign-in method not loaded.");
+  }
+}
+
+function handleSignOut() {
+  if (window.signOutFromFirebase) {
+    window.signOutFromFirebase()
+      .then(() => {
+        console.log("Logged out successfully");
+      })
+      .catch((error) => {
+        console.error("Logout failed:", error);
+      });
+  }
+}
+
+function toggleUserMenu() {
+  const dropdown = document.getElementById('user-dropdown');
+  if (dropdown) dropdown.classList.toggle('hidden');
+}
+
+// Close user dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  const profile = document.getElementById('user-profile');
+  const dropdown = document.getElementById('user-dropdown');
+  if (profile && dropdown && !profile.contains(e.target)) {
+    dropdown.classList.add('hidden');
+  }
+});
+
 // ===================== INITIALIZATION =====================
 document.addEventListener('DOMContentLoaded', () => {
   applyStoredTheme();
@@ -1486,6 +1624,37 @@ document.addEventListener('DOMContentLoaded', () => {
   // Duplicate ticker for seamless loop
   const track = document.getElementById('ticker-track');
   if(track) track.innerHTML += track.innerHTML;
+  
+  // Set up Firebase Auth state change listener
+  if (window.onAuthStateChangedListener) {
+    window.onAuthStateChangedListener((user) => {
+      currentUser = user;
+      if (user) {
+        console.log("Auth State Changed: Logged In", user.displayName);
+        document.getElementById('user-display-name').textContent = user.displayName || "Authorized User";
+        document.getElementById('user-display-email').textContent = user.email || "";
+        if (user.photoURL) {
+          document.getElementById('user-avatar').src = user.photoURL;
+        }
+        
+        const isLoginVisible = !document.getElementById('login-page').classList.contains('hidden');
+        if (isLoginVisible) {
+          enterDashboard();
+        }
+      } else {
+        console.log("Auth State Changed: Logged Out");
+        document.getElementById('user-display-name').textContent = "Guest User";
+        document.getElementById('user-display-email').textContent = "";
+        document.getElementById('user-avatar').src = "https://www.w3schools.com/howto/img_avatar.png";
+        
+        // Redirect back to welcome screen on logout
+        document.getElementById('main-app').classList.add('hidden');
+        document.getElementById('login-page').classList.add('hidden');
+        document.getElementById('landing-page').classList.remove('hidden');
+      }
+    });
+  }
+
   // Check hash or start landing
   const isApp = window.location.hash === '#app';
   if(isApp) enterDashboard();
