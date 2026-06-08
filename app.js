@@ -1570,19 +1570,36 @@ function toggleAuthMode() {
   const submitBtn = document.getElementById('btn-auth-submit');
   const toggleBtn = document.getElementById('btn-auth-toggle');
   const toggleText = document.getElementById('auth-toggle-text');
+  const desc = document.getElementById('auth-desc');
   
   if (isSignUpMode) {
-    title.textContent = "Create Account";
-    subtitle.textContent = "Register to access CrimeScope AI Platform";
-    submitBtn.textContent = "Sign Up";
+    title.textContent = "Get Started";
+    subtitle.innerHTML = 'Create your <span class="highlight" style="color: var(--purple); font-weight: 700;">CrimeScope AI</span> Account';
+    desc.textContent = "Start profiling and predicting smart city insights";
+    submitBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg> Sign Up`;
     toggleBtn.textContent = "Sign In";
     toggleText.textContent = "Already have an account?";
   } else {
-    title.textContent = "Sign In to CrimeScope AI";
-    subtitle.textContent = "Access Karnataka Smart Policing Platform";
-    submitBtn.textContent = "Sign In";
+    title.textContent = "Welcome Back";
+    subtitle.innerHTML = 'Sign in to <span class="highlight" style="color: var(--purple); font-weight: 700;">CrimeScope AI</span>';
+    desc.textContent = "Advanced AI-Powered Crime Profiling Platform";
+    submitBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Sign In`;
     toggleBtn.textContent = "Sign Up";
     toggleText.textContent = "Don't have an account?";
+  }
+}
+
+function togglePasswordVisibility() {
+  const pwdInput = document.getElementById('auth-password');
+  const eyeIconSvg = document.getElementById('eye-icon-svg');
+  if (!pwdInput) return;
+  
+  if (pwdInput.type === 'password') {
+    pwdInput.type = 'text';
+    eyeIconSvg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  } else {
+    pwdInput.type = 'password';
+    eyeIconSvg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
   }
 }
 
@@ -1593,7 +1610,7 @@ function handleEmailAuth(event) {
   const password = document.getElementById('auth-password').value;
   
   const submitBtn = document.getElementById('btn-auth-submit');
-  const originalText = submitBtn.textContent;
+  const originalHTML = submitBtn.innerHTML;
   submitBtn.disabled = true;
   submitBtn.innerHTML = `<span class="typing-indicator" style="display:inline-flex;align-items:center;gap:3px;justify-content:center"><span></span><span></span><span></span></span> ${isSignUpMode ? 'Registering...' : 'Signing in...'}`;
 
@@ -1602,7 +1619,7 @@ function handleEmailAuth(event) {
   if (!isFirebaseLoaded) {
     alert("Firebase Auth is loading or failed to connect. Please check your internet connection.");
     submitBtn.disabled = false;
-    submitBtn.textContent = originalText;
+    submitBtn.innerHTML = originalHTML;
     return;
   }
 
@@ -1614,13 +1631,13 @@ function handleEmailAuth(event) {
     .then((result) => {
       console.log("Email authentication success:", result.user);
       submitBtn.disabled = false;
-      submitBtn.textContent = originalText;
+      submitBtn.innerHTML = originalHTML;
     })
     .catch((error) => {
       console.error("Email authentication failed:", error);
       alert("Authentication Error: " + error.message);
       submitBtn.disabled = false;
-      submitBtn.textContent = originalText;
+      submitBtn.innerHTML = originalHTML;
     });
 }
 
