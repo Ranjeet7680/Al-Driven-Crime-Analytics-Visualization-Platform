@@ -1568,6 +1568,105 @@ function closeDemoModal(event) {
   }
 }
 
+let isSignUpMode = false;
+
+function toggleAuthMode() {
+  isSignUpMode = !isSignUpMode;
+  const title = document.getElementById('auth-title');
+  const subtitle = document.getElementById('auth-subtitle');
+  const submitBtn = document.getElementById('btn-auth-submit');
+  const toggleBtn = document.getElementById('btn-auth-toggle');
+  const toggleText = document.getElementById('auth-toggle-text');
+  
+  if (isSignUpMode) {
+    title.textContent = "Create Account";
+    subtitle.textContent = "Register to access CrimeScope AI Platform";
+    submitBtn.textContent = "Sign Up";
+    toggleBtn.textContent = "Sign In";
+    toggleText.textContent = "Already have an account?";
+  } else {
+    title.textContent = "Sign In to CrimeScope AI";
+    subtitle.textContent = "Access Karnataka Smart Policing Platform";
+    submitBtn.textContent = "Sign In";
+    toggleBtn.textContent = "Sign Up";
+    toggleText.textContent = "Don't have an account?";
+  }
+}
+
+function handleEmailAuth(event) {
+  if (event) event.preventDefault();
+  
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  
+  const submitBtn = document.getElementById('btn-auth-submit');
+  const originalText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = `<span class="typing-indicator" style="display:inline-flex;align-items:center;gap:3px;justify-content:center"><span></span><span></span><span></span></span> ${isSignUpMode ? 'Registering...' : 'Signing in...'}`;
+
+  const isLocalFile = window.location.protocol === 'file:';
+  const isFirebaseLoaded = typeof window.signInWithEmail === 'function' && typeof window.signUpWithEmail === 'function';
+
+  if (isLocalFile || !isFirebaseLoaded) {
+    console.log("Local or offline environment mock email auth bypass.");
+    setTimeout(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+      
+      const mockUser = {
+        displayName: email.split('@')[0],
+        email: email,
+        photoURL: "https://www.w3schools.com/howto/img_avatar.png"
+      };
+      
+      currentUser = mockUser;
+      document.getElementById('user-display-name').textContent = mockUser.displayName;
+      document.getElementById('user-display-email').textContent = mockUser.email;
+      document.getElementById('user-avatar').src = mockUser.photoURL;
+      
+      enterDashboard();
+    }, 1000);
+    return;
+  }
+
+  const authPromise = isSignUpMode 
+    ? window.signUpWithEmail(email, password)
+    : window.signInWithEmail(email, password);
+
+  authPromise
+    .then((result) => {
+      console.log("Email authentication success:", result.user);
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+    })
+    .catch((error) => {
+      console.error("Email authentication failed:", error);
+      if (error.code === 'auth/operation-not-supported-in-this-environment' || error.code === 'auth/unauthorized-domain') {
+        console.warn("Firebase Auth environment error. Bypassing with mock account...");
+        setTimeout(() => {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+          
+          const mockUser = {
+            displayName: email.split('@')[0],
+            email: email,
+            photoURL: "https://www.w3schools.com/howto/img_avatar.png"
+          };
+          currentUser = mockUser;
+          document.getElementById('user-display-name').textContent = mockUser.displayName;
+          document.getElementById('user-display-email').textContent = mockUser.email;
+          document.getElementById('user-avatar').src = mockUser.photoURL;
+          
+          enterDashboard();
+        }, 800);
+      } else {
+        alert("Authentication Error: " + error.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    });
+}
+
 function handleSignIn() {
   const isLocalFile = window.location.protocol === 'file:';
   const isFirebaseLoaded = typeof window.signInWithGoogle === 'function';
@@ -1628,7 +1727,7 @@ function handleSignOut() {
   const isLocalFile = window.location.protocol === 'file:';
   const isFirebaseLoaded = typeof window.signOutFromFirebase === 'function';
 
-  if (isLocalFile || !isFirebaseLoaded || (currentUser && currentUser.email === 'innovator@datathon.com')) {
+  if (isLocalFile || !isFirebaseLoaded || (currentUser && currentUser.email === 'innovator@datathon.com') || (currentUser && currentUser.photoURL === "https://www.w3schools.com/howto/img_avatar.png")) {
     currentUser = null;
     document.getElementById('user-display-name').textContent = "Guest User";
     document.getElementById('user-display-email').textContent = "";

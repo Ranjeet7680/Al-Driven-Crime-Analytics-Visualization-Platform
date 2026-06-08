@@ -235,34 +235,39 @@
       <div class="login-logo-wrap">
         <img src="https://storage.googleapis.com/vision-hack2skill-production/innovator/USER00666542/1780112526828-1779253126220GeminiGeneratedImageq5xor9q5xor9q5xo1.webp" alt="CrimeScope AI" class="login-card-logo" />
       </div>
-      <h2 class="login-title">Sign In to CrimeScope AI</h2>
-      <p class="login-subtitle">Access Karnataka Smart Policing Platform</p>
+      <h2 class="login-title" id="auth-title">Sign In to CrimeScope AI</h2>
+      <p class="login-subtitle" id="auth-subtitle">Access Karnataka Smart Policing Platform</p>
       
-      <div class="login-features-list">
-        <div class="login-feature-item">
-          <span class="lf-icon">🧠</span>
-          <div class="lf-text">
-            <strong>AI-Driven Predictions</strong>
-            <span>24h-30d crime trend forecasts</span>
-          </div>
+      <!-- Email & Password Form -->
+      <form id="auth-form" onsubmit="handleEmailAuth(event)" class="auth-form">
+        <div class="form-group">
+          <label for="auth-email">Email Address</label>
+          <input type="email" id="auth-email" required placeholder="Enter your email" />
         </div>
-        <div class="login-feature-item">
-          <span class="lf-icon">🚨</span>
-          <div class="lf-text">
-            <strong>Real-time Alerting</strong>
-            <span>Instant anomaly notifications</span>
-          </div>
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label for="auth-password">Password</label>
+          <input type="password" id="auth-password" required placeholder="Enter your password" minlength="6" />
         </div>
+        <button type="submit" class="btn-primary btn-auth-submit" id="btn-auth-submit" style="width: 100%; min-height: 44px; font-weight: 600;">Sign In</button>
+      </form>
+      
+      <div class="auth-divider">
+        <span>OR</span>
       </div>
       
-      <button class="btn-google-signin" onclick="handleSignIn()" id="btn-google-signin">
+      <button class="btn-google-signin" onclick="handleSignIn()" id="btn-google-signin" style="margin-bottom: 20px;">
         <svg class="google-icon-svg" viewBox="0 0 24 24" width="18" height="18">
           <path fill="#ea4335" d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.136 4.114a5.79 5.79 0 0 1-5.79-5.79 5.79 5.79 0 0 1 5.79-5.79c1.558 0 2.977.58 4.06 1.528l3.08-3.08A9.878 9.878 0 0 0 12.24 2c-5.523 0-10 4.477-10 10s4.477 10 10 10c5.796 0 9.643-4.07 9.643-9.82a9.42 9.42 0 0 0-.17-1.895h-9.473Z"/>
         </svg>
         <span>Sign in with Google</span>
       </button>
       
-      <button class="btn-login-back" onclick="goBackToWelcome()">
+      <div class="auth-toggle-row" style="font-size: 13px; color: var(--txt3); margin-top: 10px;">
+        <span id="auth-toggle-text">Don't have an account?</span>
+        <button onclick="toggleAuthMode()" class="btn-link" id="btn-auth-toggle" style="background: transparent; border: none; color: var(--purple); font-weight: 600; cursor: pointer; padding: 0 4px; font-family: inherit;">Sign Up</button>
+      </div>
+      
+      <button class="btn-login-back" onclick="goBackToWelcome()" style="margin-top: 24px; border: none; background: transparent; color: var(--txt3); cursor: pointer;">
         ← Back to Welcome Page
       </button>
     </div>

@@ -1840,4 +1840,76 @@ button{font-family:inherit;cursor:pointer}
   stroke: currentColor;
 }
 
+/* Form inputs & dividers styling */
+.auth-form {
+  margin-top: 20px;
+  text-align: left;
+}
+.form-group {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.form-group label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--txt2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.form-group input {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--txt1);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+[data-theme="light"] .form-group input {
+  background: rgba(0, 0, 0, 0.02);
+}
+.form-group input:focus {
+  border-color: var(--purple);
+  background: rgba(168, 85, 247, 0.03);
+}
+.auth-divider {
+  position: relative;
+  text-align: center;
+  margin: 24px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.auth-divider::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border);
+  z-index: 1;
+}
+.auth-divider span {
+  background: var(--bg-card);
+  padding: 0 12px;
+  color: var(--txt3);
+  font-size: 11px;
+  font-weight: 600;
+  z-index: 2;
+  position: relative;
+}
+.btn-auth-submit {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-auth-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.25);
+}
+.btn-auth-submit:active {
+  transform: translateY(0);
+}
+
 
