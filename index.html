@@ -1463,10 +1463,25 @@
         <span class="nav-label">Our Team</span>
       </a>
 
-      <a href="#" class="nav-item" id="nav-settings" onclick="showPage('settings')">
-        <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
-        <span class="nav-label">Settings & Safety</span>
-      </a>
+      <div class="nav-item-accordion-wrap">
+        <a href="#" class="nav-item" id="nav-settings" onclick="toggleSettingsAccordion(event)">
+          <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+          <span class="nav-label">Settings & Safety</span>
+          <span class="accordion-chevron" style="margin-left:auto; transition: transform 0.2s; font-size: 10px;">▼</span>
+        </a>
+        <div class="nav-sub-menu hidden" id="settings-sub-menu">
+          <a href="#" class="nav-sub-item" onclick="navigateToSettingsTab('account', event)">Account & Profile</a>
+          <a href="#" class="nav-sub-item" onclick="navigateToSettingsTab('security', event)">Security & 2FA</a>
+          <a href="#" class="nav-sub-item" onclick="navigateToSettingsTab('privacy', event)">Privacy Controls</a>
+          <a href="#" class="nav-sub-item" onclick="navigateToSettingsTab('language', event)">Language Setup</a>
+          <a href="#" class="nav-sub-item" onclick="navigateToSettingsTab('accessibility', event)">Accessibility</a>
+          <a href="#" class="nav-sub-item" onclick="navigateToSettingsTab('referrals', event)">Referral Program</a>
+          <a href="#" class="nav-sub-item" onclick="navigateToSettingsTab('notifications', event)">Notification Setup</a>
+          <a href="#" class="nav-sub-item" onclick="navigateToSettingsTab('help', event)">Help & Feedback</a>
+          <a href="#" class="nav-sub-item" onclick="navigateToSettingsTab('premium', event)">Premium Features</a>
+          <a href="#" class="nav-sub-item" onclick="navigateToSettingsTab('about', event)">About App</a>
+        </div>
+      </div>
 
       <a href="#" class="nav-item" onclick="document.getElementById('landing-page').classList.remove('hidden');document.getElementById('main-app').classList.add('hidden')">
         <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></span>
@@ -1825,43 +1840,43 @@
         <div class="settings-wrapper">
           <!-- Left settings menu bar -->
           <div class="settings-sidebar">
-            <button class="settings-tab-link active" onclick="switchSettingsTab('account', this)">
+            <button class="settings-tab-link active" id="settings-tab-link-account" onclick="switchSettingsTab('account', this)">
               <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
               Account & Profile
             </button>
-            <button class="settings-tab-link" onclick="switchSettingsTab('security', this)">
+            <button class="settings-tab-link" id="settings-tab-link-security" onclick="switchSettingsTab('security', this)">
               <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
               Security & 2FA
             </button>
-            <button class="settings-tab-link" onclick="switchSettingsTab('privacy', this)">
+            <button class="settings-tab-link" id="settings-tab-link-privacy" onclick="switchSettingsTab('privacy', this)">
               <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
               Privacy Controls
             </button>
-            <button class="settings-tab-link" onclick="switchSettingsTab('language', this)">
+            <button class="settings-tab-link" id="settings-tab-link-language" onclick="switchSettingsTab('language', this)">
               <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
               Language Setup
             </button>
-            <button class="settings-tab-link" onclick="switchSettingsTab('accessibility', this)">
+            <button class="settings-tab-link" id="settings-tab-link-accessibility" onclick="switchSettingsTab('accessibility', this)">
               <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v8M8 12h8"></path></svg>
               Accessibility
             </button>
-            <button class="settings-tab-link" onclick="switchSettingsTab('referrals', this)">
+            <button class="settings-tab-link" id="settings-tab-link-referrals" onclick="switchSettingsTab('referrals', this)">
               <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M2 12h20M12 2v10M12 2a4 4 0 0 1 4 4c0 2-4 6-4 6s-4-4-4-4a4 4 0 0 1 4-4z"></path></svg>
               Referral Program
             </button>
-            <button class="settings-tab-link" onclick="switchSettingsTab('notifications', this)">
+            <button class="settings-tab-link" id="settings-tab-link-notifications" onclick="switchSettingsTab('notifications', this)">
               <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
               Notification Setup
             </button>
-            <button class="settings-tab-link" onclick="switchSettingsTab('help', this)">
+            <button class="settings-tab-link" id="settings-tab-link-help" onclick="switchSettingsTab('help', this)">
               <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"></path></svg>
               Help & Feedback
             </button>
-            <button class="settings-tab-link" onclick="switchSettingsTab('premium', this)">
+            <button class="settings-tab-link" id="settings-tab-link-premium" onclick="switchSettingsTab('premium', this)">
               <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
               Premium Features
             </button>
-            <button class="settings-tab-link" onclick="switchSettingsTab('about', this)">
+            <button class="settings-tab-link" id="settings-tab-link-about" onclick="switchSettingsTab('about', this)">
               <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
               About App
             </button>

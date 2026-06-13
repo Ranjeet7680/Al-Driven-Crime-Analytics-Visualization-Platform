@@ -2639,8 +2639,70 @@ function switchSettingsTab(tabName, btnElement) {
     targetPane.classList.add('active');
   }
   
+  // Synchronize main sidebar sub-menu highlights
+  const subMenu = document.getElementById('settings-sub-menu');
+  if (subMenu) {
+    subMenu.querySelectorAll('.nav-sub-item').forEach(item => {
+      item.classList.remove('active');
+      const clickAttr = item.getAttribute('onclick') || '';
+      if (clickAttr.includes(`'${tabName}'`)) {
+        item.classList.add('active');
+      }
+    });
+  }
+  
   if (localStorage.getItem('screenReader') === 'enabled') {
     speakText(`Switched to settings category ${tabName}`);
+  }
+}
+
+function toggleSettingsAccordion(event) {
+  if (event) event.preventDefault();
+  const subMenu = document.getElementById('settings-sub-menu');
+  const chevron = document.querySelector('#nav-settings .accordion-chevron');
+  if (subMenu) {
+    const isHidden = subMenu.classList.contains('hidden');
+    if (isHidden) {
+      subMenu.classList.remove('hidden');
+      if (chevron) chevron.style.transform = 'rotate(180deg)';
+    } else {
+      subMenu.classList.add('hidden');
+      if (chevron) chevron.style.transform = 'rotate(0deg)';
+    }
+  }
+}
+
+function navigateToSettingsTab(tabName, event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  showPage('settings');
+  
+  // Find the button inside settings page and switch to it
+  const btn = document.getElementById('settings-tab-link-' + tabName);
+  if (btn) {
+    switchSettingsTab(tabName, btn);
+  }
+  
+  // Highlight active item in sub-menu
+  const subMenu = document.getElementById('settings-sub-menu');
+  if (subMenu) {
+    subMenu.querySelectorAll('.nav-sub-item').forEach(item => {
+      item.classList.remove('active');
+      const clickAttr = item.getAttribute('onclick') || '';
+      if (clickAttr.includes(`'${tabName}'`)) {
+        item.classList.add('active');
+      }
+    });
+  }
+  
+  // Close mobile sidebar if open
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar && window.innerWidth <= 900) {
+    sidebar.classList.add('collapsed');
+    const backdrop = document.getElementById('sidebar-backdrop');
+    if (backdrop) backdrop.classList.remove('visible');
   }
 }
 
