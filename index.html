@@ -604,6 +604,451 @@
         display: block;
       }
     }
+
+    /* ===== SETTINGS LAYOUT & TAB SYSTEM ===== */
+    .settings-wrapper {
+      display: flex;
+      gap: 24px;
+      margin-top: 20px;
+    }
+    .settings-sidebar {
+      width: 250px;
+      flex-shrink: 0;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .settings-tab-link {
+      width: 100%;
+      padding: 12px 16px;
+      text-align: left;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--rs);
+      color: var(--txt2);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: var(--ease);
+    }
+    .settings-tab-link:hover {
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--txt);
+    }
+    [data-theme="light"] .settings-tab-link:hover {
+      background: rgba(0, 0, 0, 0.03);
+    }
+    .settings-tab-link.active {
+      background: rgba(168, 85, 247, 0.1);
+      border-color: var(--border-a);
+      color: var(--purple);
+      font-weight: 600;
+    }
+    .settings-tab-link.text-danger {
+      color: var(--red);
+    }
+    .settings-tab-link.text-danger:hover {
+      background: rgba(239, 68, 68, 0.08);
+    }
+    .settings-content-area {
+      flex: 1;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 24px;
+      min-height: 550px;
+    }
+    .settings-pane {
+      display: none;
+    }
+    .settings-pane.active {
+      display: block;
+      animation: settingsFadeIn 0.3s ease;
+    }
+    @keyframes settingsFadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Pane Elements styling */
+    .pane-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--txt);
+      margin-bottom: 6px;
+    }
+    .pane-desc {
+      font-size: 13px;
+      color: var(--txt2);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .profile-pic-container {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 24px;
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: 12px;
+    }
+    [data-theme="light"] .profile-pic-container {
+      background: rgba(0,0,0,0.01);
+    }
+    .profile-avatar-wrap {
+      position: relative;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid var(--purple);
+      cursor: pointer;
+    }
+    .settings-avatar-preview {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .avatar-upload-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .profile-avatar-wrap:hover .avatar-upload-overlay {
+      opacity: 1;
+    }
+    .profile-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .profile-meta h4 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--txt);
+    }
+    .verification-badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      width: fit-content;
+      font-weight: 600;
+    }
+    .verification-badge.verified {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--green);
+    }
+    .verification-badge.unverified {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--amber);
+    }
+    .btn-verify-request {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--txt2);
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: var(--ease);
+    }
+    .btn-verify-request:hover {
+      background: var(--purple);
+      color: #fff;
+      border-color: var(--purple);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-field label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--txt2);
+    }
+    .phone-input-wrap {
+      display: flex;
+      gap: 8px;
+    }
+    .linked-accounts {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .linked-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px;
+    }
+    [data-theme="light"] .linked-item {
+      background: rgba(0, 0, 0, 0.02);
+    }
+    .linked-item.connected {
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+    .linked-item .link-state {
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .linked-item.connected .link-state {
+      color: var(--green);
+    }
+    .linked-item.clickable {
+      cursor: pointer;
+      transition: var(--ease);
+    }
+    .linked-item.clickable:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--purple);
+    }
+    [data-theme="light"] .linked-item.clickable:hover {
+      background: rgba(0, 0, 0, 0.04);
+    }
+    .linked-item .link-action {
+      color: var(--purple);
+    }
+    .danger-zone-box {
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      background: rgba(239, 68, 68, 0.02);
+      border-radius: 12px;
+      padding: 18px;
+    }
+    .danger-zone-box h4 {
+      color: var(--red);
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .danger-zone-box p {
+      font-size: 12px;
+      color: var(--txt2);
+      margin-bottom: 12px;
+    }
+    .btn-danger-action {
+      background: #dc2626;
+      border: none;
+      color: #fff;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-danger-action:hover {
+      background: #b91c1c;
+    }
+
+    /* Device lists and login history logs */
+    .device-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .device-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    [data-theme="light"] .device-item {
+      background: rgba(0,0,0,0.02);
+    }
+    .device-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .device-info strong {
+      font-size: 13px;
+      color: var(--txt);
+    }
+    .device-info span {
+      font-size: 11px;
+      color: var(--txt2);
+    }
+    .device-logout-btn {
+      background: transparent;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: var(--red);
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--ease);
+    }
+    .device-logout-btn:hover {
+      background: rgba(239, 68, 68, 0.1);
+    }
+    .settings-log-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 12px;
+      text-align: left;
+    }
+    .settings-log-table th, .settings-log-table td {
+      padding: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .settings-log-table th {
+      color: var(--txt2);
+      font-weight: 600;
+      background: rgba(255,255,255,0.01);
+    }
+    [data-theme="light"] .settings-log-table th {
+      background: rgba(0,0,0,0.01);
+    }
+    .log-status {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .log-status.success {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--green);
+    }
+    .log-status.fail {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--red);
+    }
+
+    /* Blocked user list */
+    .blocked-users-list {
+      background: rgba(255,255,255,0.01);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 13px;
+    }
+    [data-theme="light"] .blocked-users-list {
+      background: rgba(0,0,0,0.01);
+    }
+    .no-blocked-users {
+      color: var(--txt3);
+      text-align: center;
+      font-style: italic;
+    }
+    .blocked-user-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .blocked-user-row:last-child {
+      border-bottom: none;
+    }
+    .btn-unblock {
+      background: transparent;
+      border: none;
+      color: var(--purple);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Responsive mobile adjustments for Settings tab layout */
+    @media (max-width: 900px) {
+      .settings-wrapper {
+        flex-direction: column;
+      }
+      .settings-sidebar {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding: 10px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .settings-tab-link {
+        width: auto;
+        display: inline-flex;
+        padding: 8px 14px;
+      }
+    }
+
+    /* ===== ACCESSIBILITY OVERRIDES ===== */
+    
+    /* Dyslexia-friendly Typography */
+    [data-font="dyslexic"] *,
+    [data-font="dyslexic"] body,
+    [data-font="dyslexic"] p,
+    [data-font="dyslexic"] span,
+    [data-font="dyslexic"] label,
+    [data-font="dyslexic"] button,
+    [data-font="dyslexic"] input,
+    [data-font="dyslexic"] select {
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif !important;
+      letter-spacing: 0.05em !important;
+      word-spacing: 0.1em !important;
+      line-height: 1.6 !important;
+    }
+
+    /* Text size scales overrides */
+    [data-textsize="small"] body { font-size: 13px !important; }
+    [data-textsize="small"] h1, [data-textsize="small"] .section-title { font-size: 20px !important; }
+    [data-textsize="small"] h2, [data-textsize="small"] .pane-title { font-size: 16px !important; }
+    [data-textsize="small"] p, [data-textsize="small"] span, [data-textsize="small"] label, [data-textsize="small"] button, [data-textsize="small"] input, [data-textsize="small"] select, [data-textsize="small"] td, [data-textsize="small"] th { font-size: 12px !important; }
+
+    [data-textsize="medium"] body { font-size: 16px !important; }
+
+    [data-textsize="large"] body { font-size: 18px !important; }
+    [data-textsize="large"] h1, [data-textsize="large"] .section-title { font-size: 28px !important; }
+    [data-textsize="large"] h2, [data-textsize="large"] .pane-title { font-size: 22px !important; }
+    [data-textsize="large"] p, [data-textsize="large"] span, [data-textsize="large"] label, [data-textsize="large"] button, [data-textsize="large"] input, [data-textsize="large"] select, [data-textsize="large"] td, [data-textsize="large"] th { font-size: 16px !important; }
+
+    [data-textsize="xl"] body { font-size: 20px !important; }
+    [data-textsize="xl"] h1, [data-textsize="xl"] .section-title { font-size: 32px !important; }
+    [data-textsize="xl"] h2, [data-textsize="xl"] .pane-title { font-size: 26px !important; }
+    [data-textsize="xl"] p, [data-textsize="xl"] span, [data-textsize="xl"] label, [data-textsize="xl"] button, [data-textsize="xl"] input, [data-textsize="xl"] select, [data-textsize="xl"] td, [data-textsize="xl"] th { font-size: 18px !important; }
+
+    /* Color blindness adjustments */
+    [data-colorblind="protanopia"] {
+      filter: url('#protanopia-filter') !important;
+    }
+    [data-colorblind="deuteranopia"] {
+      filter: url('#deuteranopia-filter') !important;
+    }
+    [data-colorblind="tritanopia"] {
+      filter: url('#tritanopia-filter') !important;
+    }
   </style>
 </head>
 <body>
@@ -1362,166 +1807,550 @@
           <p class="section-sub">Manage accessibility, security notifications, languages, referrals, and help resources</p>
         </div>
 
-        <div class="settings-grid">
-          <!-- CARD: ACCESSIBILITY & AUDIO -->
-          <div class="settings-card">
-            <div class="card-icon" style="background: rgba(168,85,247,0.15)"><svg width="22" height="22" fill="none" stroke="#a855f7" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg></div>
-            <h3 class="settings-card-title">Accessibility & Audio</h3>
-            <div class="settings-group">
-              <label class="toggle-setting">
-                <span class="setting-label-text">
-                  <strong>High Contrast Mode</strong>
-                  <span class="setting-desc">Increases clarity and readability across the app</span>
-                </span>
-                <input type="checkbox" id="contrast-toggle" onchange="toggleHighContrast(this.checked)" />
-                <span class="toggle-switch"></span>
-              </label>
-            </div>
-            <div class="settings-group">
-              <label class="toggle-setting">
-                <span class="setting-label-text">
-                  <strong>Reduce Animations</strong>
-                  <span class="setting-desc">Disables page transitions and decorative animations</span>
-                </span>
-                <input type="checkbox" id="motion-toggle" onchange="toggleReduceMotion(this.checked)" />
-                <span class="toggle-switch"></span>
-              </label>
-            </div>
-            <div class="settings-group">
-              <label class="toggle-setting" style="display:block;">
-                <span class="setting-label-text" style="margin-bottom:8px;">
-                  <strong>Voice Assistant Gender</strong>
-                  <span class="setting-desc">Toggle between Male and Female voice output</span>
-                </span>
-                <div class="voice-gender-selector">
-                  <button type="button" class="gender-btn active" id="btn-gender-female" onclick="setVoiceGender('female')">Female ♀</button>
-                  <button type="button" class="gender-btn" id="btn-gender-male" onclick="setVoiceGender('male')">Male ♂</button>
-                </div>
-              </label>
-            </div>
+        <div class="settings-wrapper">
+          <!-- Left settings menu bar -->
+          <div class="settings-sidebar">
+            <button class="settings-tab-link active" onclick="switchSettingsTab('account', this)">👤 Account & Profile</button>
+            <button class="settings-tab-link" onclick="switchSettingsTab('security', this)">🔐 Security & 2FA</button>
+            <button class="settings-tab-link" onclick="switchSettingsTab('privacy', this)">🔒 Privacy Controls</button>
+            <button class="settings-tab-link" onclick="switchSettingsTab('language', this)">🌍 Language Setup</button>
+            <button class="settings-tab-link" onclick="switchSettingsTab('accessibility', this)">♿ Accessibility</button>
+            <button class="settings-tab-link" onclick="switchSettingsTab('referrals', this)">📢 Referral Program</button>
+            <button class="settings-tab-link" onclick="switchSettingsTab('notifications', this)">🔔 Notification Setup</button>
+            <button class="settings-tab-link" onclick="switchSettingsTab('help', this)">🆘 Help & Feedback</button>
+            <button class="settings-tab-link" onclick="switchSettingsTab('premium', this)">🏆 Premium Features</button>
+            <button class="settings-tab-link" onclick="switchSettingsTab('about', this)">ℹ️ About App</button>
+            <button class="settings-tab-link text-danger" onclick="handleSignOut()" style="margin-top:auto;">🚪 Logout</button>
           </div>
 
-          <!-- CARD: LOCALIZATION -->
-          <div class="settings-card">
-            <div class="card-icon" style="background: rgba(59,130,246,0.15)"><svg width="22" height="22" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg></div>
-            <h3 class="settings-card-title">App Language</h3>
-            <div class="settings-group">
-              <span class="setting-desc" style="margin-bottom: 8px; display: block;">Select the default interface language</span>
-              <select id="lang-selector" class="settings-select" onchange="changeLanguage(this.value)">
-                <option value="en">English (Device's Language)</option>
-                <option value="kn">Kannada (ಕನ್ನಡ)</option>
-                <option value="hi">Hindi (हिन्दी)</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- CARD: REFERRALS -->
-          <div class="settings-card">
-            <div class="card-icon" style="background: rgba(16,185,129,0.15)"><svg width="22" height="22" fill="none" stroke="#10b981" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8a3 3 0 00-3-3H5a3 3 0 00-3 3v8a3 3 0 003 3h10a3 3 0 003-3V8z"/><path d="M12 12a3 3 0 100-6 3 3 0 000 6z"/></svg></div>
-            <h3 class="settings-card-title">Invite & Earn Referral</h3>
-            <div class="settings-group">
-              <span class="setting-desc" style="margin-bottom: 12px; display: block;">Generate your unique referral link to share CrimeScope AI with other agencies and officers.</span>
-              <button class="settings-action-btn" onclick="generateReferralCode()">Generate Referral Code</button>
-              <div id="referral-display" class="referral-display hidden">
-                <div class="ref-code-wrap">
-                  <span class="ref-code" id="generated-ref-code">SCOPE-2026-X</span>
-                  <button class="ref-copy-btn" onclick="copyReferral()">Copy</button>
+          <!-- Right settings main pane -->
+          <div class="settings-content-area">
+            <!-- PANE 1: Account -->
+            <div class="settings-pane active" id="settings-pane-account">
+              <h2 class="pane-title">👤 Account & Profile Settings</h2>
+              <p class="pane-desc">Manage your profile information, email credentials, contact details, and account status</p>
+              
+              <div class="profile-pic-container">
+                <div class="profile-avatar-wrap">
+                  <img src="https://www.w3schools.com/howto/img_avatar.png" id="settings-profile-avatar" class="settings-avatar-preview" alt="Avatar" />
+                  <div class="avatar-upload-overlay" onclick="triggerAvatarUpload()">📷 Edit</div>
+                  <input type="file" id="avatar-file-input" style="display:none" onchange="previewAvatar(event)" accept="image/*" />
                 </div>
-                <div class="share-title">Share Code Via:</div>
-                <div class="share-grid">
-                  <button class="share-btn whatsapp" onclick="shareReferral('whatsapp')">WhatsApp</button>
-                  <button class="share-btn x-twitter" onclick="shareReferral('x')">X (Twitter)</button>
-                  <button class="share-btn facebook" onclick="shareReferral('facebook')">Facebook</button>
-                  <button class="share-btn linkedin" onclick="shareReferral('linkedin')">LinkedIn</button>
-                  <button class="share-btn instagram" onclick="shareReferral('instagram')">Instagram</button>
+                <div class="profile-meta">
+                  <h4 id="profile-meta-name">Guest User</h4>
+                  <span class="verification-badge unverified" id="verification-status-badge">Unverified</span>
+                  <button class="btn-verify-request" onclick="requestAccountVerification()">Request Verification</button>
                 </div>
               </div>
-            </div>
-          </div>
 
-          <!-- CARD: ACCOUNT & SAFETY -->
-          <div class="settings-card">
-            <div class="card-icon" style="background: rgba(245,158,11,0.15)"><svg width="22" height="22" fill="none" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
-            <h3 class="settings-card-title">Account & Security</h3>
-            <div class="settings-group">
-              <label class="toggle-setting">
-                <span class="setting-label-text">
-                  <strong>Security Notifications</strong>
-                  <span class="setting-desc">Receive critical email/SMS alerts on login activity</span>
-                </span>
-                <input type="checkbox" id="security-alerts-toggle" onchange="toggleSecurityAlerts(this.checked)" />
-                <span class="toggle-switch"></span>
-              </label>
-            </div>
-            <div class="settings-group" style="margin-top: 14px;">
-              <span class="setting-label-text" style="display: block; margin-bottom: 6px;">
-                <strong>Change Contact Number</strong>
-              </span>
-              <div class="change-number-wrap">
-                <input type="tel" id="new-phone-input" placeholder="Enter new phone number" class="settings-input" />
-                <button class="settings-action-btn compact" onclick="changePhoneNumber()">Update</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- CARD: HELP & FEEDBACK -->
-          <div class="settings-card wide">
-            <div class="card-icon" style="background: rgba(236,72,153,0.15)"><svg width="22" height="22" fill="none" stroke="#ec4899" stroke-width="2" viewBox="0 0 24 24"><path d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg></div>
-            <h3 class="settings-card-title">Help & Feedback</h3>
-            
-            <div class="help-sections-tabs">
-              <button class="tab-btn active" onclick="switchHelpTab('faq', this)">Help Centre (FAQs)</button>
-              <button class="tab-btn" onclick="switchHelpTab('contact', this)">Contact Us</button>
-              <button class="tab-btn" onclick="switchHelpTab('privacy', this)">Privacy Policy</button>
-            </div>
-
-            <div class="help-content-panes">
-              <!-- Pane 1: FAQs -->
-              <div class="help-pane active" id="help-pane-faq">
-                <div class="faq-search-wrap">
-                  <input type="text" id="faq-search" placeholder="Search FAQs..." oninput="searchFAQs(this.value)" class="settings-input" />
+              <div class="form-grid">
+                <div class="form-field">
+                  <label for="profile-name-input">Display Name</label>
+                  <input type="text" id="profile-name-input" class="settings-input" placeholder="Display name" />
                 </div>
-                <div class="faq-list">
-                  <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFAQ(this)">How does CrimeScope AI predict crimes? <span class="faq-chevron">▼</span></div>
-                    <div class="faq-answer">CrimeScope AI leverages advanced Machine Learning and Geospatial models (Spatial-Temporal predictions) trained on historical crime statistics, weather, census profiles, lighting indexes, and calendar events. It computes risk matrices with an 89% confidence level.</div>
+                <div class="form-field">
+                  <label for="profile-email-input">Email Address</label>
+                  <input type="email" id="profile-email-input" class="settings-input" placeholder="Email address" />
+                </div>
+                <div class="form-field">
+                  <label for="profile-phone-input">Phone Number</label>
+                  <div class="phone-input-wrap">
+                    <input type="tel" id="profile-phone-input" class="settings-input" placeholder="Phone number" />
+                    <button class="settings-action-btn compact" onclick="saveAccountPhone()">Update</button>
                   </div>
-                  <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFAQ(this)">Where does this crime data come from? <span class="faq-chevron">▼</span></div>
-                    <div class="faq-answer">The data represents historical records and incident logs (2025) structured from the Karnataka State Police department challenges and publicly available crime datasets.</div>
-                  </div>
-                  <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFAQ(this)">Is my personal account secure? <span class="faq-chevron">▼</span></div>
-                    <div class="faq-answer">Yes. CrimeScope AI uses standard SSL/TLS encryption for all communications and integrates secure verification procedures. Your data is protected under industry standard guidelines.</div>
+                </div>
+                <div class="form-field">
+                  <label>Linked Accounts</label>
+                  <div class="linked-accounts">
+                    <div class="linked-item connected">
+                      <span>Google</span>
+                      <span class="link-state">Connected</span>
+                    </div>
+                    <div class="linked-item clickable" onclick="showToast('Connecting Microsoft Account...')">
+                      <span>Microsoft</span>
+                      <span class="link-state link-action">Link</span>
+                    </div>
+                    <div class="linked-item clickable" onclick="showToast('Connecting Apple Account...')">
+                      <span>Apple ID</span>
+                      <span class="link-state link-action">Link</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <!-- Pane 2: Contact Us -->
-              <div class="help-pane" id="help-pane-contact">
-                <form id="contact-form" onsubmit="handleContactSubmit(event)" class="contact-settings-form">
-                  <div class="form-row">
-                    <input type="email" id="contact-email" required placeholder="Your email address" class="settings-input" />
-                  </div>
-                  <div class="form-row">
-                    <textarea id="contact-msg" required placeholder="Message/Feedback..." class="settings-textarea"></textarea>
-                  </div>
-                  <button type="submit" class="settings-action-btn">Send Message</button>
+              <div class="danger-zone-box" style="margin-top:24px;">
+                <h4>⚠️ Danger Zone</h4>
+                <p>Once you delete your account, there is no going back. All local caches and logs will be purged.</p>
+                <button class="btn-danger-action" onclick="deleteUserAccount()">Delete Account</button>
+              </div>
+            </div>
+
+            <!-- PANE 2: Security -->
+            <div class="settings-pane" id="settings-pane-security">
+              <h2 class="pane-title">🔐 Security & Authentication</h2>
+              <p class="pane-desc">Manage credentials, toggle multi-factor protection, and track active log history</p>
+
+              <div class="settings-group">
+                <label class="toggle-setting">
+                  <span class="setting-label-text">
+                    <strong>2FA Authentication (MFA)</strong>
+                    <span class="setting-desc">Add an extra layer of security when signing in to CrimeScope</span>
+                  </span>
+                  <input type="checkbox" id="security-2fa-toggle" onchange="toggle2FA(this.checked)" />
+                  <span class="toggle-switch"></span>
+                </label>
+              </div>
+
+              <div class="settings-group">
+                <label class="toggle-setting">
+                  <span class="setting-label-text">
+                    <strong>Biometric Sign In</strong>
+                    <span class="setting-desc">Enable fingerprint, passcode, or FaceID for faster local validation</span>
+                  </span>
+                  <input type="checkbox" id="security-biometric-toggle" onchange="toggleBiometric(this.checked)" />
+                  <span class="toggle-switch"></span>
+                </label>
+              </div>
+
+              <div class="settings-group">
+                <span class="setting-label-text" style="display:block; margin-bottom:12px;">
+                  <strong>Change Password</strong>
+                </span>
+                <form class="password-change-form" onsubmit="handlePasswordChange(event)" style="display:flex; flex-direction:column; gap:10px; max-width:400px;">
+                  <input type="password" id="current-pass" required placeholder="Current Password" class="settings-input" />
+                  <input type="password" id="new-pass" required placeholder="New Password" class="settings-input" minlength="6" />
+                  <button type="submit" class="settings-action-btn">Update Password</button>
                 </form>
               </div>
 
-              <!-- Pane 3: Privacy Policy -->
-              <div class="help-pane" id="help-pane-privacy">
-                <div class="privacy-text-scroller">
-                  <h4>1. Introduction</h4>
-                  <p>CrimeScope AI 2.0 ("we", "our", "us") values privacy and security. This Privacy Policy details how we handle user data and analytic insights generated through our smart policing platform.</p>
-                  <h4>2. Data Security & Storage</h4>
-                  <p>All intelligence reports, prediction indices, and agency profile details are processed securely. Account data is cached locally or synced via encrypted channels. We do not sell or monetize public safety information.</p>
-                  <h4>3. Cookies and Storage</h4>
-                  <p>We use localStorage to store settings preference tokens (e.g. themes, language preferences, and accessibility toggles) for offline continuity.</p>
-                  <h4>4. Policy Changes</h4>
-                  <p>We reserves the right to modify security protocols to align with local police administrative rules. Users will be notified of major updates through the Alert Center.</p>
+              <div class="settings-group">
+                <span class="setting-label-text" style="display:block; margin-bottom:8px;">
+                  <strong>Device Management</strong>
+                  <span class="setting-desc">Devices currently logged into your CrimeScope account</span>
+                </span>
+                <div class="device-list">
+                  <div class="device-item">
+                    <div class="device-info">
+                      <strong>Windows 11 PC (Chrome)</strong>
+                      <span>Bengaluru, India · Current Session</span>
+                    </div>
+                  </div>
+                  <div class="device-item">
+                    <div class="device-info">
+                      <strong>OnePlus 11 (Android Mobile)</strong>
+                      <span>Mysuru, India · 2 hours ago</span>
+                    </div>
+                    <button class="device-logout-btn" onclick="terminateSession(this)">Revoke</button>
+                  </div>
                 </div>
+                <button class="settings-action-btn" style="margin-top:10px; background:#dc2626;" onclick="terminateAllOtherSessions()">Revoke All Other Sessions</button>
+              </div>
+
+              <div class="settings-group">
+                <span class="setting-label-text" style="display:block; margin-bottom:8px;">
+                  <strong>Login History Logs</strong>
+                  <span class="setting-desc">Recent authentication queries to verify account access integrity</span>
+                </span>
+                <div style="overflow-x:auto;">
+                  <table class="settings-log-table">
+                    <thead>
+                      <tr>
+                        <th>Date & Time</th>
+                        <th>IP Address</th>
+                        <th>Device/OS</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="login-history-rows">
+                      <tr>
+                        <td>2026-06-13 12:44</td>
+                        <td>106.51.242.12</td>
+                        <td>Windows 11 (Chrome)</td>
+                        <td><span class="log-status success">Success</span></td>
+                      </tr>
+                      <tr>
+                        <td>2026-06-12 18:31</td>
+                        <td>106.51.242.12</td>
+                        <td>Android Mobile (Chrome)</td>
+                        <td><span class="log-status success">Success</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANE 3: Privacy -->
+            <div class="settings-pane" id="settings-pane-privacy">
+              <h2 class="pane-title">🔒 Privacy & Data Policy Controls</h2>
+              <p class="pane-desc">Manage visibility variables, block lists, data retention, and export local statistics</p>
+
+              <div class="settings-group">
+                <span class="setting-label-text" style="display:block; margin-bottom:8px;">
+                  <strong>Profile Visibility</strong>
+                  <span class="setting-desc">Choose who can view your analytical profile, district contributions, and team activity</span>
+                </span>
+                <select id="privacy-visibility-selector" class="settings-select" onchange="changeProfileVisibility(this.value)">
+                  <option value="public">Public (All registered agencies & officers)</option>
+                  <option value="restricted">Restricted (Only officers within your range/district)</option>
+                  <option value="private">Private (Only you can access this profile)</option>
+                </select>
+              </div>
+
+              <div class="settings-group">
+                <span class="setting-label-text" style="display:block; margin-bottom:8px;">
+                  <strong>Blocked Users</strong>
+                  <span class="setting-desc">Block specific user accounts from initiating AI Copilot shared sessions or messaging</span>
+                </span>
+                <div class="block-user-wrap" style="display:flex; gap:10px; margin-bottom:12px;">
+                  <input type="email" id="block-user-input" class="settings-input" placeholder="User email to block" />
+                  <button class="settings-action-btn compact" onclick="addBlockedUser()">Block User</button>
+                </div>
+                <div class="blocked-users-list" id="blocked-users-container">
+                  <div class="no-blocked-users">No blocked users</div>
+                </div>
+              </div>
+
+              <div class="settings-group">
+                <span class="setting-label-text" style="display:block; margin-bottom:8px;">
+                  <strong>Data Portability & Retention</strong>
+                  <span class="setting-desc">Download a copy of your analytic variables, preferences, and activity logs</span>
+                </span>
+                <div class="data-retention-actions" style="display:flex; gap:12px;">
+                  <button class="settings-action-btn" onclick="exportAccountData()">Export Account Data (JSON)</button>
+                  <button class="settings-action-btn" style="background:#ef4444;" onclick="requestAnalyticsErasure()">Purge Cached Logs</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANE 4: Language -->
+            <div class="settings-pane" id="settings-pane-language">
+              <h2 class="pane-title">🌍 Language & Localization Settings</h2>
+              <p class="pane-desc">Select the default interface language for CrimeScope dashboards, alerts, and navigation tools</p>
+
+              <div class="settings-group">
+                <label class="toggle-setting" style="margin-bottom:14px;">
+                  <span class="setting-label-text">
+                    <strong>Auto-Detect Device Language</strong>
+                    <span class="setting-desc">Sets application language automatically based on your device profile settings</span>
+                  </span>
+                  <input type="checkbox" id="auto-lang-toggle" checked onchange="toggleAutoLanguage(this.checked)" />
+                  <span class="toggle-switch"></span>
+                </label>
+              </div>
+
+              <div class="settings-group">
+                <span class="setting-label-text" style="display:block; margin-bottom:8px;">
+                  <strong>Supported Regional Languages</strong>
+                </span>
+                <select id="lang-selector-pane" class="settings-select" onchange="changeLanguage(this.value)">
+                  <option value="en">English (Device's Language)</option>
+                  <option value="kn">Kannada (ಕನ್ನಡ)</option>
+                  <option value="hi">Hindi (हिन्दी)</option>
+                  <option value="te">Telugu (తెలుగు)</option>
+                  <option value="ta">Tamil (தமிழ்)</option>
+                  <option value="ml">Malayalam (മലയാളം)</option>
+                  <option value="bn">Bengali (বাংলা)</option>
+                  <option value="mr">Marathi (मराठी)</option>
+                </select>
+              </div>
+
+              <div class="settings-group">
+                <span class="setting-label-text" style="display:block; margin-bottom:6px;">
+                  <strong>Translation Cache</strong>
+                  <span class="setting-desc">Saves loaded translation files locally to improve response latency and support offline mode</span>
+                </span>
+                <button class="settings-action-btn compact" onclick="clearTranslationCache()">Clear Translation Cache</button>
+              </div>
+            </div>
+
+            <!-- PANE 5: Accessibility -->
+            <div class="settings-pane" id="settings-pane-accessibility">
+              <h2 class="pane-title">♿ Accessibility & Visual Assist Center</h2>
+              <p class="pane-desc">Enable assistive visuals, read-aloud configurations, and tactile haptic indicators</p>
+
+              <div class="settings-group">
+                <label class="toggle-setting">
+                  <span class="setting-label-text">
+                    <strong>High Contrast Mode</strong>
+                    <span class="setting-desc">Increases clarity and text readability across dashboard panels</span>
+                  </span>
+                  <input type="checkbox" id="contrast-toggle" onchange="toggleHighContrast(this.checked)" />
+                  <span class="toggle-switch"></span>
+                </label>
+              </div>
+
+              <div class="settings-group">
+                <label class="toggle-setting">
+                  <span class="setting-label-text">
+                    <strong>Reduce Motion / Animation</strong>
+                    <span class="setting-desc">Disables page transitions, loop tickers, and moving visual elements</span>
+                  </span>
+                  <input type="checkbox" id="motion-toggle" onchange="toggleReduceMotion(this.checked)" />
+                  <span class="toggle-switch"></span>
+                </label>
+              </div>
+
+              <div class="settings-group">
+                <span class="setting-label-text" style="display:block; margin-bottom:8px;">
+                  <strong>Text Font size</strong>
+                  <span class="setting-desc">Scale text sizing for all buttons, labels, and charts</span>
+                </span>
+                <select id="accessibility-size-selector" class="settings-select" onchange="changeTextSizing(this.value)">
+                  <option value="small">Small (13px)</option>
+                  <option value="medium" selected>Medium / Default (16px)</option>
+                  <option value="large">Large (18px)</option>
+                  <option value="xl">Extra Large (20px)</option>
+                </select>
+              </div>
+
+              <div class="settings-group">
+                <label class="toggle-setting">
+                  <span class="setting-label-text">
+                    <strong>Dyslexia Friendly Font</strong>
+                    <span class="setting-desc">Changes text typography to a highly legible, bottom-heavy font profile</span>
+                  </span>
+                  <input type="checkbox" id="dyslexia-font-toggle" onchange="toggleDyslexiaFont(this.checked)" />
+                  <span class="toggle-switch"></span>
+                </label>
+              </div>
+
+              <div class="settings-group">
+                <span class="setting-label-text" style="display:block; margin-bottom:8px;">
+                  <strong>Color Blindness Adaptation</strong>
+                  <span class="setting-desc">Modifies contrast palette variables to correct red-green or blue-yellow color vision limits</span>
+                </span>
+                <select id="accessibility-colorblind-selector" class="settings-select" onchange="changeColorBlindMode(this.value)">
+                  <option value="normal" selected>Normal Colors</option>
+                  <option value="protanopia">Protanopia (Red-weak / Red-green)</option>
+                  <option value="deuteranopia">Deuteranopia (Green-weak / Red-green)</option>
+                  <option value="tritanopia">Tritanopia (Blue-weak / Blue-yellow)</option>
+                </select>
+              </div>
+
+              <div class="settings-group">
+                <label class="toggle-setting">
+                  <span class="setting-label-text">
+                    <strong>Haptic Feedback Simulation</strong>
+                    <span class="setting-desc">Triggers soft click animations and tactile feedback on interactive buttons</span>
+                  </span>
+                  <input type="checkbox" id="haptic-toggle" onchange="toggleHapticFeedback(this.checked)" />
+                  <span class="toggle-switch"></span>
+                </label>
+              </div>
+
+              <div class="settings-group">
+                <label class="toggle-setting" style="display:block;">
+                  <span class="setting-label-text" style="margin-bottom:8px;">
+                    <strong>Voice Assistant Gender</strong>
+                    <span class="setting-desc">Toggle between Male and Female voice output</span>
+                  </span>
+                  <div class="voice-gender-selector">
+                    <button type="button" class="gender-btn active" id="btn-gender-female" onclick="setVoiceGender('female')">Female ♀</button>
+                    <button type="button" class="gender-btn" id="btn-gender-male" onclick="setVoiceGender('male')">Male ♂</button>
+                  </div>
+                </label>
+              </div>
+
+              <div class="settings-group">
+                <label class="toggle-setting">
+                  <span class="setting-label-text">
+                    <strong>Screen Reader Mode</strong>
+                    <span class="setting-desc">Reads page changes, alerts, and navigation actions aloud using speech synthesis</span>
+                  </span>
+                  <input type="checkbox" id="screen-reader-toggle" onchange="toggleScreenReader(this.checked)" />
+                  <span class="toggle-switch"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- PANE 6: Referrals -->
+            <div class="settings-pane" id="settings-pane-referrals">
+              <h2 class="pane-title">📢 Invite Friends & Referral Dashboard</h2>
+              <p class="pane-desc">Share CrimeScope AI with other police divisions and earn premium analytical tokens</p>
+
+              <div class="referral-dashboard-grid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px;">
+                <div class="ref-stat-card" style="background:var(--bg-card); border:1px solid var(--border); padding:16px; border-radius:12px; text-align:center;"><div class="rstat-val" id="ref-stat-sent" style="font-size:24px; font-weight:800; color:var(--purple)">14</div><div class="rstat-lbl" style="font-size:12px; color:var(--txt3)">Invites Sent</div></div>
+                <div class="ref-stat-card" style="background:var(--bg-card); border:1px solid var(--border); padding:16px; border-radius:12px; text-align:center;"><div class="rstat-val" id="ref-stat-success" style="font-size:24px; font-weight:800; color:var(--blue)">8</div><div class="rstat-lbl" style="font-size:12px; color:var(--txt3)">Successful Links</div></div>
+                <div class="ref-stat-card" style="background:var(--bg-card); border:1px solid var(--border); padding:16px; border-radius:12px; text-align:center; margin-top:8px;"><div class="rstat-val" id="ref-stat-rewards" style="font-size:24px; font-weight:800; color:var(--green)">4 Tokens</div><div class="rstat-lbl" style="font-size:12px; color:var(--txt3)">Rewards Earned</div></div>
+                <div class="ref-stat-card" style="background:var(--bg-card); border:1px solid var(--border); padding:16px; border-radius:12px; text-align:center; margin-top:8px;"><div class="rstat-val" id="ref-stat-earnings" style="font-size:24px; font-weight:800; color:var(--amber)">₹400</div><div class="rstat-lbl" style="font-size:12px; color:var(--txt3)">Referral Earnings</div></div>
+              </div>
+
+              <div class="settings-group" style="margin-top:20px;">
+                <span class="setting-desc" style="margin-bottom: 12px; display: block;">Generate your unique referral code to share with other districts and earn extra tools.</span>
+                <button class="settings-action-btn" onclick="generateReferralCode()">Generate Referral Code</button>
+                <div id="referral-display" class="referral-display hidden">
+                  <div class="ref-code-wrap">
+                    <span class="ref-code" id="generated-ref-code">RANJEET2026</span>
+                    <button class="ref-copy-btn" onclick="copyReferral()">Copy Code</button>
+                  </div>
+                  <div class="share-title">Share Invitation Via:</div>
+                  <div class="share-grid">
+                    <button class="share-btn whatsapp" onclick="shareReferral('whatsapp')">WhatsApp</button>
+                    <button class="share-btn telegram" onclick="shareReferral('telegram')">Telegram</button>
+                    <button class="share-btn x-twitter" onclick="shareReferral('x')">X (Twitter)</button>
+                    <button class="share-btn facebook" onclick="shareReferral('facebook')">Facebook</button>
+                    <button class="share-btn linkedin" onclick="shareReferral('linkedin')">LinkedIn</button>
+                    <button class="share-btn instagram" onclick="shareReferral('instagram')">Instagram</button>
+                    <button class="share-btn gmail" onclick="shareReferral('gmail')">Gmail</button>
+                    <button class="share-btn sms" onclick="shareReferral('sms')">SMS / Text</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANE 7: Notifications -->
+            <div class="settings-pane" id="settings-pane-notifications">
+              <h2 class="pane-title">🔔 Notification & Alert Preferences</h2>
+              <p class="pane-desc">Choose which types of system queries and announcements trigger active device notifications</p>
+
+              <div class="settings-group">
+                <label class="toggle-setting">
+                  <span class="setting-label-text">
+                    <strong>Security Alerts</strong>
+                    <span class="setting-desc">Login notifications, verification requests, and account updates (Critical)</span>
+                  </span>
+                  <input type="checkbox" id="notif-security-toggle" checked onchange="toggleNotificationCategory('security', this.checked)" />
+                  <span class="toggle-switch"></span>
+                </label>
+              </div>
+
+              <div class="settings-group">
+                <label class="toggle-setting">
+                  <span class="setting-label-text">
+                    <strong>Referral Rewards</strong>
+                    <span class="setting-desc">Earned token allocations and successful referral updates</span>
+                  </span>
+                  <input type="checkbox" id="notif-rewards-toggle" checked onchange="toggleNotificationCategory('referrals', this.checked)" />
+                  <span class="toggle-switch"></span>
+                </label>
+              </div>
+
+              <div class="settings-group">
+                <label class="toggle-setting">
+                  <span class="setting-label-text">
+                    <strong>Feature Updates</strong>
+                    <span class="setting-desc">New version releases, platform improvements, and tool updates</span>
+                  </span>
+                  <input type="checkbox" id="notif-features-toggle" checked onchange="toggleNotificationCategory('features', this.checked)" />
+                  <span class="toggle-switch"></span>
+                </label>
+              </div>
+
+              <div class="settings-group">
+                <label class="toggle-setting">
+                  <span class="setting-label-text">
+                    <strong>System Announcements</strong>
+                    <span class="setting-desc">Maintenance logs, dataset update triggers, and Karnataka State Police briefs</span>
+                  </span>
+                  <input type="checkbox" id="notif-system-toggle" checked onchange="toggleNotificationCategory('system', this.checked)" />
+                  <span class="toggle-switch"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- PANE 8: Help & Support -->
+            <div class="settings-pane" id="settings-pane-help">
+              <h2 class="pane-title">🆘 Help Center & Support Channels</h2>
+              <p class="pane-desc">Need assistance? Access FAQs, start a live chat session, or submit support tickets</p>
+
+              <div class="help-sections-tabs">
+                <button class="tab-btn active" onclick="switchHelpTab('faq', this)">FAQs</button>
+                <button class="tab-btn" onclick="switchHelpTab('contact', this)">Contact Channels</button>
+                <button class="tab-btn" onclick="switchHelpTab('legal', this)">Legal & Policies</button>
+              </div>
+
+              <div class="help-content-panes">
+                <!-- FAQs Pane -->
+                <div class="help-pane active" id="help-pane-faq">
+                  <input type="text" id="faq-search" placeholder="Search FAQs..." oninput="searchFAQs(this.value)" class="settings-input" style="margin-bottom:12px;" />
+                  <div class="faq-list">
+                    <div class="faq-item">
+                      <div class="faq-question" onclick="toggleFAQ(this)">How does CrimeScope AI predict crimes? <span class="faq-chevron">▼</span></div>
+                      <div class="faq-answer">CrimeScope AI leverages advanced Spatial-Temporal Machine Learning models trained on historical crime logs, lighting indices, weather conditions, and holiday cycles to forecast risk metrics.</div>
+                    </div>
+                    <div class="faq-item">
+                      <div class="faq-question" onclick="toggleFAQ(this)">Where does this crime data come from? <span class="faq-chevron">▼</span></div>
+                      <div class="faq-answer">The data represents historical records (2025) structured from the Karnataka State Police department challenges and publicly available crime datasets.</div>
+                    </div>
+                    <div class="faq-item">
+                      <div class="faq-question" onclick="toggleFAQ(this)">What is the Crime Digital Twin? <span class="faq-chevron">▼</span></div>
+                      <div class="faq-answer">The Crime Digital Twin is a simulation sandbox which allows officers to test variables (like street lighting, CCTV density, patrol frequency) and forecast crime rate changes prior to action.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Contact Support Pane -->
+                <div class="help-pane" id="help-pane-contact">
+                  <div style="display:flex; flex-direction:column; gap:14px; max-width:500px;">
+                    <div class="support-channels-list" style="display:flex; flex-direction:column; gap:8px;">
+                      <a href="mailto:support@crimescope.ai" class="support-channel-link" style="text-decoration:none; color:var(--purple); font-weight:600; font-size:13px;">📧 Email Support (support@crimescope.ai)</a>
+                      <a href="https://wa.me/919876543210" target="_blank" class="support-channel-link" style="text-decoration:none; color:var(--green); font-weight:600; font-size:13px;">💬 WhatsApp Support (+91 98765 43210)</a>
+                      <button class="settings-action-btn compact" onclick="startLiveChat()" style="margin-top:4px;">💬 Launch Live Support Chat</button>
+                    </div>
+
+                    <form id="contact-form" onsubmit="handleContactSubmit(event)" class="contact-settings-form">
+                      <strong style="font-size:13px; color:var(--txt2); display:block; margin-top:8px;">Submit a Support Ticket</strong>
+                      <input type="email" id="contact-email" required placeholder="Your email address" class="settings-input" />
+                      <textarea id="contact-msg" required placeholder="Describe your issue or feedback..." class="settings-textarea"></textarea>
+                      <button type="submit" class="settings-action-btn">Submit Ticket</button>
+                    </form>
+                  </div>
+                </div>
+
+                <!-- Legal Pane -->
+                <div class="help-pane" id="help-pane-legal">
+                  <div class="privacy-text-scroller">
+                    <h4>Privacy Policy</h4>
+                    <p>CrimeScope AI 2.0 values privacy and security. We encrypt all traffic, store local preference parameters in secure buffers, and strictly prohibit monetization of crime analytics data.</p>
+                    <h4>Terms & Conditions</h4>
+                    <p>By accessing the CrimeScope dashboard, you agree to comply with Indian cyber laws, state policing guidelines, and maintain complete confidentiality of intelligence data.</p>
+                    <h4>Community Guidelines</h4>
+                    <p>Be respectful inside cooperative chatbot rooms. Do not share credentials, and report unauthorized access queries instantly to system supervisors.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANE 9: Premium Features -->
+            <div class="settings-pane" id="settings-pane-premium">
+              <h2 class="pane-title">🏆 Premium Enterprise Features</h2>
+              <p class="pane-desc">Overview of advanced features activated for active state policing departments</p>
+              
+              <div class="premium-features-list" style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
+                <div class="premium-item" style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:12px; padding:14px;">
+                  <strong style="color:var(--purple); font-size:14px;">🧠 Advanced Predict Engine</strong>
+                  <p style="font-size:12px; color:var(--txt3); margin-top:4px;">Prediction confidence filters extended up to 30 days with multi-variable correlations (weather, state events).</p>
+                </div>
+                <div class="premium-item" style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:12px; padding:14px;">
+                  <strong style="color:var(--blue); font-size:14px;">💾 Offline Mode & Local Cache</strong>
+                  <p style="font-size:12px; color:var(--txt3); margin-top:4px;">Access heatmaps, analytics history, and predictions without an active network query using cached parameters.</p>
+                </div>
+                <div class="premium-item" style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:12px; padding:14px;">
+                  <strong style="color:var(--green); font-size:14px;">🔄 Multi-Device Cloud Sync</strong>
+                  <p style="font-size:12px; color:var(--txt3); margin-top:4px;">Seamlessly synchronizes alert settings, custom digital twin simulations, and chat history logs across devices.</p>
+                </div>
+                <div class="premium-item" style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:12px; padding:14px;">
+                  <strong style="color:var(--amber); font-size:14px;">🔒 Advanced Cryptography</strong>
+                  <p style="font-size:12px; color:var(--txt3); margin-top:4px;">All database queries and chat sessions are protected by AES-256 end-to-end encryption standards.</p>
+                </div>
+              </div>
+              <div class="premium-badge-box" style="text-align:center;">
+                <span class="premium-gold-badge" style="background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; padding:6px 14px; border-radius:20px; font-weight:800; font-size:13px; box-shadow:0 0 15px rgba(245,158,11,0.3)">★ Enterprise License Active</span>
+              </div>
+            </div>
+
+            <!-- PANE 10: About -->
+            <div class="settings-pane" id="settings-pane-about">
+              <h2 class="pane-title">ℹ️ About CrimeScope AI</h2>
+              <p class="pane-desc">Platform and release details for CrimeScope AI 2.0</p>
+              
+              <div class="about-app-card" style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:10px;">
+                <div class="app-info-row" style="display:flex; justify-content:space-between; font-size:13px;"><strong style="color:var(--txt2)">App Version:</strong> <span style="color:var(--txt3)">v2.2.0 (Play Store Ready)</span></div>
+                <div class="app-info-row" style="display:flex; justify-content:space-between; font-size:13px;"><strong style="color:var(--txt2)">Release Date:</strong> <span style="color:var(--txt3)">June 2026</span></div>
+                <div class="app-info-row" style="display:flex; justify-content:space-between; font-size:13px;"><strong style="color:var(--txt2)">Built For:</strong> <span style="color:var(--txt3)">Karnataka Smart Policing & Datathon 2026</span></div>
+                <div class="app-info-row" style="display:flex; justify-content:space-between; font-size:13px;"><strong style="color:var(--txt2)">Team Name:</strong> <span style="color:var(--txt3); font-weight:700;">INNOVATOR TEAM</span></div>
+                <div class="app-info-row" style="display:flex; justify-content:space-between; font-size:13px;"><strong style="color:var(--txt2)">Lead Architect:</strong> <span style="color:var(--txt3)">Ranjeet Kumar</span></div>
               </div>
             </div>
           </div>
@@ -1541,6 +2370,30 @@
     <button onclick="stopVoice()">✕ Cancel</button>
   </div>
 </div>
+
+<!-- ===== SVG Colorblindness Filters ===== -->
+<svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="protanopia-filter">
+      <feColorMatrix type="matrix" values="0.567, 0.433, 0,     0, 0,
+                                           0.558, 0.442, 0,     0, 0,
+                                           0,     0.242, 0.758, 0, 0,
+                                           0,     0,     0,     1, 0"/>
+    </filter>
+    <filter id="deuteranopia-filter">
+      <feColorMatrix type="matrix" values="0.625, 0.375, 0,     0, 0,
+                                           0.7,   0.3,   0,     0, 0,
+                                           0,     0.3,   0.7,   0, 0,
+                                           0,     0,     0,     1, 0"/>
+    </filter>
+    <filter id="tritanopia-filter">
+      <feColorMatrix type="matrix" values="0.95,  0.05,  0,     0, 0,
+                                           0,     0.433, 0.567, 0, 0,
+                                           0,     0.475, 0.525, 0, 0,
+                                           0,     0,     0,     1, 0"/>
+    </filter>
+  </defs>
+</svg>
 
 <!-- Demo modal removed as it is now a native welcome page section -->
 

@@ -211,6 +211,10 @@ function showPage(name) {
   const nav = document.getElementById(`nav-${name}`);
   if (nav) nav.classList.add('active');
   document.getElementById('page-title').textContent = pageTitles[name] || name;
+  if (localStorage.getItem('screenReader') === 'enabled') {
+    const pageTitleText = pageTitles[name] || name;
+    speakText("Navigated to " + pageTitleText);
+  }
   setTimeout(() => {
     const init = {
       overview: initOverview, heatmap: initHeatmap, district: initDistrictPage,
@@ -1785,6 +1789,27 @@ document.addEventListener('DOMContentLoaded', () => {
   // Apply accessibility and language on load
   applyStoredAccessibility();
   applyStoredLanguage();
+  loadUserProfile();
+
+  // Haptic feedback click simulation
+  window.addEventListener('click', function(e) {
+    if (localStorage.getItem('hapticFeedback') === 'enabled') {
+      const isButtonOrLink = e.target.closest('button, a, .clickable, select, input[type="checkbox"], input[type="radio"], .settings-tab-link, .tab-btn');
+      if (isButtonOrLink) {
+        if (navigator.vibrate) {
+          navigator.vibrate(15);
+        } else {
+          const el = e.target.closest('button, a, .clickable, select, input[type="checkbox"], .settings-tab-link, .tab-btn');
+          if (el) {
+            el.style.transform = 'scale(0.97)';
+            setTimeout(() => {
+              el.style.transform = '';
+            }, 80);
+          }
+        }
+      }
+    }
+  });
 
   // ---- GLOBAL: Prevent all href="#" links from jumping to top ----
   document.addEventListener('click', function(e) {
@@ -1878,14 +1903,157 @@ const localizations = {
     home: "होम",
     map: "मानचित्र",
     ai: "एआई",
-    alertsLabel: "अलर्ट",
+    alertsLabel: "Alerts",
     chat: "चैट"
+  },
+  te: {
+    overview: "అవలోకనం",
+    heatmap: "క్రైమ్ హీట్‌మ్యాప్",
+    district: "జిల్లా విశ్లేషణ",
+    crimeTypes: "నేరాల వర్గాలు",
+    trends: "నేరాల ధోరణులు",
+    vulnerable: "సమస్యాత్మక సమూహాలు",
+    aiPrediction: "AI అంచనా ఇంజిన్",
+    aiAssistant: "AI కో-పైలట్",
+    alerts: "అలర్ట్ సెంటర్",
+    simulator: "డిజిటల్ ట్విన్ సిమ్",
+    explainability: "AI వివరణాత్మకత",
+    team: "మా బృందం",
+    welcome: "స్వాగత పేజీ",
+    kpi1: "మొత్తం IPC/BNS నేరాలు",
+    kpi2: "SLL నేరాలు",
+    kpi3: "బెంగళూరు నగరం",
+    kpi4: "నేర పరిష్కార రేటు %",
+    kpi5: "ప్రాణాంతక రహదారి ప్రమాదాలు",
+    kpi6: "మహిళా భద్రతా సూచిక",
+    dashboardOverview: "డ్యాష్‌బోర్డ్ అవలోకనం",
+    settings: "సెట్టింగులు & భద్రత",
+    home: "హోమ్",
+    map: "మ్యాప్",
+    ai: "AI",
+    alertsLabel: "అలర్ట్లు",
+    chat: "చాట్"
+  },
+  ta: {
+    overview: "கண்ணோட்டம்",
+    heatmap: "குற்ற வரைபடம்",
+    district: "மாவட்ட பகுப்பாய்வு",
+    crimeTypes: "குற்றப் பிரிவுகள்",
+    trends: "குற்றப் போக்குகள்",
+    vulnerable: "பாதிக்கப்படக்கூடிய குழுக்கள்",
+    aiPrediction: "AI கணிப்பு இயந்திரம்",
+    aiAssistant: "AI இணை உதவியாளர்",
+    alerts: "எச்சரிக்கை மையம்",
+    simulator: "டிஜிட்டல் ட்வின் சிமுலேட்டர்",
+    explainability: "AI விளக்கத்தன்மை",
+    team: "எங்கள் குழு",
+    welcome: "வரவேற்பு பக்கம்",
+    kpi1: "மொத்த IPC/BNS குற்றங்கள்",
+    kpi2: "SLL குற்றங்கள்",
+    kpi3: "பெங்களூரு நகரம்",
+    kpi4: "குற்றத் தீர்வு விகிதம் %",
+    kpi5: "உயிரிழப்பு சாலை விபத்துக்கள்",
+    kpi6: "பெண்கள் பாதுகாப்பு குறியீடு",
+    dashboardOverview: "டாஷ்போர்டு கண்ணோட்டம்",
+    settings: "அமைப்புகள் & பாதுகாப்பு",
+    home: "முகப்பு",
+    map: "வரைபடம்",
+    ai: "AI",
+    alertsLabel: "எச்சரிக்கைகள்",
+    chat: "அரட்டை"
+  },
+  ml: {
+    overview: "അവലോകനം",
+    heatmap: "കുറ്റകൃത്യ മാപ്പ്",
+    district: "ജില്ലാ വിശകലനം",
+    crimeTypes: "കുറ്റകൃത്യ വിഭാഗങ്ങൾ",
+    trends: "കുറ്റകൃത്യ പ്രവണതകൾ",
+    vulnerable: "ദുർബല വിഭാഗങ്ങൾ",
+    aiPrediction: "AI പ്രവചന എഞ്ചിൻ",
+    aiAssistant: "AI കോ-പൈലറ്റ്",
+    alerts: "അലർട്ട് സെന്റർ",
+    simulator: "ഡിജിറ്റൽ ട്വിൻ സിമുലേറ്റർ",
+    explainability: "AI വിശദീകരണം",
+    team: "ഞങ്ങളുടെ ടീം",
+    welcome: "സ്വാഗത പേജ്",
+    kpi1: "ആകെ IPC/BNS കുറ്റകൃത്യങ്ങൾ",
+    kpi2: "SLL കുറ്റകൃത്യങ്ങൾ",
+    kpi3: "ബെംഗളൂരു നഗരം",
+    kpi4: "കുറ്റകൃത്യ പരിഹാര നിരക്ക് %",
+    kpi5: "മാരകമായ റോഡപകടങ്ങൾ",
+    kpi6: "സ്ത്രീ സുരക്ഷാ സൂചിക",
+    dashboardOverview: "ഡാഷ്‌ബോർഡ് അവലോകനം",
+    settings: "ക്രമീകരണങ്ങളും സുരക്ഷയും",
+    home: "ഹോം",
+    map: "മാപ്പ്",
+    ai: "AI",
+    alertsLabel: "അലർട്ടുകൾ",
+    chat: "ചാറ്റ്"
+  },
+  bn: {
+    overview: "পর্যালোচনা",
+    heatmap: "অপরাধের মানচিত্র",
+    district: "জেলা ভিত্তিক বিশ্লেষণ",
+    crimeTypes: "অপরাধের বিভাগ",
+    trends: "অপরাধের প্রবণতা",
+    vulnerable: "ঝুঁকিপূর্ণ গোষ্ঠী",
+    aiPrediction: "AI পূর্বাভাস ইঞ্জিন",
+    aiAssistant: "AI সহ-পাইলট",
+    alerts: "সতর্কতা কেন্দ্র",
+    simulator: "ডিজিটাল টুইন সিমুলেটর",
+    explainability: "AI ব্যাখ্যাযোগ্যতা",
+    team: "আমাদের দল",
+    welcome: "স্বাগত পাতা",
+    kpi1: "মোট IPC/BNS অপরাধ",
+    kpi2: "SLL অপরাধ",
+    kpi3: "বেঙ্গালুরু শহর",
+    kpi4: "অপরাধ সমাধানের হার %",
+    kpi5: "মারাত্মক সড়ক দুর্ঘটনা",
+    kpi6: "নারী নিরাপত্তা সূচক",
+    dashboardOverview: "ড্যাশবোর্ড পর্যালোচনা",
+    settings: "সেটিংস ও নিরাপত্তা",
+    home: "হোম",
+    map: "মানচিত্র",
+    ai: "AI",
+    alertsLabel: "সতর্কতা",
+    chat: "চ্যাট"
+  },
+  mr: {
+    overview: "आढावा",
+    heatmap: "गुन्हे नकाशा",
+    district: "जिल्हा विश्लेषण",
+    crimeTypes: "गुन्ह्यांचे प्रकार",
+    trends: "गुन्हेगारी ट्रेंड्स",
+    vulnerable: "संवेदनशील गट",
+    aiPrediction: "AI अंदाज इंजिन",
+    aiAssistant: "AI को-पायलट",
+    alerts: "अलर्ट सेंटर",
+    simulator: "डिजिटल ट्विन सिम्युलेटर",
+    explainability: "AI स्पष्टीकरणक्षमता",
+    team: "आमची टीम",
+    welcome: "स्वागत पृष्ठ",
+    kpi1: "एकूण IPC/BNS गुन्हे",
+    kpi2: "SLL गुन्हे",
+    kpi3: "बेंगळुरू शहर",
+    kpi4: "गुन्हे निवारण दर %",
+    kpi5: "प्राणघातक रस्ते अपघात",
+    kpi6: "महिला सुरक्षा निर्देशांक",
+    dashboardOverview: "डॅशボード आढावा",
+    settings: "सेटिंग्ज आणि सुरक्षा",
+    home: "होम",
+    map: "नकाशा",
+    ai: "AI",
+    alertsLabel: "अलर्ट",
+    chat: "चॅट"
   }
 };
 
 function applyStoredAccessibility() {
   const contrast = localStorage.getItem('contrast') || 'normal';
   const motion = localStorage.getItem('motion') || 'normal';
+  const textsize = localStorage.getItem('textsize') || 'medium';
+  const dyslexia = localStorage.getItem('dyslexia') || 'disabled';
+  const colorblind = localStorage.getItem('colorblind') || 'normal';
   
   if (contrast === 'high') {
     document.documentElement.setAttribute('data-contrast', 'high');
@@ -1898,11 +2066,45 @@ function applyStoredAccessibility() {
   } else {
     document.documentElement.removeAttribute('data-motion');
   }
+
+  // Apply text scaling
+  document.documentElement.setAttribute('data-textsize', textsize);
+
+  // Apply dyslexia-friendly typography
+  if (dyslexia === 'enabled') {
+    document.documentElement.setAttribute('data-font', 'dyslexic');
+  } else {
+    document.documentElement.removeAttribute('data-font');
+  }
+
+  // Apply color blindness filters
+  if (colorblind !== 'normal') {
+    document.documentElement.setAttribute('data-colorblind', colorblind);
+  } else {
+    document.documentElement.removeAttribute('data-colorblind');
+  }
 }
 
 function applyStoredLanguage() {
-  const lang = localStorage.getItem('appLanguage') || 'en';
+  const isAuto = localStorage.getItem('autoLanguage') !== 'false';
+  let lang = 'en';
+  if (isAuto) {
+    const navLang = navigator.language || navigator.userLanguage || 'en';
+    const cleanNavLang = navLang.split('-')[0].toLowerCase();
+    const supported = ['en', 'kn', 'hi', 'te', 'ta', 'ml', 'bn', 'mr'];
+    if (supported.includes(cleanNavLang)) {
+      lang = cleanNavLang;
+    }
+  } else {
+    lang = localStorage.getItem('appLanguage') || 'en';
+  }
   applyLanguage(lang);
+  
+  // Sync selectors in settings UI
+  const langSelectorPane = document.getElementById('lang-selector-pane');
+  if (langSelectorPane) {
+    langSelectorPane.value = lang;
+  }
 }
 
 function applyLanguage(lang) {
@@ -1997,26 +2199,85 @@ function initSettingsPage() {
   }
 
   // Sync Language dropdown
-  const langSelector = document.getElementById('lang-selector');
-  if (langSelector) {
-    langSelector.value = localStorage.getItem('appLanguage') || 'en';
+  const langSelectorPane = document.getElementById('lang-selector-pane');
+  if (langSelectorPane) {
+    langSelectorPane.value = localStorage.getItem('appLanguage') || 'en';
   }
 
-  // Sync security notifications toggle checkbox
-  const securityToggle = document.getElementById('security-alerts-toggle');
-  if (securityToggle) {
-    securityToggle.checked = (localStorage.getItem('securityNotifications') === 'enabled');
+  // Sync Language auto-detect toggle
+  const autoLangToggle = document.getElementById('auto-lang-toggle');
+  if (autoLangToggle) {
+    autoLangToggle.checked = (localStorage.getItem('autoLanguage') !== 'false');
   }
+
+  // Sync Font size selector
+  const sizeSelector = document.getElementById('accessibility-size-selector');
+  if (sizeSelector) {
+    sizeSelector.value = localStorage.getItem('textsize') || 'medium';
+  }
+
+  // Sync Dyslexia font toggle
+  const dyslexiaToggle = document.getElementById('dyslexia-font-toggle');
+  if (dyslexiaToggle) {
+    dyslexiaToggle.checked = (localStorage.getItem('dyslexia') === 'enabled');
+  }
+
+  // Sync Colorblind adaptation selector
+  const colorblindSelector = document.getElementById('accessibility-colorblind-selector');
+  if (colorblindSelector) {
+    colorblindSelector.value = localStorage.getItem('colorblind') || 'normal';
+  }
+
+  // Sync Haptic feedback toggle
+  const hapticToggle = document.getElementById('haptic-toggle');
+  if (hapticToggle) {
+    hapticToggle.checked = (localStorage.getItem('hapticFeedback') !== 'disabled');
+  }
+
+  // Sync Screen reader toggle
+  const screenReaderToggle = document.getElementById('screen-reader-toggle');
+  if (screenReaderToggle) {
+    screenReaderToggle.checked = (localStorage.getItem('screenReader') === 'enabled');
+  }
+
+  // Sync 2FA toggle
+  const twoFAToggle = document.getElementById('security-2fa-toggle');
+  if (twoFAToggle) {
+    twoFAToggle.checked = (localStorage.getItem('security2FA') === 'enabled');
+  }
+
+  // Sync Biometric toggle
+  const bioToggle = document.getElementById('security-biometric-toggle');
+  if (bioToggle) {
+    bioToggle.checked = (localStorage.getItem('securityBiometric') === 'enabled');
+  }
+
+  // Sync Profile Visibility dropdown
+  const visibilitySelector = document.getElementById('privacy-visibility-selector');
+  if (visibilitySelector) {
+    visibilitySelector.value = localStorage.getItem('privacyVisibility') || 'public';
+  }
+
+  // Sync notification preferences
+  const notifSec = document.getElementById('notif-security-toggle');
+  if (notifSec) notifSec.checked = (localStorage.getItem('notif-security') !== 'disabled');
+
+  const notifRew = document.getElementById('notif-rewards-toggle');
+  if (notifRew) notifRew.checked = (localStorage.getItem('notif-referrals') !== 'disabled');
+
+  const notifFeat = document.getElementById('notif-features-toggle');
+  if (notifFeat) notifFeat.checked = (localStorage.getItem('notif-features') !== 'disabled');
+
+  const notifSys = document.getElementById('notif-system-toggle');
+  if (notifSys) notifSys.checked = (localStorage.getItem('notif-system') !== 'disabled');
 
   // Sync Voice Gender buttons
   const gender = localStorage.getItem('voiceGender') || 'female';
   setVoiceGenderUI(gender);
 
-  // Sync saved phone number if any
-  const phoneInput = document.getElementById('new-phone-input');
-  if (phoneInput && localStorage.getItem('phoneNumber')) {
-    phoneInput.value = localStorage.getItem('phoneNumber');
-  }
+  // Sync profile details and blocked users
+  loadUserProfile();
+  updateBlockedUsersUI();
 }
 
 function toggleHighContrast(checked) {
@@ -2087,7 +2348,12 @@ function changeLanguage(lang) {
   const msgMap = {
     en: "Language changed to English",
     kn: "ಭಾಷೆಯನ್ನು ಕನ್ನಡಕ್ಕೆ ಬದಲಾಯಿಸಲಾಗಿದೆ",
-    hi: "भाषा बदलकर हिंदी कर दी गई है"
+    hi: "भाषा बदलकर हिंदी कर दी गई है",
+    te: "భాషను తెలుగులోకి మార్చారు",
+    ta: "மொழி தமிழுக்கு மாற்றப்பட்டது",
+    ml: "ഭാഷ മലയാളത്തിലേക്ക് മാറ്റി",
+    bn: "भाषा বাংলায় পরিবর্তন করা হয়েছে",
+    mr: "भाषा मराठी मध्ये बदलली आहे"
   };
   showToast(msgMap[lang] || "Language changed");
 }
@@ -2131,6 +2397,9 @@ function shareReferral(platform) {
     case 'whatsapp':
       shareUrl = `https://api.whatsapp.com/send?text=${textEncoded}`;
       break;
+    case 'telegram':
+      shareUrl = `https://t.me/share/url?url=${urlEncoded}&text=${textEncoded}`;
+      break;
     case 'x':
       shareUrl = `https://x.com/intent/tweet?text=${textEncoded}`;
       break;
@@ -2144,6 +2413,12 @@ function shareReferral(platform) {
       copyReferral();
       alert("Instagram sharing: Code copied to clipboard! Paste it into Instagram Story, DM, or post description.");
       return;
+    case 'gmail':
+      shareUrl = `mailto:?subject=${encodeURIComponent("Join me on CrimeScope AI 2.0")}&body=${textEncoded}`;
+      break;
+    case 'sms':
+      shareUrl = `sms:?body=${textEncoded}`;
+      break;
   }
   
   if (shareUrl) {
@@ -2210,15 +2485,345 @@ function toggleSecurityAlerts(checked) {
 }
 
 function changePhoneNumber() {
-  const phoneInput = document.getElementById('new-phone-input');
+  const phoneInput = document.getElementById('profile-phone-input') || document.getElementById('new-phone-input');
   if (phoneInput && phoneInput.value.trim()) {
     const num = phoneInput.value.trim();
-    localStorage.setItem('phoneNumber', num);
+    localStorage.setItem('profilePhone', num);
     showToast("Phone number updated to " + num);
+    loadUserProfile();
   } else {
     showToast("Please enter a valid phone number.");
   }
 }
+
+function saveAccountPhone() {
+  changePhoneNumber();
+}
+
+function switchSettingsTab(tabName, btnElement) {
+  // Toggle active tab link
+  const sidebar = btnElement.parentElement;
+  if (sidebar) {
+    sidebar.querySelectorAll('.settings-tab-link').forEach(btn => btn.classList.remove('active'));
+  }
+  btnElement.classList.add('active');
+  
+  // Toggle active settings pane
+  document.querySelectorAll('.settings-pane').forEach(pane => pane.classList.remove('active'));
+  const targetPane = document.getElementById('settings-pane-' + tabName);
+  if (targetPane) {
+    targetPane.classList.add('active');
+  }
+  
+  if (localStorage.getItem('screenReader') === 'enabled') {
+    speakText(`Switched to settings category ${tabName}`);
+  }
+}
+
+function loadUserProfile() {
+  const name = localStorage.getItem('profileName') || 'Guest User';
+  const email = localStorage.getItem('profileEmail') || 'guest@example.com';
+  const phone = localStorage.getItem('profilePhone') || '+91 98765 43210';
+  const avatar = localStorage.getItem('profileAvatar') || 'https://www.w3schools.com/howto/img_avatar.png';
+  const isVerified = localStorage.getItem('profileVerified') === 'true';
+
+  const uDispName = document.getElementById('user-display-name');
+  if (uDispName) uDispName.textContent = name;
+  
+  const uDispEmail = document.getElementById('user-display-email');
+  if (uDispEmail) uDispEmail.textContent = email;
+
+  const pMetaName = document.getElementById('profile-meta-name');
+  if (pMetaName) pMetaName.textContent = name;
+
+  const pNameInput = document.getElementById('profile-name-input');
+  if (pNameInput) pNameInput.value = name;
+
+  const pEmailInput = document.getElementById('profile-email-input');
+  if (pEmailInput) pEmailInput.value = email;
+
+  const pPhoneInput = document.getElementById('profile-phone-input');
+  if (pPhoneInput) pPhoneInput.value = phone;
+
+  const avatarImg = document.getElementById('settings-profile-avatar');
+  if (avatarImg) avatarImg.src = avatar;
+
+  const badge = document.getElementById('verification-status-badge');
+  if (badge) {
+    if (isVerified) {
+      badge.textContent = 'Verified';
+      badge.className = 'verification-badge verified';
+    } else {
+      badge.textContent = 'Unverified';
+      badge.className = 'verification-badge unverified';
+    }
+  }
+}
+
+function triggerAvatarUpload() {
+  const fileInput = document.getElementById('avatar-file-input');
+  if (fileInput) fileInput.click();
+}
+
+function previewAvatar(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const imgDataUrl = e.target.result;
+      localStorage.setItem('profileAvatar', imgDataUrl);
+      const avatarImg = document.getElementById('settings-profile-avatar');
+      if (avatarImg) avatarImg.src = imgDataUrl;
+      
+      const userAvatar = document.getElementById('user-avatar');
+      if (userAvatar) userAvatar.src = imgDataUrl;
+      
+      showToast("Profile picture updated!");
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function requestAccountVerification() {
+  showToast("Verification request submitted! Review is in progress.");
+  localStorage.setItem('profileVerified', 'true');
+  setTimeout(() => {
+    loadUserProfile();
+  }, 1000);
+}
+
+function deleteUserAccount() {
+  if (confirm("Are you sure you want to delete your account? All local preferences and history will be purged.")) {
+    localStorage.clear();
+    showToast("Account deleted. Reverting to guest defaults.");
+    setTimeout(() => {
+      window.location.hash = '';
+      window.location.reload();
+    }, 1200);
+  }
+}
+
+function toggle2FA(checked) {
+  localStorage.setItem('security2FA', checked ? 'enabled' : 'disabled');
+  showToast(checked ? "Two-Factor Authentication Enabled" : "Two-Factor Authentication Disabled");
+}
+
+function toggleBiometric(checked) {
+  localStorage.setItem('securityBiometric', checked ? 'enabled' : 'disabled');
+  showToast(checked ? "Biometric Sign In Enabled" : "Biometric Sign In Disabled");
+}
+
+function handlePasswordChange(event) {
+  event.preventDefault();
+  const currentPass = document.getElementById('current-pass').value;
+  const newPass = document.getElementById('new-pass').value;
+  if (currentPass && newPass) {
+    showToast("Password updated successfully!");
+    document.getElementById('current-pass').value = '';
+    document.getElementById('new-pass').value = '';
+  }
+}
+
+function terminateSession(btnElement) {
+  const row = btnElement.closest('.device-item');
+  if (row) {
+    row.style.opacity = '0.5';
+    btnElement.disabled = true;
+    btnElement.textContent = 'Revoking...';
+    setTimeout(() => {
+      row.remove();
+      showToast("Session terminated successfully.");
+    }, 800);
+  }
+}
+
+function terminateAllOtherSessions() {
+  if (confirm("Are you sure you want to revoke all other active sessions?")) {
+    const items = document.querySelectorAll('.device-item');
+    items.forEach(item => {
+      if (!item.textContent.includes('Current Session')) {
+        item.style.opacity = '0.5';
+        setTimeout(() => item.remove(), 500);
+      }
+    });
+    showToast("All other active sessions revoked.");
+  }
+}
+
+function changeProfileVisibility(value) {
+  localStorage.setItem('privacyVisibility', value);
+  showToast("Profile visibility set to " + value.toUpperCase());
+}
+
+let blockedUsersList = JSON.parse(localStorage.getItem('blockedUsers') || '[]');
+
+function updateBlockedUsersUI() {
+  const container = document.getElementById('blocked-users-container');
+  if (!container) return;
+  
+  if (blockedUsersList.length === 0) {
+    container.innerHTML = '<div class="no-blocked-users">No blocked users</div>';
+  } else {
+    container.innerHTML = blockedUsersList.map((email, idx) => `
+      <div class="blocked-user-row">
+        <span>${email}</span>
+        <button class="btn-unblock" onclick="unblockUser(${idx})">Unblock</button>
+      </div>
+    `).join('');
+  }
+}
+
+function addBlockedUser() {
+  const input = document.getElementById('block-user-input');
+  if (input && input.value.trim()) {
+    const email = input.value.trim();
+    if (!blockedUsersList.includes(email)) {
+      blockedUsersList.push(email);
+      localStorage.setItem('blockedUsers', JSON.stringify(blockedUsersList));
+      updateBlockedUsersUI();
+      showToast(`${email} has been blocked.`);
+      input.value = '';
+    } else {
+      showToast("User is already blocked.");
+    }
+  }
+}
+
+function unblockUser(idx) {
+  const email = blockedUsersList[idx];
+  blockedUsersList.splice(idx, 1);
+  localStorage.setItem('blockedUsers', JSON.stringify(blockedUsersList));
+  updateBlockedUsersUI();
+  showToast(`${email} has been unblocked.`);
+}
+
+function exportAccountData() {
+  const data = {
+    profile: {
+      name: localStorage.getItem('profileName') || 'Guest User',
+      email: localStorage.getItem('profileEmail') || 'guest@example.com',
+      phone: localStorage.getItem('profilePhone') || '+91 98765 43210'
+    },
+    settings: {
+      theme: localStorage.getItem('crimescope-theme') || 'dark',
+      contrast: localStorage.getItem('contrast') || 'normal',
+      motion: localStorage.getItem('motion') || 'normal',
+      appLanguage: localStorage.getItem('appLanguage') || 'en',
+      voiceGender: localStorage.getItem('voiceGender') || 'female',
+      textsize: localStorage.getItem('textsize') || 'medium',
+      dyslexia: localStorage.getItem('dyslexia') || 'disabled',
+      colorblind: localStorage.getItem('colorblind') || 'normal',
+      haptic: localStorage.getItem('hapticFeedback') || 'enabled',
+      screenReader: localStorage.getItem('screenReader') || 'disabled'
+    },
+    blockedUsers: blockedUsersList,
+    exportTimestamp: new Date().toISOString()
+  };
+  
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `crimescope_profile_export_${Date.now()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  showToast("Account statistics data exported successfully.");
+}
+
+function requestAnalyticsErasure() {
+  if (confirm("Are you sure you want to purge all cached crime analytics files and digital twin forecasts? This cannot be undone.")) {
+    showToast("Purging analytics caches...");
+    setTimeout(() => {
+      showToast("Analytics databases and cache blocks successfully cleared.");
+    }, 1000);
+  }
+}
+
+function toggleAutoLanguage(checked) {
+  localStorage.setItem('autoLanguage', checked ? 'true' : 'false');
+  applyStoredLanguage();
+  showToast(checked ? "Language Auto-Detection Enabled" : "Language Auto-Detection Disabled");
+}
+
+function clearTranslationCache() {
+  showToast("Clearing local translation buffer cache...");
+  setTimeout(() => {
+    showToast("Translation cache cleared successfully.");
+  }, 800);
+}
+
+function changeTextSizing(size) {
+  localStorage.setItem('textsize', size);
+  applyStoredAccessibility();
+  showToast(`Font size scale set to: ${size.toUpperCase()}`);
+}
+
+function toggleDyslexiaFont(checked) {
+  localStorage.setItem('dyslexia', checked ? 'enabled' : 'disabled');
+  applyStoredAccessibility();
+  showToast(checked ? "Dyslexia Friendly Font Enabled" : "Dyslexia Friendly Font Disabled");
+}
+
+function changeColorBlindMode(mode) {
+  localStorage.setItem('colorblind', mode);
+  applyStoredAccessibility();
+  showToast(`Color adaptation set to: ${mode.toUpperCase()}`);
+}
+
+// Global click check for haptic setting is loaded in DOMContentLoaded
+
+function toggleHapticFeedback(checked) {
+  localStorage.setItem('hapticFeedback', checked ? 'enabled' : 'disabled');
+  showToast(checked ? "Haptic click feedback enabled" : "Haptic click feedback disabled");
+}
+
+function toggleScreenReader(checked) {
+  localStorage.setItem('screenReader', checked ? 'enabled' : 'disabled');
+  showToast(checked ? "Screen Reader Announcer Enabled" : "Screen Reader Announcer Disabled");
+  if (checked) {
+    speakText("Screen reader mode activated. Announcing page navigation updates.");
+  }
+}
+
+function toggleNotificationCategory(category, checked) {
+  localStorage.setItem(`notif-${category}`, checked ? 'enabled' : 'disabled');
+  showToast(`${category.charAt(0).toUpperCase() + category.slice(1)} alerts set to: ${checked ? 'ON' : 'OFF'}`);
+}
+
+function startLiveChat() {
+  showToast("Initiating secure chat tunnel to police support desk...");
+  setTimeout(() => {
+    showToast("Live support desk is currently offline. Please send an email or submit a ticket.");
+  }, 1200);
+}
+
+// Add event listeners for profile inputs to auto-save in localStorage
+document.addEventListener('DOMContentLoaded', () => {
+  const pNameInput = document.getElementById('profile-name-input');
+  if (pNameInput) {
+    pNameInput.addEventListener('change', (e) => {
+      const val = e.target.value.trim();
+      if (val) {
+        localStorage.setItem('profileName', val);
+        loadUserProfile();
+        showToast("Profile name updated to " + val);
+      }
+    });
+  }
+
+  const pEmailInput = document.getElementById('profile-email-input');
+  if (pEmailInput) {
+    pEmailInput.addEventListener('change', (e) => {
+      const val = e.target.value.trim();
+      if (val) {
+        localStorage.setItem('profileEmail', val);
+        loadUserProfile();
+        showToast("Profile email updated to " + val);
+      }
+    });
+  }
+});
 
 function showToast(msg) {
   const oldToast = document.querySelector('.toast-msg');
