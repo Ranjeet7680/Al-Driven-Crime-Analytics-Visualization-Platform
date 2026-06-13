@@ -2,6 +2,21 @@
 //   CrimeScope AI 2.0 — Complete Application
 // ============================================
 
+// Mock Chart class fallback for offline / restricted CDN scenarios
+if (typeof Chart === 'undefined') {
+  window.Chart = class {
+    constructor(ctx, config) {
+      this.ctx = ctx;
+      this.config = config;
+      this.data = config.data || { datasets: [{}, {}] };
+      this.options = config.options || {};
+    }
+    destroy() {}
+    update() {}
+  };
+  window.Chart.defaults = { color: '#94a3b8' };
+}
+
 // ===================== LOADING SCREEN =====================
 function runLoadingScreen() {
   const screen = document.getElementById('loading-screen');
@@ -38,19 +53,20 @@ function toggleTheme() {
   const next = current === 'dark' ? 'light' : 'dark';
   html.setAttribute('data-theme', next);
   localStorage.setItem('crimescope-theme', next);
-  // Re-render charts in light mode with updated background
-  if (next === 'light') {
-    Chart.defaults.color = '#475569';
-    Object.values(charts).forEach(ch => {
-      if (!ch || !ch.options) return;
-      try { ch.update('none'); } catch(e) {}
-    });
-  } else {
-    Chart.defaults.color = '#94a3b8';
-    Object.values(charts).forEach(ch => {
-      if (!ch || !ch.options) return;
-      try { ch.update('none'); } catch(e) {}
-    });
+  if (typeof Chart !== 'undefined') {
+    if (next === 'light') {
+      Chart.defaults.color = '#475569';
+      Object.values(charts).forEach(ch => {
+        if (!ch || !ch.options) return;
+        try { ch.update('none'); } catch(e) {}
+      });
+    } else {
+      Chart.defaults.color = '#94a3b8';
+      Object.values(charts).forEach(ch => {
+        if (!ch || !ch.options) return;
+        try { ch.update('none'); } catch(e) {}
+      });
+    }
   }
   // Redraw the heatmap canvas with new theme colors
   const heatPage = document.getElementById('page-heatmap');
@@ -65,7 +81,9 @@ function applyStoredTheme() {
 }
 
 
-Chart.defaults.color = '#94a3b8';
+if (typeof Chart !== 'undefined') {
+  Chart.defaults.color = '#94a3b8';
+}
 const C = CRIME_DATA.colors;
 const charts = {};
 
