@@ -606,6 +606,21 @@
     }
 
     /* ===== SETTINGS LAYOUT & TAB SYSTEM ===== */
+    .settings-tab-icon {
+      width: 16px;
+      height: 16px;
+      stroke-width: 2.2px;
+      flex-shrink: 0;
+    }
+    .settings-title-icon {
+      width: 20px;
+      height: 20px;
+      stroke-width: 2.2px;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 8px;
+      color: var(--purple);
+    }
     .settings-wrapper {
       display: flex;
       gap: 24px;
@@ -1803,31 +1818,64 @@
       <!-- PAGE: SETTINGS & SAFETY -->
       <section class="page" id="page-settings">
         <div class="section-header">
-          <h1 class="section-title">⚙️ Settings & Safety</h1>
+          <h1 class="section-title"><svg class="settings-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> Settings & Safety</h1>
           <p class="section-sub">Manage accessibility, security notifications, languages, referrals, and help resources</p>
         </div>
 
         <div class="settings-wrapper">
           <!-- Left settings menu bar -->
           <div class="settings-sidebar">
-            <button class="settings-tab-link active" onclick="switchSettingsTab('account', this)">👤 Account & Profile</button>
-            <button class="settings-tab-link" onclick="switchSettingsTab('security', this)">🔐 Security & 2FA</button>
-            <button class="settings-tab-link" onclick="switchSettingsTab('privacy', this)">🔒 Privacy Controls</button>
-            <button class="settings-tab-link" onclick="switchSettingsTab('language', this)">🌍 Language Setup</button>
-            <button class="settings-tab-link" onclick="switchSettingsTab('accessibility', this)">♿ Accessibility</button>
-            <button class="settings-tab-link" onclick="switchSettingsTab('referrals', this)">📢 Referral Program</button>
-            <button class="settings-tab-link" onclick="switchSettingsTab('notifications', this)">🔔 Notification Setup</button>
-            <button class="settings-tab-link" onclick="switchSettingsTab('help', this)">🆘 Help & Feedback</button>
-            <button class="settings-tab-link" onclick="switchSettingsTab('premium', this)">🏆 Premium Features</button>
-            <button class="settings-tab-link" onclick="switchSettingsTab('about', this)">ℹ️ About App</button>
-            <button class="settings-tab-link text-danger" onclick="handleSignOut()" style="margin-top:auto;">🚪 Logout</button>
+            <button class="settings-tab-link active" onclick="switchSettingsTab('account', this)">
+              <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              Account & Profile
+            </button>
+            <button class="settings-tab-link" onclick="switchSettingsTab('security', this)">
+              <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              Security & 2FA
+            </button>
+            <button class="settings-tab-link" onclick="switchSettingsTab('privacy', this)">
+              <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              Privacy Controls
+            </button>
+            <button class="settings-tab-link" onclick="switchSettingsTab('language', this)">
+              <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+              Language Setup
+            </button>
+            <button class="settings-tab-link" onclick="switchSettingsTab('accessibility', this)">
+              <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v8M8 12h8"></path></svg>
+              Accessibility
+            </button>
+            <button class="settings-tab-link" onclick="switchSettingsTab('referrals', this)">
+              <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M2 12h20M12 2v10M12 2a4 4 0 0 1 4 4c0 2-4 6-4 6s-4-4-4-4a4 4 0 0 1 4-4z"></path></svg>
+              Referral Program
+            </button>
+            <button class="settings-tab-link" onclick="switchSettingsTab('notifications', this)">
+              <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              Notification Setup
+            </button>
+            <button class="settings-tab-link" onclick="switchSettingsTab('help', this)">
+              <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"></path></svg>
+              Help & Feedback
+            </button>
+            <button class="settings-tab-link" onclick="switchSettingsTab('premium', this)">
+              <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              Premium Features
+            </button>
+            <button class="settings-tab-link" onclick="switchSettingsTab('about', this)">
+              <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              About App
+            </button>
+            <button class="settings-tab-link text-danger" onclick="handleSignOut()" style="margin-top:auto;">
+              <svg class="settings-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg>
+              Logout
+            </button>
           </div>
 
           <!-- Right settings main pane -->
           <div class="settings-content-area">
             <!-- PANE 1: Account -->
             <div class="settings-pane active" id="settings-pane-account">
-              <h2 class="pane-title">👤 Account & Profile Settings</h2>
+              <h2 class="pane-title"><svg class="settings-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Account & Profile Settings</h2>
               <p class="pane-desc">Manage your profile information, email credentials, contact details, and account status</p>
               
               <div class="profile-pic-container">
@@ -1887,7 +1935,7 @@
 
             <!-- PANE 2: Security -->
             <div class="settings-pane" id="settings-pane-security">
-              <h2 class="pane-title">🔐 Security & Authentication</h2>
+              <h2 class="pane-title"><svg class="settings-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Security & Authentication</h2>
               <p class="pane-desc">Manage credentials, toggle multi-factor protection, and track active log history</p>
 
               <div class="settings-group">
@@ -1982,7 +2030,7 @@
 
             <!-- PANE 3: Privacy -->
             <div class="settings-pane" id="settings-pane-privacy">
-              <h2 class="pane-title">🔒 Privacy & Data Policy Controls</h2>
+              <h2 class="pane-title"><svg class="settings-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> Privacy & Data Policy Controls</h2>
               <p class="pane-desc">Manage visibility variables, block lists, data retention, and export local statistics</p>
 
               <div class="settings-group">
@@ -2025,7 +2073,7 @@
 
             <!-- PANE 4: Language -->
             <div class="settings-pane" id="settings-pane-language">
-              <h2 class="pane-title">🌍 Language & Localization Settings</h2>
+              <h2 class="pane-title"><svg class="settings-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> Language & Localization Settings</h2>
               <p class="pane-desc">Select the default interface language for CrimeScope dashboards, alerts, and navigation tools</p>
 
               <div class="settings-group">
@@ -2066,7 +2114,7 @@
 
             <!-- PANE 5: Accessibility -->
             <div class="settings-pane" id="settings-pane-accessibility">
-              <h2 class="pane-title">♿ Accessibility & Visual Assist Center</h2>
+              <h2 class="pane-title"><svg class="settings-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v8M8 12h8"></path></svg> Accessibility & Visual Assist Center</h2>
               <p class="pane-desc">Enable assistive visuals, read-aloud configurations, and tactile haptic indicators</p>
 
               <div class="settings-group">
@@ -2166,7 +2214,7 @@
 
             <!-- PANE 6: Referrals -->
             <div class="settings-pane" id="settings-pane-referrals">
-              <h2 class="pane-title">📢 Invite Friends & Referral Dashboard</h2>
+              <h2 class="pane-title"><svg class="settings-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M2 12h20M12 2v10M12 2a4 4 0 0 1 4 4c0 2-4 6-4 6s-4-4-4-4a4 4 0 0 1 4-4z"></path></svg> Invite Friends & Referral Dashboard</h2>
               <p class="pane-desc">Share CrimeScope AI with other police divisions and earn premium analytical tokens</p>
 
               <div class="referral-dashboard-grid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px;">
@@ -2201,7 +2249,7 @@
 
             <!-- PANE 7: Notifications -->
             <div class="settings-pane" id="settings-pane-notifications">
-              <h2 class="pane-title">🔔 Notification & Alert Preferences</h2>
+              <h2 class="pane-title"><svg class="settings-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg> Notification & Alert Preferences</h2>
               <p class="pane-desc">Choose which types of system queries and announcements trigger active device notifications</p>
 
               <div class="settings-group">
@@ -2251,7 +2299,7 @@
 
             <!-- PANE 8: Help & Support -->
             <div class="settings-pane" id="settings-pane-help">
-              <h2 class="pane-title">🆘 Help Center & Support Channels</h2>
+              <h2 class="pane-title"><svg class="settings-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"></path></svg> Help Center & Support Channels</h2>
               <p class="pane-desc">Need assistance? Access FAQs, start a live chat session, or submit support tickets</p>
 
               <div class="help-sections-tabs">
@@ -2314,7 +2362,7 @@
 
             <!-- PANE 9: Premium Features -->
             <div class="settings-pane" id="settings-pane-premium">
-              <h2 class="pane-title">🏆 Premium Enterprise Features</h2>
+              <h2 class="pane-title"><svg class="settings-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> Premium Enterprise Features</h2>
               <p class="pane-desc">Overview of advanced features activated for active state policing departments</p>
               
               <div class="premium-features-list" style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
@@ -2342,7 +2390,7 @@
 
             <!-- PANE 10: About -->
             <div class="settings-pane" id="settings-pane-about">
-              <h2 class="pane-title">ℹ️ About CrimeScope AI</h2>
+              <h2 class="pane-title"><svg class="settings-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> About CrimeScope AI</h2>
               <p class="pane-desc">Platform and release details for CrimeScope AI 2.0</p>
               
               <div class="about-app-card" style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:10px;">
