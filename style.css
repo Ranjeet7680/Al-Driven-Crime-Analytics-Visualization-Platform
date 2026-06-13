@@ -1698,9 +1698,25 @@ button{font-family:inherit;cursor:pointer}
 /* ===================== AUTH & USER PROFILE STYLES ===================== */
 .login-page {
   position: fixed; inset: 0; z-index: 500;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--bg); overflow: hidden;
+  display: flex;
+  overflow: hidden;
   transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+/* Show left hero panel on screens wider than 900px */
+@media (min-width: 901px) {
+  .login-hero-panel {
+    display: flex !important;
+  }
+}
+/* Light mode right panel bg */
+[data-theme="light"] #login-page main {
+  background: #f8f9ff !important;
+}
+/* Input focus glow */
+.login-field:focus {
+  border-color: var(--purple) !important;
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.12) !important;
+  background: rgba(124,58,237,0.02) !important;
 }
 .login-container {
   position: relative; z-index: 10;
