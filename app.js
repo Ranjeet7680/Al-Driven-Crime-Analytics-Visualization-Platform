@@ -1087,41 +1087,95 @@ function speakText(text) {
     cleanText = cleanText.replace(/&[a-z0-9#]+;/gi, "");
     const utterance = new SpeechSynthesisUtterance(cleanText);
     
-    // Choose gender voice
+    const lang = localStorage.getItem('appLanguage') || 'en';
     const gender = localStorage.getItem('voiceGender') || 'female';
     const voices = window.speechSynthesis.getVoices();
-    let selectedVoice = null;
+    
+    // Map of app lang code to locales
+    const langLocales = {
+      en: 'en-IN',
+      hi: 'hi-IN',
+      kn: 'kn-IN',
+      te: 'te-IN',
+      ta: 'ta-IN',
+      ml: 'ml-IN',
+      bn: 'bn-IN',
+      mr: 'mr-IN'
+    };
+    
+    const targetLang = langLocales[lang] || 'en-IN';
+    utterance.lang = targetLang;
     
     if (gender === 'female') {
-      utterance.pitch = 1.25;
-      selectedVoice = voices.find(v => 
-        (v.name.toLowerCase().includes('female') || 
-         v.name.toLowerCase().includes('zira') || 
-         v.name.toLowerCase().includes('hazel') ||
-         v.name.toLowerCase().includes('samantha') || 
-         v.name.toLowerCase().includes('haruka') ||
-         v.name.toLowerCase().includes('sangeeta') ||
-         v.name.toLowerCase().includes('heera')) && v.lang.startsWith('en')
-      );
+      utterance.pitch = 1.2;
     } else {
       utterance.pitch = 0.85;
-      selectedVoice = voices.find(v => 
-        (v.name.toLowerCase().includes('male') || 
-         v.name.toLowerCase().includes('david') || 
-         v.name.toLowerCase().includes('ravi') || 
-         v.name.toLowerCase().includes('george') ||
-         v.name.toLowerCase().includes('mark')) && v.lang.startsWith('en')
-      );
+    }
+    
+    let selectedVoice = null;
+    
+    // Find all voices matching the current target language
+    const langVoices = voices.filter(v => v.lang.toLowerCase().startsWith(lang.toLowerCase()));
+    
+    if (langVoices.length > 0) {
+      if (gender === 'female') {
+        selectedVoice = langVoices.find(v => 
+          v.name.toLowerCase().includes('female') || 
+          v.name.toLowerCase().includes('zira') || 
+          v.name.toLowerCase().includes('hazel') ||
+          v.name.toLowerCase().includes('samantha') || 
+          v.name.toLowerCase().includes('sangeeta') ||
+          v.name.toLowerCase().includes('kalpana') ||
+          v.name.toLowerCase().includes('heera') ||
+          v.name.toLowerCase().includes('shruti') ||
+          v.name.toLowerCase().includes('swara') ||
+          v.name.toLowerCase().includes('priya') ||
+          v.name.toLowerCase().includes('neha')
+        );
+      } else {
+        selectedVoice = langVoices.find(v => 
+          v.name.toLowerCase().includes('male') || 
+          v.name.toLowerCase().includes('david') || 
+          v.name.toLowerCase().includes('ravi') || 
+          v.name.toLowerCase().includes('george') ||
+          v.name.toLowerCase().includes('mark') ||
+          v.name.toLowerCase().includes('anant') ||
+          v.name.toLowerCase().includes('madhur') ||
+          v.name.toLowerCase().includes('hemant')
+        );
+      }
+      
+      // Fallback to first available language voice if gender specific not found
+      if (!selectedVoice) {
+        selectedVoice = langVoices[0];
+      }
     }
     
     if (selectedVoice) {
       utterance.voice = selectedVoice;
     } else {
-      const engVoice = voices.find(v => v.lang.startsWith('en'));
-      if (engVoice) utterance.voice = engVoice;
+      // Fallback: search for English voices with gender if target language voices are unavailable
+      if (gender === 'female') {
+        selectedVoice = voices.find(v => 
+          (v.name.toLowerCase().includes('female') || 
+           v.name.toLowerCase().includes('zira') || 
+           v.name.toLowerCase().includes('hazel') ||
+           v.name.toLowerCase().includes('samantha') || 
+           v.name.toLowerCase().includes('heera')) && v.lang.toLowerCase().startsWith('en')
+        );
+      } else {
+        selectedVoice = voices.find(v => 
+          (v.name.toLowerCase().includes('male') || 
+           v.name.toLowerCase().includes('david') || 
+           v.name.toLowerCase().includes('ravi') || 
+           v.name.toLowerCase().includes('george')) && v.lang.toLowerCase().startsWith('en')
+        );
+      }
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+      }
     }
     
-    utterance.lang = 'en-IN';
     window.speechSynthesis.speak(utterance);
   }
 }
