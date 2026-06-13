@@ -1132,34 +1132,44 @@ function speakText(text) {
     
     let selectedVoice = null;
     
-    // Find all voices matching the current target language
-    const langVoices = voices.filter(v => v.lang.toLowerCase().startsWith(lang.toLowerCase()));
+    // Find all voices matching the current target language safely
+    const langVoices = voices.filter(v => 
+      v.lang && 
+      typeof v.lang === 'string' && 
+      v.lang.toLowerCase().startsWith(lang.toLowerCase())
+    );
     
     if (langVoices.length > 0) {
       if (gender === 'female') {
         selectedVoice = langVoices.find(v => 
-          v.name.toLowerCase().includes('female') || 
-          v.name.toLowerCase().includes('zira') || 
-          v.name.toLowerCase().includes('hazel') ||
-          v.name.toLowerCase().includes('samantha') || 
-          v.name.toLowerCase().includes('sangeeta') ||
-          v.name.toLowerCase().includes('kalpana') ||
-          v.name.toLowerCase().includes('heera') ||
-          v.name.toLowerCase().includes('shruti') ||
-          v.name.toLowerCase().includes('swara') ||
-          v.name.toLowerCase().includes('priya') ||
-          v.name.toLowerCase().includes('neha')
+          v.name && 
+          typeof v.name === 'string' && (
+            v.name.toLowerCase().includes('female') || 
+            v.name.toLowerCase().includes('zira') || 
+            v.name.toLowerCase().includes('hazel') ||
+            v.name.toLowerCase().includes('samantha') || 
+            v.name.toLowerCase().includes('sangeeta') ||
+            v.name.toLowerCase().includes('kalpana') ||
+            v.name.toLowerCase().includes('heera') ||
+            v.name.toLowerCase().includes('shruti') ||
+            v.name.toLowerCase().includes('swara') ||
+            v.name.toLowerCase().includes('priya') ||
+            v.name.toLowerCase().includes('neha')
+          )
         );
       } else {
         selectedVoice = langVoices.find(v => 
-          v.name.toLowerCase().includes('male') || 
-          v.name.toLowerCase().includes('david') || 
-          v.name.toLowerCase().includes('ravi') || 
-          v.name.toLowerCase().includes('george') ||
-          v.name.toLowerCase().includes('mark') ||
-          v.name.toLowerCase().includes('anant') ||
-          v.name.toLowerCase().includes('madhur') ||
-          v.name.toLowerCase().includes('hemant')
+          v.name && 
+          typeof v.name === 'string' && (
+            v.name.toLowerCase().includes('male') || 
+            v.name.toLowerCase().includes('david') || 
+            v.name.toLowerCase().includes('ravi') || 
+            v.name.toLowerCase().includes('george') ||
+            v.name.toLowerCase().includes('mark') ||
+            v.name.toLowerCase().includes('anant') ||
+            v.name.toLowerCase().includes('madhur') ||
+            v.name.toLowerCase().includes('hemant')
+          )
         );
       }
       
@@ -1172,21 +1182,31 @@ function speakText(text) {
     if (selectedVoice) {
       utterance.voice = selectedVoice;
     } else {
-      // Fallback: search for English voices with gender if target language voices are unavailable
+      // Fallback: search for English voices with gender safely if target language voices are unavailable
       if (gender === 'female') {
         selectedVoice = voices.find(v => 
-          (v.name.toLowerCase().includes('female') || 
-           v.name.toLowerCase().includes('zira') || 
-           v.name.toLowerCase().includes('hazel') ||
-           v.name.toLowerCase().includes('samantha') || 
-           v.name.toLowerCase().includes('heera')) && v.lang.toLowerCase().startsWith('en')
+          v.name && 
+          v.lang && 
+          typeof v.name === 'string' && 
+          typeof v.lang === 'string' && (
+            v.name.toLowerCase().includes('female') || 
+            v.name.toLowerCase().includes('zira') || 
+            v.name.toLowerCase().includes('hazel') ||
+            v.name.toLowerCase().includes('samantha') || 
+            v.name.toLowerCase().includes('heera')
+          ) && v.lang.toLowerCase().startsWith('en')
         );
       } else {
         selectedVoice = voices.find(v => 
-          (v.name.toLowerCase().includes('male') || 
-           v.name.toLowerCase().includes('david') || 
-           v.name.toLowerCase().includes('ravi') || 
-           v.name.toLowerCase().includes('george')) && v.lang.toLowerCase().startsWith('en')
+          v.name && 
+          v.lang && 
+          typeof v.name === 'string' && 
+          typeof v.lang === 'string' && (
+            v.name.toLowerCase().includes('male') || 
+            v.name.toLowerCase().includes('david') || 
+            v.name.toLowerCase().includes('ravi') || 
+            v.name.toLowerCase().includes('george')
+          ) && v.lang.toLowerCase().startsWith('en')
         );
       }
       if (selectedVoice) {
@@ -1194,7 +1214,11 @@ function speakText(text) {
       }
     }
     
-    window.speechSynthesis.speak(utterance);
+    try {
+      window.speechSynthesis.speak(utterance);
+    } catch (err) {
+      console.warn("Speech synthesis error:", err);
+    }
   }
 }
 
@@ -1862,6 +1886,7 @@ document.addEventListener('DOMContentLoaded', () => {
   applyStoredAccessibility();
   applyStoredLanguage();
   loadUserProfile();
+  initSettingsPage();
 
   // Haptic feedback click simulation
   window.addEventListener('click', function(e) {
@@ -2557,19 +2582,46 @@ function toggleSecurityAlerts(checked) {
 }
 
 function changePhoneNumber() {
-  const phoneInput = document.getElementById('profile-phone-input') || document.getElementById('new-phone-input');
-  if (phoneInput && phoneInput.value.trim()) {
-    const num = phoneInput.value.trim();
-    localStorage.setItem('profilePhone', num);
-    showToast("Phone number updated to " + num);
-    loadUserProfile();
-  } else {
-    showToast("Please enter a valid phone number.");
-  }
+  saveAccountPhone();
 }
 
 function saveAccountPhone() {
-  changePhoneNumber();
+  const nameInput = document.getElementById('profile-name-input');
+  const emailInput = document.getElementById('profile-email-input');
+  const phoneInput = document.getElementById('profile-phone-input') || document.getElementById('new-phone-input');
+  
+  let updated = false;
+  
+  if (nameInput) {
+    const nameVal = nameInput.value.trim();
+    if (nameVal) {
+      localStorage.setItem('profileName', nameVal);
+      updated = true;
+    }
+  }
+  
+  if (emailInput) {
+    const emailVal = emailInput.value.trim();
+    if (emailVal) {
+      localStorage.setItem('profileEmail', emailVal);
+      updated = true;
+    }
+  }
+  
+  if (phoneInput) {
+    const phoneVal = phoneInput.value.trim();
+    if (phoneVal) {
+      localStorage.setItem('profilePhone', phoneVal);
+      updated = true;
+    }
+  }
+  
+  if (updated) {
+    loadUserProfile();
+    showToast("Profile details updated successfully!");
+  } else {
+    showToast("Please enter valid profile details.");
+  }
 }
 
 function switchSettingsTab(tabName, btnElement) {
