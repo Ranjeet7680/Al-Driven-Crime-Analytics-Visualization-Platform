@@ -200,7 +200,7 @@ const pageTitles = {
   trends: 'Crime Trends', vulnerable: 'Vulnerable Groups',
   'ai-prediction': '🧠 AI Prediction Engine', 'ai-assistant': '🤖 AI Copilot',
   alerts: '🚨 Alert Center', simulator: '🎮 Digital Twin Simulator',
-  explainability: '🔬 AI Explainability', team: 'Our Team'
+  explainability: '🔬 AI Explainability', team: 'Our Team', settings: '⚙️ Settings & Safety'
 };
 
 function showPage(name) {
@@ -217,7 +217,7 @@ function showPage(name) {
       'crime-types': initCrimeTypes, trends: initTrends, vulnerable: initVulnerable,
       'ai-prediction': initAIPrediction, 'ai-assistant': () => {},
       alerts: initAlerts, simulator: initSimulator,
-      explainability: initExplainability, team: initTeam
+      explainability: initExplainability, team: initTeam, settings: initSettingsPage
     };
     if (init[name]) init[name]();
   }, 80);
@@ -1082,6 +1082,41 @@ function speakText(text) {
     cleanText = cleanText.replace(/&nbsp;/g, " ");
     cleanText = cleanText.replace(/&[a-z0-9#]+;/gi, "");
     const utterance = new SpeechSynthesisUtterance(cleanText);
+    
+    // Choose gender voice
+    const gender = localStorage.getItem('voiceGender') || 'female';
+    const voices = window.speechSynthesis.getVoices();
+    let selectedVoice = null;
+    
+    if (gender === 'female') {
+      utterance.pitch = 1.25;
+      selectedVoice = voices.find(v => 
+        (v.name.toLowerCase().includes('female') || 
+         v.name.toLowerCase().includes('zira') || 
+         v.name.toLowerCase().includes('hazel') ||
+         v.name.toLowerCase().includes('samantha') || 
+         v.name.toLowerCase().includes('haruka') ||
+         v.name.toLowerCase().includes('sangeeta') ||
+         v.name.toLowerCase().includes('heera')) && v.lang.startsWith('en')
+      );
+    } else {
+      utterance.pitch = 0.85;
+      selectedVoice = voices.find(v => 
+        (v.name.toLowerCase().includes('male') || 
+         v.name.toLowerCase().includes('david') || 
+         v.name.toLowerCase().includes('ravi') || 
+         v.name.toLowerCase().includes('george') ||
+         v.name.toLowerCase().includes('mark')) && v.lang.startsWith('en')
+      );
+    }
+    
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+    } else {
+      const engVoice = voices.find(v => v.lang.startsWith('en'));
+      if (engVoice) utterance.voice = engVoice;
+    }
+    
     utterance.lang = 'en-IN';
     window.speechSynthesis.speak(utterance);
   }
@@ -1747,9 +1782,423 @@ document.addEventListener('DOMContentLoaded', () => {
   const isApp = window.location.hash === '#app';
   if(isApp) enterDashboard();
 
+  // Apply accessibility and language on load
+  applyStoredAccessibility();
+  applyStoredLanguage();
+
   // ---- GLOBAL: Prevent all href="#" links from jumping to top ----
   document.addEventListener('click', function(e) {
     const a = e.target.closest('a[href="#"]');
     if (a) e.preventDefault();
   }, true); // capture phase — fires before onclick
 });
+
+
+// ===================== SETTINGS & SAFETY LOGIC =====================
+
+const localizations = {
+  en: {
+    overview: "Overview",
+    heatmap: "Crime Heatmap",
+    district: "District Analysis",
+    crimeTypes: "Crime Categories",
+    trends: "Trends",
+    vulnerable: "Vulnerable Groups",
+    aiPrediction: "AI Prediction Engine",
+    aiAssistant: "AI Copilot",
+    alerts: "Alert Center",
+    simulator: "Digital Twin Sim",
+    explainability: "AI Explainability",
+    team: "Our Team",
+    welcome: "Welcome Page",
+    kpi1: "Total IPC/BNS Crimes",
+    kpi2: "SLL Crimes",
+    kpi3: "Bengaluru City",
+    kpi4: "Crime Resolution Rate %",
+    kpi5: "Fatal Road Accidents",
+    kpi6: "Women Safety Index",
+    dashboardOverview: "Dashboard Overview"
+  },
+  kn: {
+    overview: "ಅವಲೋಕನ",
+    heatmap: "ಅಪರಾಧ ನಕ್ಷೆ",
+    district: "ಜಿಲ್ಲಾವಾರು ವಿಶ್ಲೇಷಣೆ",
+    crimeTypes: "ಅಪರಾಧ ವಿಭಾಗಗಳು",
+    trends: "ಅಪರಾಧ ಪ್ರವೃತ್ತಿಗಳು",
+    vulnerable: "ದುರ್ಬಲ ಗುಂಪುಗಳು",
+    aiPrediction: "AI ಭವಿಷ್ಯ ನುಡಿಯುವ ಇಂಜಿನ್",
+    aiAssistant: "AI ಸಹಾಯಕ",
+    alerts: "ಎಚ್ಚರಿಕೆ ಕೇಂದ್ರ",
+    simulator: "ಡಿಜಿಟಲ್ ಟ್ವಿನ್ ಸಿಮ್",
+    explainability: "AI ವಿವರಣೆ ನೀಡುವಿಕೆ",
+    team: "ನಮ್ಮ ತಂಡ",
+    welcome: "ಸ್ವಾಗತ ಪುಟ",
+    kpi1: "ಒಟ್ಟು ಐಪಿಸಿ/ಬಿಎನ್ಎಸ್ ಅಪರಾಧಗಳು",
+    kpi2: "ಎಸ್‌ಎಲ್‌ಎಲ್ ಅಪರಾಧಗಳು",
+    kpi3: "ಬೆಂಗಳೂರು ನಗರ",
+    kpi4: "ಅಪರಾಧ ಪರಿಹಾರ ದರ %",
+    kpi5: "ಮಾರಣಾಂತಿಕ ರಸ್ತೆ ಅಪಘಾತಗಳು",
+    kpi6: "ಮಹಿಳಾ ಸುರಕ್ಷತಾ ಸೂಚ್ಯಂಕ",
+    dashboardOverview: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಅವಲೋಕನ"
+  },
+  hi: {
+    overview: "अवलोकन",
+    heatmap: "अपराध हॉटस्पॉट",
+    district: "जिला विश्लेषण",
+    crimeTypes: "अपराध श्रेणियाँ",
+    trends: "रुझान",
+    vulnerable: "संवेदनशील समूह",
+    aiPrediction: "AI पूर्वानुमान इंजन",
+    aiAssistant: "AI सह-पायलट",
+    alerts: "अलर्ट सेंटर",
+    simulator: "डिजिटल ट्विन सिमुलेशन",
+    explainability: "AI स्पष्टीकरण",
+    team: "हमारी टीम",
+    welcome: "स्वागत पृष्ठ",
+    kpi1: "कुल आईपीसी/बीएनएस अपराध",
+    kpi2: "एसएलएल अपराध",
+    kpi3: "बेंगलुरु शहर",
+    kpi4: "अपराध समाधान दर %",
+    kpi5: "घातक सड़क दुर्घटनाएं",
+    kpi6: "महिला सुरक्षा सूचकांक",
+    dashboardOverview: "डैशबोर्ड अवलोकन"
+  }
+};
+
+function applyStoredAccessibility() {
+  const contrast = localStorage.getItem('contrast') || 'normal';
+  const motion = localStorage.getItem('motion') || 'normal';
+  
+  if (contrast === 'high') {
+    document.documentElement.setAttribute('data-contrast', 'high');
+  } else {
+    document.documentElement.removeAttribute('data-contrast');
+  }
+  
+  if (motion === 'reduce') {
+    document.documentElement.setAttribute('data-motion', 'reduce');
+  } else {
+    document.documentElement.removeAttribute('data-motion');
+  }
+}
+
+function applyStoredLanguage() {
+  const lang = localStorage.getItem('appLanguage') || 'en';
+  applyLanguage(lang);
+}
+
+function applyLanguage(lang) {
+  const dict = localizations[lang] || localizations.en;
+  
+  // Update sidebar labels
+  const navMap = {
+    'nav-overview': dict.overview,
+    'nav-heatmap': dict.heatmap,
+    'nav-district': dict.district,
+    'nav-crime-types': dict.crimeTypes,
+    'nav-trends': dict.trends,
+    'nav-vulnerable': dict.vulnerable,
+    'nav-ai-prediction': dict.aiPrediction,
+    'nav-ai-assistant': dict.aiAssistant,
+    'nav-alerts': dict.alerts,
+    'nav-simulator': dict.simulator,
+    'nav-explainability': dict.explainability,
+    'nav-team': dict.team
+  };
+  
+  for (const [id, text] of Object.entries(navMap)) {
+    const el = document.getElementById(id);
+    if (el) {
+      const lbl = el.querySelector('.nav-label');
+      if (lbl) lbl.textContent = text;
+    }
+  }
+  
+  // Welcome page in sidebar nav
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar) {
+    const welcomeLink = sidebar.querySelector('a[onclick*="landing-page"] .nav-label');
+    if (welcomeLink) welcomeLink.textContent = dict.welcome;
+  }
+  
+  // Overview kpi cards
+  const kpiGrid = document.getElementById('kpi-grid');
+  if (kpiGrid) {
+    const kpis = kpiGrid.querySelectorAll('.kpi-card');
+    const kpiLabels = [dict.kpi1, dict.kpi2, dict.kpi3, dict.kpi4, dict.kpi5, dict.kpi6];
+    kpis.forEach((card, idx) => {
+      const lbl = card.querySelector('.kpi-label');
+      if (lbl && kpiLabels[idx]) lbl.textContent = kpiLabels[idx];
+    });
+  }
+  
+  // Update active page title
+  const activePage = document.querySelector('.page.active');
+  if (activePage) {
+    const pageId = activePage.id.replace('page-', '');
+    if (pageId === 'overview') {
+      document.getElementById('page-title').textContent = dict.dashboardOverview;
+    } else {
+      const pageTitleText = pageTitles[pageId] || pageId;
+      document.getElementById('page-title').textContent = pageTitleText;
+    }
+  }
+}
+
+function initSettingsPage() {
+  // Sync High Contrast toggle checkbox
+  const contrastToggle = document.getElementById('contrast-toggle');
+  if (contrastToggle) {
+    contrastToggle.checked = (localStorage.getItem('contrast') === 'high');
+  }
+  
+  // Sync Reduced Motion toggle checkbox
+  const motionToggle = document.getElementById('motion-toggle');
+  if (motionToggle) {
+    motionToggle.checked = (localStorage.getItem('motion') === 'reduce');
+  }
+
+  // Sync Language dropdown
+  const langSelector = document.getElementById('lang-selector');
+  if (langSelector) {
+    langSelector.value = localStorage.getItem('appLanguage') || 'en';
+  }
+
+  // Sync security notifications toggle checkbox
+  const securityToggle = document.getElementById('security-alerts-toggle');
+  if (securityToggle) {
+    securityToggle.checked = (localStorage.getItem('securityNotifications') === 'enabled');
+  }
+
+  // Sync Voice Gender buttons
+  const gender = localStorage.getItem('voiceGender') || 'female';
+  setVoiceGenderUI(gender);
+
+  // Sync saved phone number if any
+  const phoneInput = document.getElementById('new-phone-input');
+  if (phoneInput && localStorage.getItem('phoneNumber')) {
+    phoneInput.value = localStorage.getItem('phoneNumber');
+  }
+}
+
+function toggleHighContrast(checked) {
+  if (checked) {
+    localStorage.setItem('contrast', 'high');
+  } else {
+    localStorage.setItem('contrast', 'normal');
+  }
+  applyStoredAccessibility();
+  showToast(checked ? "High Contrast Mode Enabled" : "High Contrast Mode Disabled");
+}
+
+function toggleReduceMotion(checked) {
+  if (checked) {
+    localStorage.setItem('motion', 'reduce');
+  } else {
+    localStorage.setItem('motion', 'normal');
+  }
+  applyStoredAccessibility();
+  showToast(checked ? "Reduced Motion Enabled" : "Reduced Motion Disabled");
+}
+
+function setVoiceGender(gender) {
+  localStorage.setItem('voiceGender', gender);
+  setVoiceGenderUI(gender);
+  showToast("Voice assistant set to " + (gender === 'male' ? "Male" : "Female"));
+  
+  // Audio preview confirmation
+  setTimeout(() => {
+    speakText("Voice configuration confirmed. Assistant gender is set to " + gender);
+  }, 300);
+}
+
+function setVoiceGenderUI(gender) {
+  // Update Settings buttons
+  const btnFemale = document.getElementById('btn-gender-female');
+  const btnMale = document.getElementById('btn-gender-male');
+  
+  if (btnFemale && btnMale) {
+    if (gender === 'female') {
+      btnFemale.classList.add('active');
+      btnMale.classList.remove('active');
+    } else {
+      btnMale.classList.add('active');
+      btnFemale.classList.remove('active');
+    }
+  }
+
+  // Update Chat Copilot sidebar buttons
+  const chatFemale = document.getElementById('chat-gender-female');
+  const chatMale = document.getElementById('chat-gender-male');
+  
+  if (chatFemale && chatMale) {
+    if (gender === 'female') {
+      chatFemale.classList.add('active');
+      chatMale.classList.remove('active');
+    } else {
+      chatMale.classList.add('active');
+      chatFemale.classList.remove('active');
+    }
+  }
+}
+
+function changeLanguage(lang) {
+  localStorage.setItem('appLanguage', lang);
+  applyStoredLanguage();
+  
+  const msgMap = {
+    en: "Language changed to English",
+    kn: "ಭಾಷೆಯನ್ನು ಕನ್ನಡಕ್ಕೆ ಬದಲಾಯಿಸಲಾಗಿದೆ",
+    hi: "भाषा बदलकर हिंदी कर दी गई है"
+  };
+  showToast(msgMap[lang] || "Language changed");
+}
+
+function generateReferralCode() {
+  const randNum = Math.floor(1000 + Math.random() * 9000);
+  const code = "SCOPE-2026-" + randNum;
+  
+  document.getElementById('generated-ref-code').textContent = code;
+  document.getElementById('referral-display').classList.remove('hidden');
+  showToast("Referral code generated successfully!");
+}
+
+function copyReferral() {
+  const code = document.getElementById('generated-ref-code').textContent;
+  const message = `Hey! Join me on CrimeScope AI 2.0, the advanced AI crime predicting platform. Use my referral code: ${code} to unlock premium security predictions! Check it out!`;
+  
+  navigator.clipboard.writeText(message).then(() => {
+    showToast("Referral invitation copied to clipboard!");
+  }).catch(() => {
+    const dummy = document.createElement("input");
+    document.body.appendChild(dummy);
+    dummy.value = message;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
+    showToast("Referral invitation copied to clipboard!");
+  });
+}
+
+function shareReferral(platform) {
+  const code = document.getElementById('generated-ref-code').textContent;
+  const rawMsg = `Hey! Join me on CrimeScope AI 2.0, the advanced AI crime predicting platform. Use my referral code: ${code} to unlock premium security predictions! Check it out!`;
+  const url = "https://crimescope.ai";
+  
+  const textEncoded = encodeURIComponent(rawMsg);
+  const urlEncoded = encodeURIComponent(url);
+  
+  let shareUrl = "";
+  switch(platform) {
+    case 'whatsapp':
+      shareUrl = `https://api.whatsapp.com/send?text=${textEncoded}`;
+      break;
+    case 'x':
+      shareUrl = `https://x.com/intent/tweet?text=${textEncoded}`;
+      break;
+    case 'facebook':
+      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${urlEncoded}&quote=${textEncoded}`;
+      break;
+    case 'linkedin':
+      shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${urlEncoded}&summary=${textEncoded}`;
+      break;
+    case 'instagram':
+      copyReferral();
+      alert("Instagram sharing: Code copied to clipboard! Paste it into Instagram Story, DM, or post description.");
+      return;
+  }
+  
+  if (shareUrl) {
+    window.open(shareUrl, '_blank');
+  }
+}
+
+function toggleFAQ(element) {
+  const faqItem = element.parentElement;
+  if (faqItem) {
+    faqItem.classList.toggle('open');
+  }
+}
+
+function searchFAQs(query) {
+  const q = query.toLowerCase();
+  const faqItems = document.querySelectorAll('.faq-item');
+  
+  faqItems.forEach(item => {
+    const question = item.querySelector('.faq-question').textContent.toLowerCase();
+    const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+    
+    if (question.includes(q) || answer.includes(q)) {
+      item.style.display = 'block';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+}
+
+function switchHelpTab(tab, btnElement) {
+  const tabContainer = btnElement.parentElement;
+  if (tabContainer) {
+    tabContainer.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  }
+  btnElement.classList.add('active');
+  
+  const helpSection = btnElement.closest('.settings-card');
+  if (helpSection) {
+    helpSection.querySelectorAll('.help-pane').forEach(pane => pane.classList.remove('active'));
+    
+    const targetPane = document.getElementById('help-pane-' + tab);
+    if (targetPane) {
+      targetPane.classList.add('active');
+    }
+  }
+}
+
+function handleContactSubmit(event) {
+  event.preventDefault();
+  const email = document.getElementById('contact-email').value;
+  const msg = document.getElementById('contact-msg').value;
+  
+  if (email && msg) {
+    showToast("Feedback sent successfully! Thank you.");
+    document.getElementById('contact-email').value = '';
+    document.getElementById('contact-msg').value = '';
+  }
+}
+
+function toggleSecurityAlerts(checked) {
+  localStorage.setItem('securityNotifications', checked ? 'enabled' : 'disabled');
+  showToast(checked ? "Security Notifications Enabled" : "Security Notifications Disabled");
+}
+
+function changePhoneNumber() {
+  const phoneInput = document.getElementById('new-phone-input');
+  if (phoneInput && phoneInput.value.trim()) {
+    const num = phoneInput.value.trim();
+    localStorage.setItem('phoneNumber', num);
+    showToast("Phone number updated to " + num);
+  } else {
+    showToast("Please enter a valid phone number.");
+  }
+}
+
+function showToast(msg) {
+  const oldToast = document.querySelector('.toast-msg');
+  if (oldToast) {
+    oldToast.remove();
+  }
+
+  const toast = document.createElement('div');
+  toast.className = 'toast-msg';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(20px)';
+    toast.style.transition = 'opacity 0.3s, transform 0.3s';
+    setTimeout(() => {
+      toast.remove();
+    }, 300);
+  }, 2500);
+}
