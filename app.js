@@ -1817,7 +1817,13 @@ const localizations = {
     kpi4: "Crime Resolution Rate %",
     kpi5: "Fatal Road Accidents",
     kpi6: "Women Safety Index",
-    dashboardOverview: "Dashboard Overview"
+    dashboardOverview: "Dashboard Overview",
+    settings: "Settings & Safety",
+    home: "Home",
+    map: "Map",
+    ai: "AI",
+    alertsLabel: "Alerts",
+    chat: "Chat"
   },
   kn: {
     overview: "ಅವಲೋಕನ",
@@ -1839,7 +1845,13 @@ const localizations = {
     kpi4: "ಅಪರಾಧ ಪರಿಹಾರ ದರ %",
     kpi5: "ಮಾರಣಾಂತಿಕ ರಸ್ತೆ ಅಪಘಾತಗಳು",
     kpi6: "ಮಹಿಳಾ ಸುರಕ್ಷತಾ ಸೂಚ್ಯಂಕ",
-    dashboardOverview: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಅವಲೋಕನ"
+    dashboardOverview: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಅವಲೋಕನ",
+    settings: "ಸಂಯೋಜನೆಗಳು ಮತ್ತು ಸುರಕ್ಷತೆ",
+    home: "ಮನೆ",
+    map: "ನಕ್ಷೆ",
+    ai: "ಏಐ",
+    alertsLabel: "ಎಚ್ಚರಿಕೆಗಳು",
+    chat: "ಚಾಟ್"
   },
   hi: {
     overview: "अवलोकन",
@@ -1861,7 +1873,13 @@ const localizations = {
     kpi4: "अपराध समाधान दर %",
     kpi5: "घातक सड़क दुर्घटनाएं",
     kpi6: "महिला सुरक्षा सूचकांक",
-    dashboardOverview: "डैशबोर्ड अवलोकन"
+    dashboardOverview: "डैशबोर्ड अवलोकन",
+    settings: "सेटिंग्स और सुरक्षा",
+    home: "होम",
+    map: "मानचित्र",
+    ai: "एआई",
+    alertsLabel: "अलर्ट",
+    chat: "चैट"
   }
 };
 
@@ -1903,13 +1921,31 @@ function applyLanguage(lang) {
     'nav-alerts': dict.alerts,
     'nav-simulator': dict.simulator,
     'nav-explainability': dict.explainability,
-    'nav-team': dict.team
+    'nav-team': dict.team,
+    'nav-settings': dict.settings
   };
   
   for (const [id, text] of Object.entries(navMap)) {
     const el = document.getElementById(id);
     if (el) {
       const lbl = el.querySelector('.nav-label');
+      if (lbl) lbl.textContent = text;
+    }
+  }
+  
+  // Update mobile bottom nav labels
+  const mobNavMap = {
+    'mob-overview': dict.home,
+    'mob-heatmap': dict.map,
+    'mob-ai-prediction': dict.ai,
+    'mob-alerts': dict.alertsLabel,
+    'mob-ai-assistant': dict.chat
+  };
+  
+  for (const [id, text] of Object.entries(mobNavMap)) {
+    const el = document.getElementById(id);
+    if (el) {
+      const lbl = el.querySelector('span');
       if (lbl) lbl.textContent = text;
     }
   }
@@ -1938,6 +1974,8 @@ function applyLanguage(lang) {
     const pageId = activePage.id.replace('page-', '');
     if (pageId === 'overview') {
       document.getElementById('page-title').textContent = dict.dashboardOverview;
+    } else if (pageId === 'settings') {
+      document.getElementById('page-title').textContent = dict.settings;
     } else {
       const pageTitleText = pageTitles[pageId] || pageId;
       document.getElementById('page-title').textContent = pageTitleText;
