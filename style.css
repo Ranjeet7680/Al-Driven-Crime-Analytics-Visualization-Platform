@@ -1833,7 +1833,12 @@ button{font-family:inherit;cursor:pointer}
 /* Animated glowing orbs */
 .lp-orb {
   position: absolute; border-radius: 50%; z-index: 1; pointer-events: none;
-  filter: blur(70px); opacity: 0.3; animation: lpOrbFloat 8s ease-in-out infinite;
+  filter: blur(70px); opacity: 0.3;
+  animation: lpOrbFloat 12s ease-in-out infinite, lpHueShift 15s linear infinite;
+}
+@keyframes lpHueShift {
+  0% { filter: hue-rotate(0deg) blur(70px); }
+  100% { filter: hue-rotate(360deg) blur(70px); }
 }
 .lp-orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, #7c3aed, transparent); top: -100px; left: -100px; animation-delay: 0s; }
 .lp-orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, #2563eb, transparent); bottom: -80px; right: -80px; animation-delay: -3s; }
@@ -1907,8 +1912,14 @@ button{font-family:inherit;cursor:pointer}
   color: #fff; letter-spacing: -0.03em;
 }
 .lp-headline-accent {
-  background: linear-gradient(90deg, #a78bfa 0%, #60a5fa 50%, #34d399 100%);
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #34d399, #a78bfa);
+  background-size: 300% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  animation: lpGradientFlow 8s linear infinite;
+}
+@keyframes lpGradientFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
 }
 .lp-subtext {
   font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.6);

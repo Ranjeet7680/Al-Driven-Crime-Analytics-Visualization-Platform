@@ -151,30 +151,44 @@ function initLoginCanvas() {
   }
   resize();
 
-  const COLORS = ['#7c3aed','#3b82f6','#06b6d4','#a855f7','#10b981'];
-  const nodes = Array.from({length: 70}, () => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    vx: (Math.random() - 0.5) * 0.4,
-    vy: (Math.random() - 0.5) * 0.4,
-    r: Math.random() * 2.5 + 0.8,
-    color: COLORS[Math.floor(Math.random() * COLORS.length)],
-    pulse: Math.random() * Math.PI * 2,
-  }));
-
+  const COLORS = [
+    { rgb: '124,58,237', hex: '#7c3aed' },
+    { rgb: '59,130,246', hex: '#3b82f6' },
+    { rgb: '6,182,212', hex: '#06b6d4' },
+    { rgb: '168,85,247', hex: '#a855f7' },
+    { rgb: '16,185,129', hex: '#10b981' }
+  ];
+  const nodes = Array.from({length: 70}, () => {
+    const c = COLORS[Math.floor(Math.random() * COLORS.length)];
+    return {
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 2.5 + 0.8,
+      rgb: c.rgb,
+      hex: c.hex,
+      pulse: Math.random() * Math.PI * 2,
+    };
+  });
+  
   let animId;
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+  
     // Draw connections
     nodes.forEach((a, i) => {
       nodes.slice(i + 1).forEach(b => {
         const dx = a.x - b.x, dy = a.y - b.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < 130) {
-          const alpha = (1 - dist / 130) * 0.18;
+          const alpha = (1 - dist / 130) * 0.22;
           ctx.beginPath();
-          ctx.strokeStyle = `rgba(139,92,246,${alpha})`;
+          // Create gradient between node A and node B
+          const grad = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
+          grad.addColorStop(0, `rgba(${a.rgb},${alpha})`);
+          grad.addColorStop(1, `rgba(${b.rgb},${alpha})`);
+          ctx.strokeStyle = grad;
           ctx.lineWidth = 0.8;
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
@@ -182,25 +196,24 @@ function initLoginCanvas() {
         }
       });
     });
-
+  
     // Draw nodes
-    const t = Date.now() * 0.001;
     nodes.forEach(n => {
       n.pulse += 0.02;
       n.x += n.vx; n.y += n.vy;
       if (n.x < 0 || n.x > canvas.width)  n.vx *= -1;
       if (n.y < 0 || n.y > canvas.height) n.vy *= -1;
-
+  
       const scale = 1 + 0.3 * Math.sin(n.pulse);
       ctx.beginPath();
       ctx.arc(n.x, n.y, n.r * scale, 0, Math.PI * 2);
-      ctx.fillStyle = n.color + '99';
+      ctx.fillStyle = `rgba(${n.rgb},0.55)`;
       ctx.fill();
-
+  
       // Glow
       ctx.beginPath();
       ctx.arc(n.x, n.y, n.r * scale * 2.5, 0, Math.PI * 2);
-      ctx.fillStyle = n.color + '18';
+      ctx.fillStyle = `rgba(${n.rgb},0.12)`;
       ctx.fill();
     });
 
