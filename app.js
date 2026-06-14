@@ -139,6 +139,83 @@ function initNeuralCanvas() {
   window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
 }
 
+// ===================== LOGIN PAGE CANVAS =====================
+function initLoginCanvas() {
+  const canvas = document.getElementById('lp-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  resize();
+
+  const COLORS = ['#7c3aed','#3b82f6','#06b6d4','#a855f7','#10b981'];
+  const nodes = Array.from({length: 70}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 0.4,
+    vy: (Math.random() - 0.5) * 0.4,
+    r: Math.random() * 2.5 + 0.8,
+    color: COLORS[Math.floor(Math.random() * COLORS.length)],
+    pulse: Math.random() * Math.PI * 2,
+  }));
+
+  let animId;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw connections
+    nodes.forEach((a, i) => {
+      nodes.slice(i + 1).forEach(b => {
+        const dx = a.x - b.x, dy = a.y - b.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 130) {
+          const alpha = (1 - dist / 130) * 0.18;
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(139,92,246,${alpha})`;
+          ctx.lineWidth = 0.8;
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+      });
+    });
+
+    // Draw nodes
+    const t = Date.now() * 0.001;
+    nodes.forEach(n => {
+      n.pulse += 0.02;
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 0 || n.x > canvas.width)  n.vx *= -1;
+      if (n.y < 0 || n.y > canvas.height) n.vy *= -1;
+
+      const scale = 1 + 0.3 * Math.sin(n.pulse);
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r * scale, 0, Math.PI * 2);
+      ctx.fillStyle = n.color + '99';
+      ctx.fill();
+
+      // Glow
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r * scale * 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = n.color + '18';
+      ctx.fill();
+    });
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  draw();
+
+  const ro = new ResizeObserver(resize);
+  ro.observe(canvas.parentElement);
+
+  // Return cleanup function
+  return () => { cancelAnimationFrame(animId); ro.disconnect(); };
+}
+
 function scrollToSection(id) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -202,6 +279,11 @@ function enterDashboard() {
     document.getElementById('landing-page').classList.add('hidden');
     document.getElementById('main-app').classList.add('hidden');
     document.getElementById('login-page').classList.remove('hidden');
+    // Initialize the animated canvas on first show
+    if (!window._lpCanvasInit) {
+      window._lpCanvasInit = true;
+      setTimeout(() => initLoginCanvas(), 50);
+    }
   }
 }
 

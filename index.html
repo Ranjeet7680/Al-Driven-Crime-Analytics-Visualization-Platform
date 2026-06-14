@@ -1171,7 +1171,7 @@
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
         </div>
         <h3>AI Crime Hotspot Map</h3>
-        <p>function drawKarnatakaMap() { /* No-op: static image used */with real-time risk zones from Safe (green) to Critical (red).</p>
+        <p>Interactive district-level risk visualization with real-time risk zones from Safe (green) to Critical (red).</p>
         <div class="feat-tag">Geospatial · Live</div>
       </div>
       <div class="feat-card" onclick="enterDashboard(); setTimeout(()=>showPage('ai-assistant'),300)">
@@ -1325,86 +1325,116 @@
           <div class="lp-stat">
             <div class="lp-stat-val">256-bit</div>
             <div class="lp-stat-lbl">ENCRYPTION</div>
+            <div class="lp-stat-val">138K+</div>
+            <div class="lp-stat-lbl">CRIMES ANALYZED</div>
           </div>
-          <div class="lp-stat-divider"></div>
+          <div class="lp-stat-sep"></div>
           <div class="lp-stat">
-            <div class="lp-stat-val">37</div>
-            <div class="lp-stat-lbl">DISTRICTS LIVE</div>
+            <div class="lp-stat-val">89%</div>
+            <div class="lp-stat-lbl">AI ACCURACY</div>
           </div>
+          <div class="lp-stat-sep"></div>
+          <div class="lp-stat">
+            <div class="lp-stat-val">24/7</div>
+            <div class="lp-stat-lbl">LIVE MONITORING</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom badge -->
+      <div class="lp-datathon-badge">
+        <img src="innovator_logo.png" alt="Innovator" class="lp-inn-logo"/>
+        <div>
+          <div class="lp-inn-name">INNOVATOR TEAM</div>
+          <div class="lp-inn-sub">Datathon 2026 · Karnataka</div>
         </div>
       </div>
     </section>
 
-    <!-- ═══ RIGHT: Login Form Panel ═══ -->
+    <!-- ═══ RIGHT: Login Form ═══ -->
     <main class="lp-form-panel">
+      <!-- Theme toggle -->
+      <button class="lp-theme-btn" onclick="toggleTheme()" title="Toggle Theme">
+        <span class="theme-icon-sun">☀️</span>
+        <span class="theme-icon-moon">🌙</span>
+      </button>
+
       <div class="lp-form-inner">
 
-        <!-- Logo & Title -->
+        <!-- Logo + Branding -->
         <div class="lp-brand">
-          <div class="lp-logo-wrap">
-            <img src="logo.png" alt="CrimeScope AI Logo" class="lp-logo-img" />
+          <div class="lp-logo-ring">
+            <img src="logo.png" alt="CrimeScope AI" class="lp-logo-img" />
+            <div class="lp-logo-glow"></div>
           </div>
           <h1 class="lp-title" id="auth-title">Welcome Back</h1>
-          <p class="lp-desc" id="auth-desc">Sign in to <span class="lp-brand-name">CrimeScope AI</span><br>Advanced AI-Powered Crime Profiling Platform</p>
+          <p class="lp-subtitle" id="auth-subtitle">Sign in to <span class="lp-brand-highlight">CrimeScope AI</span></p>
+          <p class="lp-desc" id="auth-desc">Advanced AI-Powered Crime Intelligence Platform</p>
         </div>
+
+        <!-- Error message slot -->
+        <div id="auth-error" class="lp-error hidden"></div>
 
         <!-- Email / Password Form -->
         <form id="auth-form" onsubmit="handleEmailAuth(event)" class="lp-form">
 
           <!-- Email -->
-          <div class="lp-field-group">
-            <label for="auth-email" class="lp-label">Email Address</label>
+          <div class="lp-field">
+            <label class="lp-label" for="auth-email">Email Address</label>
             <div class="lp-input-wrap">
-              <span class="lp-input-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <span class="lp-ico">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
               </span>
-              <input type="email" id="auth-email" required placeholder="Enter your email" class="lp-input" />
+              <input type="email" id="auth-email" class="lp-input" required placeholder="name@example.com" autocomplete="email" />
             </div>
           </div>
 
           <!-- Password -->
-          <div class="lp-field-group">
-            <label for="auth-password" class="lp-label">Password</label>
+          <div class="lp-field">
+            <div class="lp-label-row">
+              <label class="lp-label" for="auth-password">Password</label>
+              <a href="#" onclick="event.preventDefault();alert('Password reset link sent to your email.');" class="lp-forgot">Forgot?</a>
+            </div>
             <div class="lp-input-wrap">
-              <span class="lp-input-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span class="lp-ico">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               </span>
-              <input type="password" id="auth-password" required placeholder="Enter your password" minlength="6" class="lp-input" style="padding-right:46px;" />
-              <span class="lp-eye-btn" onclick="togglePasswordVisibility()">
-                <svg id="eye-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              </span>
+              <input type="password" id="auth-password" class="lp-input" required placeholder="••••••••" minlength="6" autocomplete="current-password" style="padding-right:46px;" />
+              <button type="button" class="lp-eye" onclick="togglePasswordVisibility()" tabindex="-1">
+                <svg id="eye-icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
             </div>
           </div>
 
-          <!-- Forgot -->
-          <div class="lp-forgot-row">
-            <a href="#" onclick="event.preventDefault();alert('Reset link sent to your email.');" class="lp-forgot-link">Forgot Password?</a>
-          </div>
-
-          <!-- Sign In Button -->
-          <button type="submit" id="btn-auth-submit" class="lp-signin-btn">
+          <!-- Submit Button -->
+          <button type="submit" id="btn-auth-submit" class="lp-btn-primary">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
             Sign In
           </button>
         </form>
 
         <!-- Divider -->
-        <div class="lp-divider"><span>OR</span></div>
+        <div class="lp-divider"><span>OR CONTINUE WITH</span></div>
 
         <!-- Google Sign In -->
-        <button onclick="handleSignIn()" id="btn-google-signin" class="lp-google-btn">
-          <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        <button onclick="handleSignIn()" id="btn-google-signin" class="lp-btn-google">
+          <svg viewBox="0 0 24 24" width="18" height="18">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
           <span>Sign in with Google</span>
         </button>
 
-        <!-- Auth toggle -->
+        <!-- Toggle Sign Up / Sign In -->
         <div class="lp-toggle-row">
           <span id="auth-toggle-text">Don't have an account?</span>
-          <button onclick="toggleAuthMode()" id="btn-auth-toggle" class="lp-toggle-btn">Sign Up</button>
+          <button onclick="toggleAuthMode()" id="btn-auth-toggle" class="lp-toggle-link">Sign Up</button>
         </div>
 
-        <!-- Trust row -->
-        <div class="lp-trust-row">
+        <!-- Trust + Back -->
+        <div class="lp-trust">
           <div class="lp-trust-item">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             Secure &amp; Encrypted Login
@@ -1428,143 +1458,6 @@
       </footer>
     </main>
 
-  </div>
-</div>
-
-<!-- ===================== MAIN APP ===================== -->
-
-
-    <!-- LEFT: Hero Panel -->
-    <section class="login-hero-panel" style="display:none;flex:0 0 55%;position:relative;background:#0b0f1a;overflow:hidden;">
-      <!-- Animated gradient orbs -->
-      <div style="position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(124,58,237,0.25) 0%,transparent 70%);top:-100px;left:-100px;pointer-events:none;"></div>
-      <div style="position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(37,99,235,0.2) 0%,transparent 70%);bottom:50px;right:-50px;pointer-events:none;"></div>
-      <!-- Grid overlay -->
-      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.03)1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03)1px,transparent 1px);background-size:40px 40px;pointer-events:none;"></div>
-      <!-- Content -->
-      <div style="position:relative;z-index:10;display:flex;flex-direction:column;justify-content:flex-end;height:100%;padding:56px;">
-        <!-- Shield icon -->
-        <div style="width:64px;height:64px;background:rgba(255,255,255,0.08);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.15);border-radius:18px;display:flex;align-items:center;justify-content:center;margin-bottom:28px;">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-        </div>
-        <h2 style="font-family:'Space Grotesk',sans-serif;font-size:38px;font-weight:800;line-height:1.15;color:#ffffff;margin-bottom:16px;letter-spacing:-0.02em;">Intelligence at the<br/>speed of thought.</h2>
-        <p style="font-size:16px;color:rgba(255,255,255,0.65);max-width:380px;line-height:1.6;margin-bottom:40px;">Access advanced criminal profiling tools and secure data visualization powered by CrimeScope AI.</p>
-        <!-- Stats row -->
-        <div style="display:flex;gap:32px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.1);">
-          <div>
-            <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:#fff;">99.9%</div>
-            <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;">Accuracy Rate</div>
-          </div>
-          <div>
-            <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:#fff;">256-bit</div>
-            <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;">Encryption</div>
-          </div>
-          <div>
-            <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:#fff;">37</div>
-            <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;">Districts Live</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- RIGHT: Login Form -->
-    <main style="flex:1;min-width:0;display:flex;flex-direction:column;background:var(--bg-card,#ffffff);overflow-y:auto;">
-      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:40px 28px;">
-        <div style="width:100%;max-width:420px;" id="login-form-wrapper">
-
-          <!-- Theme toggle top-right -->
-          <div style="display:flex;justify-content:flex-end;margin-bottom:28px;">
-            <button onclick="toggleTheme()" title="Toggle Day/Night" style="width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);background:rgba(255,255,255,0.05);cursor:pointer;color:var(--txt2);transition:all 0.25s ease;padding:0;">
-              <span class="theme-icon-sun" style="font-size:16px;">☀️</span>
-              <span class="theme-icon-moon" style="font-size:16px;">🌙</span>
-            </button>
-          </div>
-
-          <!-- Logo & Branding -->
-          <div style="text-align:center;margin-bottom:36px;">
-            <div style="width:76px;height:76px;border:1px solid var(--border-a,rgba(124,58,237,0.3));border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;background:rgba(124,58,237,0.05);box-shadow:0 0 0 6px rgba(124,58,237,0.05);">
-              <img src="logo.png" alt="CrimeScope AI" style="width:48px;height:48px;object-fit:contain;border-radius:10px;" />
-            </div>
-            <h1 style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;color:var(--txt);margin-bottom:6px;">Welcome Back</h1>
-            <p style="font-size:14px;color:var(--txt3);">Sign in to <span style="color:var(--purple);font-weight:700;">CrimeScope AI</span><br/>Advanced AI-Powered Crime Profiling Platform</p>
-          </div>
-
-          <!-- Email & Password Form -->
-          <form id="auth-form" onsubmit="handleEmailAuth(event)" style="display:flex;flex-direction:column;gap:18px;">
-            <!-- Email -->
-            <div style="display:flex;flex-direction:column;gap:6px;">
-              <label for="auth-email" style="font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:0.07em;">Email Address</label>
-              <div style="position:relative;">
-                <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--txt3);display:flex;align-items:center;pointer-events:none;">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                </span>
-                <input type="email" id="auth-email" required placeholder="Enter your email" class="login-field" style="width:100%;padding:13px 14px 13px 42px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg,rgba(0,0,0,0.02));color:var(--txt);font-size:14px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;font-family:inherit;box-sizing:border-box;" />
-              </div>
-            </div>
-            <!-- Password -->
-            <div style="display:flex;flex-direction:column;gap:6px;">
-              <label for="auth-password" style="font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:0.07em;">Password</label>
-              <div style="position:relative;">
-                <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--txt3);display:flex;align-items:center;pointer-events:none;">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                </span>
-                <input type="password" id="auth-password" required placeholder="Enter your password" minlength="6" class="login-field" style="width:100%;padding:13px 42px 13px 42px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg,rgba(0,0,0,0.02));color:var(--txt);font-size:14px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;font-family:inherit;box-sizing:border-box;" />
-                <span onclick="togglePasswordVisibility()" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--txt3);cursor:pointer;display:flex;align-items:center;transition:color 0.2s;">
-                  <svg id="eye-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                </span>
-              </div>
-            </div>
-            <!-- Forgot password -->
-            <div style="text-align:right;margin-top:-8px;">
-              <a href="#" onclick="event.preventDefault();alert('Reset link sent to your email.');" style="font-size:12px;color:var(--purple);font-weight:600;text-decoration:none;">Forgot Password?</a>
-            </div>
-            <!-- Sign In Button -->
-            <button type="submit" id="btn-auth-submit" style="width:100%;min-height:48px;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--purple,#7c3aed),var(--blue,#2563eb));color:#ffffff;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;box-shadow:0 4px 20px rgba(124,58,237,0.3);font-family:inherit;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-              Sign In
-            </button>
-          </form>
-
-          <!-- Divider -->
-          <div class="auth-divider" style="margin:22px 0;"><span>OR</span></div>
-
-          <!-- Google Sign In -->
-          <button onclick="handleSignIn()" id="btn-google-signin" style="width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:var(--bg-card,#fff);color:var(--txt,#1f2937);border:1.5px solid var(--border);border-radius:12px;padding:13px 24px;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s,transform 0.2s,box-shadow 0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.06);font-family:inherit;margin-bottom:20px;">
-            <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#ea4335" d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.136 4.114a5.79 5.79 0 0 1-5.79-5.79 5.79 5.79 0 0 1 5.79-5.79c1.558 0 2.977.58 4.06 1.528l3.08-3.08A9.878 9.878 0 0 0 12.24 2c-5.523 0-10 4.477-10 10s4.477 10 10 10c5.796 0 9.643-4.07 9.643-9.82a9.42 9.42 0 0 0-.17-1.895h-9.473Z"/></svg>
-            <span>Sign in with Google</span>
-          </button>
-
-          <!-- Toggle auth mode -->
-          <div style="text-align:center;font-size:13px;color:var(--txt3);">
-            <span id="auth-toggle-text">Don't have an account?</span>
-            <button onclick="toggleAuthMode()" id="btn-auth-toggle" style="background:transparent;border:none;color:var(--purple);font-weight:700;cursor:pointer;padding:0 4px;font-family:inherit;font-size:13px;">Sign Up</button>
-          </div>
-
-          <!-- Trust Badges -->
-          <div style="margin-top:28px;display:flex;flex-direction:column;align-items:center;gap:8px;">
-            <div style="display:flex;align-items:center;gap:6px;color:var(--txt3);font-size:12px;">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <span>Secure &amp; End-to-End Encrypted Login</span>
-            </div>
-            <button onclick="goBackToWelcome()" style="background:transparent;border:none;color:var(--txt3);font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:inherit;padding:0;transition:color 0.2s;">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-              Back to Welcome Page
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Footer -->
-      <footer style="padding:16px 28px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px;">
-        <span style="font-size:11px;color:var(--txt3);">&copy; 2026 CrimeScope AI. All rights reserved.</span>
-        <div style="display:flex;gap:14px;">
-          <a href="#" style="font-size:11px;color:var(--txt3);text-decoration:none;transition:color 0.2s;">Privacy</a>
-          <a href="#" style="font-size:11px;color:var(--txt3);text-decoration:none;transition:color 0.2s;">Terms</a>
-          <a href="#" style="font-size:11px;color:var(--txt3);text-decoration:none;transition:color 0.2s;">Security</a>
-          <a href="#" style="font-size:11px;color:var(--txt3);text-decoration:none;transition:color 0.2s;">Support</a>
-        </div>
-      </footer>
-    </main>
   </div>
 </div>
 
