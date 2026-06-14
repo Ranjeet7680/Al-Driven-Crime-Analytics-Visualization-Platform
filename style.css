@@ -26,7 +26,16 @@
 
 /* ---- LANDING PAGE ---- */
 [data-theme="light"] .landing-page {
-  background: linear-gradient(160deg,#f0f4ff 0%,#e8eeff 40%,#f5f0ff 70%,#f8fafc 100%);
+  background: 
+    radial-gradient(circle at center, rgba(99, 102, 241, 0.08) 1.5px, transparent 1.5px),
+    #f6f8fc;
+  background-size: 32px 32px, 100% 100%;
+}
+[data-theme="light"] .landing-page::before {
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.07) 0%, transparent 70%);
+}
+[data-theme="light"] .landing-page::after {
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
 }
 [data-theme="light"] #neural-canvas { opacity: 0.15; }
 [data-theme="light"] .hero-title { color: #0f172a; }
@@ -787,8 +796,58 @@ button{font-family:inherit;cursor:pointer}
 
 
 /* ---- LANDING PAGE ---- */
-.landing-page{position:fixed;inset:0;overflow-x:hidden;overflow-y:auto;background:linear-gradient(135deg,#050811 0%,#0a0d1a 50%,#080b14 100%)}
-#neural-canvas{position:absolute;inset:0;z-index:0;opacity:.6}
+.landing-page {
+  position: fixed;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: 
+    /* Dot mesh overlay */
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    /* Deep space gradient base */
+    linear-gradient(135deg, #03050c 0%, #080b18 50%, #04060e 100%);
+  background-size: 30px 30px, 100% 100%;
+}
+
+/* Drifting ambient glows in the background of landing page */
+.landing-page::before {
+  content: "";
+  position: absolute;
+  top: -10%; left: 10%;
+  width: 65vw; height: 65vw;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.16) 0%, transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(80px);
+  animation: floatGlow1 25s ease-in-out infinite alternate;
+}
+.landing-page::after {
+  content: "";
+  position: absolute;
+  bottom: 10%; right: 10%;
+  width: 70vw; height: 70vw;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(90px);
+  animation: floatGlow2 30s ease-in-out infinite alternate;
+}
+
+@keyframes floatGlow1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(8vw, 6vh) scale(1.15); }
+}
+@keyframes floatGlow2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-6vw, -8vh) scale(0.9); }
+}
+
+#neural-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: .45; /* Slightly reduced opacity to blend beautifully with the glows */
+}
 .hidden{display:none!important}
 .main-app{position:relative}
 
