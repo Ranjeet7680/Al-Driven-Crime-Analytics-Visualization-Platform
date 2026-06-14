@@ -293,6 +293,15 @@ function goBackToWelcome() {
   document.getElementById('landing-page').classList.remove('hidden');
 }
 
+function toggleLandingMenu() {
+  const menu = document.getElementById('landing-mobile-menu');
+  const btn = document.getElementById('landing-menu-btn');
+  if (menu) {
+    menu.classList.toggle('open');
+    if (btn) btn.classList.toggle('open');
+  }
+}
+
 // ===================== PAGE NAVIGATION =====================
 const pageTitles = {
   overview: 'Dashboard Overview', heatmap: 'Crime Hotspot Map',
@@ -303,18 +312,67 @@ const pageTitles = {
   explainability: '🔬 AI Explainability', team: 'Our Team', settings: '⚙️ Settings & Safety'
 };
 
+function syncMobileBottomNav(name) {
+  document.querySelectorAll('.mob-nav-item').forEach(i => i.classList.remove('active'));
+  const mobIdMap = {
+    'overview': 'mob-overview',
+    'heatmap': 'mob-heatmap',
+    'ai-prediction': 'mob-ai-prediction',
+    'alerts': 'mob-alerts',
+    'ai-assistant': 'mob-ai-assistant'
+  };
+  const targetId = mobIdMap[name];
+  if (targetId) {
+    const el = document.getElementById(targetId);
+    if (el) el.classList.add('active');
+  }
+}
+
 function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+    p.classList.remove('page-show');
+  });
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  
   const pg = document.getElementById(`page-${name}`);
-  if (pg) pg.classList.add('active');
+  if (pg) {
+    pg.classList.add('active');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        pg.classList.add('page-show');
+      });
+    });
+  }
+  
   const nav = document.getElementById(`nav-${name}`);
   if (nav) nav.classList.add('active');
+  
+  // Sync mobile bottom navigation active state
+  syncMobileBottomNav(name);
+  
   document.getElementById('page-title').textContent = pageTitles[name] || name;
+  
   if (localStorage.getItem('screenReader') === 'enabled') {
     const pageTitleText = pageTitles[name] || name;
     speakText("Navigated to " + pageTitleText);
   }
+  
+  // Re-run number counters for Overview page
+  if (name === 'overview') {
+    setTimeout(runCounters, 120);
+  }
+  
+  // Auto-close mobile sidebar drawer
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar && window.innerWidth <= 900) {
+    sidebar.classList.add('collapsed');
+    const backdrop = document.getElementById('sidebar-backdrop');
+    if (backdrop) backdrop.classList.remove('visible');
+    const menuBtn = document.getElementById('menu-btn');
+    if (menuBtn) menuBtn.classList.remove('open');
+  }
+  
   setTimeout(() => {
     const init = {
       overview: initOverview, heatmap: initHeatmap, district: initDistrictPage,
