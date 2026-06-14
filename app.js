@@ -292,6 +292,13 @@ function enterDashboard() {
     document.getElementById('landing-page').classList.add('hidden');
     document.getElementById('main-app').classList.add('hidden');
     document.getElementById('login-page').classList.remove('hidden');
+    
+    // Auto-switch to Sign Up mode if there is a pending referral code and not already in sign-up mode
+    const pendingRef = sessionStorage.getItem('pendingReferralCode');
+    if (pendingRef && !isSignUpMode) {
+      toggleAuthMode();
+    }
+    
     // Initialize the animated canvas on first show
     if (!window._lpCanvasInit) {
       window._lpCanvasInit = true;
@@ -1860,6 +1867,21 @@ function toggleAuthMode() {
   const toggleText = document.getElementById('auth-toggle-text');
   const desc = document.getElementById('auth-desc');
   
+  const referralGroup = document.getElementById('auth-referral-group');
+  if (referralGroup) {
+    if (isSignUpMode) {
+      referralGroup.classList.remove('hidden');
+      const pendingRef = sessionStorage.getItem('pendingReferralCode');
+      const refInput = document.getElementById('auth-referral');
+      if (pendingRef && refInput && !refInput.value) {
+        refInput.value = pendingRef;
+        showToast("Referral code pre-filled from link!");
+      }
+    } else {
+      referralGroup.classList.add('hidden');
+    }
+  }
+  
   if (isSignUpMode) {
     title.textContent = "Get Started";
     subtitle.innerHTML = 'Create your <span class="highlight" style="color: var(--purple); font-weight: 700;">CrimeScope AI</span> Account';
@@ -1918,6 +1940,16 @@ function handleEmailAuth(event) {
   authPromise
     .then((result) => {
       console.log("Email authentication success:", result.user);
+      
+      // If user successfully registers, process any entered referral code!
+      if (isSignUpMode) {
+        const refInput = document.getElementById('auth-referral');
+        const refValue = refInput ? refInput.value.trim() : "";
+        if (refValue) {
+          processReferralSignup(refValue);
+        }
+      }
+      
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalHTML;
     })
@@ -1945,6 +1977,17 @@ function handleSignIn() {
   window.signInWithGoogle()
     .then((result) => {
       console.log("Logged in successfully:", result.user);
+      
+      // Process pending referral code if it exists for first login
+      const isNewUser = result.additionalUserInfo && result.additionalUserInfo.isNewUser;
+      if (isNewUser || !localStorage.getItem('hasLoggedInBefore')) {
+        localStorage.setItem('hasLoggedInBefore', 'true');
+        const pendingRef = sessionStorage.getItem('pendingReferralCode');
+        if (pendingRef) {
+          processReferralSignup(pendingRef);
+          sessionStorage.removeItem('pendingReferralCode');
+        }
+      }
     })
     .catch((error) => {
       console.error("Login failed:", error);
@@ -2528,6 +2571,11 @@ function initSettingsPage() {
   // Sync profile details and blocked users
   loadUserProfile();
   updateBlockedUsersUI();
+  
+  // Initialize referrals
+  if (typeof initReferrals === 'function') {
+    initReferrals();
+  }
 }
 
 function toggleHighContrast(checked) {
@@ -2608,39 +2656,144 @@ function changeLanguage(lang) {
   showToast(msgMap[lang] || "Language changed");
 }
 
-function generateReferralCode() {
-  const randNum = Math.floor(1000 + Math.random() * 9000);
-  const code = "SCOPE-2026-" + randNum;
+function initReferrals() {
+  const existingCode = localStorage.getItem('myReferralCode');
+  if (existingCode) {
+    const codeEl = document.getElementById('generated-ref-code');
+    const displayEl = document.getElementById('referral-display');
+    if (codeEl) codeEl.textContent = existingCode;
+    if (displayEl) displayEl.classList.remove('hidden');
+  }
   
-  document.getElementById('generated-ref-code').textContent = code;
-  document.getElementById('referral-display').classList.remove('hidden');
+  // Set up stats (using fallback if not set yet)
+  const sentEl = document.getElementById('ref-stat-sent');
+  const successEl = document.getElementById('ref-stat-success');
+  const rewardsEl = document.getElementById('ref-stat-rewards');
+  const earningsEl = document.getElementById('ref-stat-earnings');
+  
+  if (sentEl) sentEl.textContent = localStorage.getItem('ref_stats_sent') || '14';
+  if (successEl) successEl.textContent = localStorage.getItem('ref_stats_success') || '8';
+  if (rewardsEl) rewardsEl.textContent = localStorage.getItem('ref_stats_rewards') || '4 Tokens';
+  if (earningsEl) earningsEl.textContent = localStorage.getItem('ref_stats_earnings') || '₹400';
+}
+
+function processReferralSignup(code) {
+  if (!code) return;
+  code = code.trim().toUpperCase();
+  
+  let applied = [];
+  try {
+    applied = JSON.parse(localStorage.getItem('appliedReferralCodes') || '[]');
+  } catch (e) {
+    applied = [];
+  }
+  
+  if (applied.includes(code)) {
+    console.log("Referral code already applied:", code);
+    return;
+  }
+  
+  applied.push(code);
+  localStorage.setItem('appliedReferralCodes', JSON.stringify(applied));
+  
+  // Increment stats in localStorage
+  let sent = parseInt(localStorage.getItem('ref_stats_sent') || '14') + 1;
+  let success = parseInt(localStorage.getItem('ref_stats_success') || '8') + 1;
+  
+  let rewardsStr = localStorage.getItem('ref_stats_rewards') || '4 Tokens';
+  let rewardsNum = parseInt(rewardsStr) || 4;
+  rewardsNum += 1;
+  
+  let earningsStr = localStorage.getItem('ref_stats_earnings') || '₹400';
+  let earningsNum = parseInt(earningsStr.replace(/[^\d]/g, '')) || 400;
+  earningsNum += 50; // Add ₹50 reward
+  
+  localStorage.setItem('ref_stats_sent', sent.toString());
+  localStorage.setItem('ref_stats_success', success.toString());
+  localStorage.setItem('ref_stats_rewards', `${rewardsNum} Tokens`);
+  localStorage.setItem('ref_stats_earnings', `₹${earningsNum}`);
+  
+  // Update UI elements dynamically if we are currently inside the app
+  initReferrals();
+  
+  showToast(`Referral code "${code}" applied successfully! +1 Token & +₹50 credited.`);
+}
+
+function generateReferralCode() {
+  let code = localStorage.getItem('myReferralCode');
+  if (!code) {
+    const randNum = Math.floor(1000 + Math.random() * 9000);
+    code = "SCOPE-2026-" + randNum;
+    localStorage.setItem('myReferralCode', code);
+    
+    // Increment sent count
+    let sent = parseInt(localStorage.getItem('ref_stats_sent') || '14') + 1;
+    localStorage.setItem('ref_stats_sent', sent.toString());
+  }
+  
+  const codeEl = document.getElementById('generated-ref-code');
+  const displayEl = document.getElementById('referral-display');
+  if (codeEl) codeEl.textContent = code;
+  if (displayEl) displayEl.classList.remove('hidden');
+  
+  initReferrals();
   showToast("Referral code generated successfully!");
 }
 
 function copyReferral() {
-  const code = document.getElementById('generated-ref-code').textContent;
-  const message = `Hey! Join me on CrimeScope AI 2.0, the advanced AI crime predicting platform. Use my referral code: ${code} to unlock premium security predictions! Check it out!`;
+  const codeEl = document.getElementById('generated-ref-code');
+  const code = codeEl ? codeEl.textContent : (localStorage.getItem('myReferralCode') || 'SCOPE-2026-1000');
+  const referralLink = `https://al-driven-crime-anal-lbbcplfo.onslate.in/?ref=${code}`;
+  const flyerLink = `https://al-driven-crime-anal-lbbcplfo.onslate.in/ChatGPT%20Image%20Jun%203,%202026,%2011_02_22%20AM.png`;
+  
+  const message = `🚨 *CrimeScope AI 2.0 — Smarter Insights, Safer Communities* 🚨\n\nHey! Join me on CrimeScope AI 2.0, the advanced AI crime predicting and analytics platform.\n\n🔑 *My Referral Code:* ${code}\n🔗 *Register Here:* ${referralLink}\n\nCheck out the platform details in the flyer attached below!\n🖼️ *Promo Flyer:* ${flyerLink}`;
   
   navigator.clipboard.writeText(message).then(() => {
-    showToast("Referral invitation copied to clipboard!");
+    showToast("Referral invitation message copied!");
   }).catch(() => {
-    const dummy = document.createElement("input");
+    // Fallback using textarea to preserve newlines
+    const dummy = document.createElement("textarea");
     document.body.appendChild(dummy);
     dummy.value = message;
     dummy.select();
     document.execCommand("copy");
     document.body.removeChild(dummy);
-    showToast("Referral invitation copied to clipboard!");
+    showToast("Referral invitation message copied!");
   });
 }
 
-function shareReferral(platform) {
-  const code = document.getElementById('generated-ref-code').textContent;
-  const rawMsg = `Hey! Join me on CrimeScope AI 2.0, the advanced AI crime predicting platform. Use my referral code: ${code} to unlock premium security predictions! Check it out!`;
-  const url = "https://crimescope.ai";
+async function shareReferral(platform) {
+  const codeEl = document.getElementById('generated-ref-code');
+  const code = codeEl ? codeEl.textContent : (localStorage.getItem('myReferralCode') || 'SCOPE-2026-1000');
+  const referralLink = `https://al-driven-crime-anal-lbbcplfo.onslate.in/?ref=${code}`;
+  const flyerLink = `https://al-driven-crime-anal-lbbcplfo.onslate.in/ChatGPT%20Image%20Jun%203,%202026,%2011_02_22%20AM.png`;
   
-  const textEncoded = encodeURIComponent(rawMsg);
-  const urlEncoded = encodeURIComponent(url);
+  const message = `🚨 *CrimeScope AI 2.0 — Smarter Insights, Safer Communities* 🚨\n\nHey! Join me on CrimeScope AI 2.0, the advanced AI crime predicting and analytics platform.\n\n🔑 *My Referral Code:* ${code}\n🔗 *Register Here:* ${referralLink}\n\nCheck out the platform details in the flyer attached below!\n🖼️ *Promo Flyer:* ${flyerLink}`;
+  
+  // Try to use native Web Share API with image file if supported
+  if (navigator.share && navigator.canShare) {
+    try {
+      const imgRes = await fetch(window.location.origin + '/ChatGPT Image Jun 3, 2026, 11_02_22 AM.png');
+      const blob = await imgRes.blob();
+      const file = new File([blob], 'CrimeScope_AI_2_0_Flyer.png', { type: blob.type });
+      
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          title: 'CrimeScope AI 2.0 Referral',
+          text: message,
+          files: [file]
+        });
+        showToast("Referral shared successfully!");
+        return;
+      }
+    } catch (e) {
+      console.warn("Native share failed, falling back to url redirect:", e);
+    }
+  }
+  
+  // Fallback to URL links
+  const textEncoded = encodeURIComponent(message);
+  const urlEncoded = encodeURIComponent(referralLink);
   
   let shareUrl = "";
   switch(platform) {
@@ -2661,7 +2814,7 @@ function shareReferral(platform) {
       break;
     case 'instagram':
       copyReferral();
-      alert("Instagram sharing: Code copied to clipboard! Paste it into Instagram Story, DM, or post description.");
+      alert("Instagram sharing: Message & flyer link copied to clipboard! Paste it in your Story, DM, or post.");
       return;
     case 'gmail':
       shareUrl = `mailto:?subject=${encodeURIComponent("Join me on CrimeScope AI 2.0")}&body=${textEncoded}`;
@@ -3184,3 +3337,17 @@ function showToast(msg) {
     }, 300);
   }, 2500);
 }
+
+// URL Referral Code Detector
+(function detectReferralCode() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const refCode = params.get('ref');
+    if (refCode) {
+      sessionStorage.setItem('pendingReferralCode', refCode.trim());
+      console.log("Detected referral code in URL:", refCode.trim());
+    }
+  } catch (err) {
+    console.error("Error detecting referral code:", err);
+  }
+})();
