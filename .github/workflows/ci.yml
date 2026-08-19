@@ -1,0 +1,29 @@
+name: CI & Validation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate JavaScript Syntax
+        run: |
+          node -c app.js
+          node -c data.js
+      - name: Verify Core Assets
+        run: |
+          test -f index.html
+          test -f style.css
+          test -f data.js
+          test -f app.js
+          echo "All core SPA assets validated!"
