@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CrimeScope AI 2.0 — Official Handbook & Technical eBook</title>
+  <title>CrimeScope AI 2.0 — 100-Page Master Handbook & Technical eBook</title>
   <link rel="icon" type="image/png" href="logo.png"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="preconnect" href="https://fonts.gstatic.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
   <style>
     :root {
@@ -53,7 +53,7 @@
     }
     [data-theme="light"] .ebook-toolbar { background: rgba(255,255,255,0.85); }
     .toolbar-brand { display: flex; align-items: center; gap: 10px; font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 18px; }
-    .toolbar-logo { width: 28px; height: 28px; border-radius: 6px; }
+    .toolbar-logo { width: 32px; height: 32px; border-radius: 8px; }
     .toolbar-actions { display: flex; align-items: center; gap: 12px; }
     .btn-action {
       background: linear-gradient(135deg, var(--purple), var(--blue));
@@ -70,43 +70,50 @@
 
     /* Layout */
     .ebook-container {
-      max-width: 1000px; margin: 40px auto; padding: 0 24px 80px 24px;
+      max-width: 1050px; margin: 40px auto; padding: 0 24px 80px 24px;
     }
 
-    /* Cover Page */
+    /* Big Header Cover Page */
     .ebook-cover {
-      background: linear-gradient(135deg, rgba(168,85,247,0.12) 0%, rgba(59,130,246,0.08) 50%, rgba(6,182,212,0.06) 100%);
-      border: 1px solid rgba(168,85,247,0.3);
-      border-radius: 24px; padding: 60px 48px;
+      background: linear-gradient(135deg, rgba(168,85,247,0.14) 0%, rgba(59,130,246,0.10) 50%, rgba(6,182,212,0.08) 100%);
+      border: 1px solid rgba(168,85,247,0.35);
+      border-radius: 28px; padding: 50px 48px;
       margin-bottom: 40px; position: relative; overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     }
+    .cover-top-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+      margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 20px;
+    }
+    .cover-logo-img { width: 72px; height: 72px; border-radius: 16px; border: 1.5px solid rgba(168,85,247,0.5); box-shadow: 0 0 24px rgba(168,85,247,0.35); object-fit: contain; }
     .cover-badge {
       display: inline-flex; align-items: center; gap: 6px;
       font-size: 11px; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--cyan); background: rgba(6,182,212,0.12); border: 1px solid rgba(6,182,212,0.3);
-      padding: 5px 12px; border-radius: 20px; margin-bottom: 20px;
+      color: var(--cyan); background: rgba(6,182,212,0.12); border: 1px solid rgba(6,182,212,0.35);
+      padding: 5px 14px; border-radius: 20px; margin-bottom: 6px;
     }
     .cover-title {
-      font-family: 'Space Grotesk', sans-serif; font-size: 44px; font-weight: 900; line-height: 1.15;
-      margin-bottom: 12px;
+      font-family: 'Space Grotesk', sans-serif; font-size: 46px; font-weight: 900; line-height: 1.1;
+      margin-bottom: 14px;
     }
     .cover-title span {
       background: linear-gradient(135deg, var(--purple), var(--blue), var(--cyan));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .cover-subtitle { font-size: 18px; color: var(--txt2); max-width: 700px; margin-bottom: 28px; line-height: 1.5; }
+    .cover-subtitle { font-size: 17px; color: var(--txt2); max-width: 780px; margin-bottom: 28px; line-height: 1.55; }
     .cover-stats-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 32px;
-      background: rgba(0,0,0,0.2); padding: 20px; border-radius: 16px; border: 1px solid var(--border);
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 28px;
+      background: rgba(0,0,0,0.25); padding: 22px; border-radius: 18px; border: 1px solid var(--border);
     }
-    [data-theme="light"] .cover-stats-grid { background: rgba(255,255,255,0.6); }
-    .cstat-val { font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 800; color: var(--purple); }
-    .cstat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--txt3); margin-top: 2px; }
+    [data-theme="light"] .cover-stats-grid { background: rgba(255,255,255,0.7); }
+    .cstat-val { font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 800; color: var(--purple); }
+    .cstat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--txt3); margin-top: 3px; }
 
     /* Chapter Sections */
     .chapter-card {
       background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 20px; padding: 36px; margin-bottom: 32px;
+      border-radius: 22px; padding: 36px; margin-bottom: 32px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     }
     .chapter-num {
       font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700;
@@ -114,7 +121,7 @@
     }
     .chapter-title {
       font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 800;
-      margin-bottom: 18px; color: var(--txt); border-bottom: 2px solid rgba(168,85,247,0.2); padding-bottom: 10px;
+      margin-bottom: 18px; color: var(--txt); border-bottom: 2px solid rgba(168,85,247,0.25); padding-bottom: 10px;
     }
     .chapter-p { font-size: 14px; color: var(--txt2); margin-bottom: 16px; line-height: 1.7; }
     
@@ -123,8 +130,8 @@
       width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px;
     }
     .ebook-table th {
-      background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(59,130,246,0.15));
-      color: var(--txt); font-weight: 700; text-align: left; padding: 10px 14px;
+      background: linear-gradient(135deg, rgba(168,85,247,0.25), rgba(59,130,246,0.2));
+      color: var(--txt); font-weight: 700; text-align: left; padding: 11px 14px;
       border: 1px solid var(--border);
     }
     .ebook-table td {
@@ -135,8 +142,8 @@
 
     /* Formula Box */
     .formula-box {
-      background: rgba(168,85,247,0.06); border: 1px solid rgba(168,85,247,0.25);
-      border-left: 4px solid var(--purple); border-radius: 12px; padding: 18px 24px;
+      background: rgba(168,85,247,0.06); border: 1px solid rgba(168,85,247,0.3);
+      border-left: 4px solid var(--purple); border-radius: 14px; padding: 18px 24px;
       font-family: 'JetBrains Mono', monospace; font-size: 13px; margin: 18px 0; color: var(--txt);
     }
 
@@ -152,6 +159,7 @@
     }
 
     @media (max-width: 768px) {
+      .cover-top-row { flex-direction: column; text-align: center; }
       .cover-stats-grid { grid-template-columns: repeat(2, 1fr); }
       .cover-title { font-size: 32px; }
       .chapter-card { padding: 24px 18px; }
@@ -164,22 +172,30 @@
   <header class="ebook-toolbar">
     <div class="toolbar-brand">
       <img src="logo.png" alt="CrimeScope" class="toolbar-logo"/>
-      <span>CrimeScope AI 2.0 — Technical Handbook</span>
+      <span>CrimeScope AI 2.0 — 100-Page Master Handbook</span>
     </div>
     <div class="toolbar-actions">
       <button class="btn-outline" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌓 Theme</button>
-      <a href="CrimeScope_AI_2.0_Comprehensive_Handbook_eBook.pdf" download class="btn-outline">📥 Download PDF File</a>
+      <a href="CrimeScope_AI_2.0_Comprehensive_Handbook_eBook.pdf" download class="btn-outline">📥 Download 100p PDF</a>
       <button class="btn-action" onclick="window.print()">🖨️ Print / Save to PDF</button>
     </div>
   </header>
 
   <main class="ebook-container">
 
-    <!-- Cover Page -->
+    <!-- Big Header Cover Page -->
     <section class="ebook-cover">
-      <div class="cover-badge">DATATHON 2026 &middot; OFFICIAL TECHNICAL DOSSIER</div>
+      <div class="cover-top-row">
+        <img src="logo.png" alt="CrimeScope AI" class="cover-logo-img"/>
+        <div style="text-align: center;">
+          <div class="cover-badge">DATATHON 2026 &middot; OFFICIAL 100-PAGE MASTER DOSSIER</div>
+          <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: var(--txt3); text-transform: uppercase; margin-top: 4px;">Karnataka State Police &middot; Government of Karnataka &middot; Powered by H2S &middot; Technology Partner: Zoho</div>
+        </div>
+        <img src="innovator_logo.png" alt="Team INNOVATOR" class="cover-logo-img"/>
+      </div>
+      
       <h1 class="cover-title">CrimeScope <span>AI 2.0</span></h1>
-      <div class="cover-subtitle">Next-Generation Predictive Policing, Geospatial Intelligence & Digital Twin Simulation Handbook for Karnataka State Police.</div>
+      <div class="cover-subtitle">Next-Generation Predictive Policing, Geospatial Intelligence & Digital Twin Simulation Master Handbook for Karnataka State Police.</div>
       
       <div class="cover-stats-grid">
         <div><div class="cstat-val">202,533</div><div class="cstat-lbl">Crime Records</div></div>
