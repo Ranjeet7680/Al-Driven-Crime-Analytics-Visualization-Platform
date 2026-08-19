@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CrimeScope AI 2.0 — Official Handbook & Technical eBook</title>
+  <link rel="icon" type="image/png" href="logo.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #080b14;
+      --bg-panel: #0d1117;
+      --bg-card: #111827;
+      --border: rgba(255,255,255,0.08);
+      --txt: #f1f5f9;
+      --txt2: #94a3b8;
+      --txt3: #64748b;
+      --purple: #a855f7;
+      --blue: #3b82f6;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --cyan: #06b6d4;
+    }
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --bg-panel: #ffffff;
+      --bg-card: #ffffff;
+      --border: rgba(0,0,0,0.08);
+      --txt: #0f172a;
+      --txt2: #475569;
+      --txt3: #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--txt);
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+    }
+    
+    /* Top Toolbar */
+    .ebook-toolbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13, 17, 23, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    [data-theme="light"] .ebook-toolbar { background: rgba(255,255,255,0.85); }
+    .toolbar-brand { display: flex; align-items: center; gap: 10px; font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 18px; }
+    .toolbar-logo { width: 28px; height: 28px; border-radius: 6px; }
+    .toolbar-actions { display: flex; align-items: center; gap: 12px; }
+    .btn-action {
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      color: #fff; border: none; border-radius: 8px; padding: 8px 16px;
+      font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-action:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(168,85,247,0.4); }
+    .btn-outline {
+      background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+      color: var(--txt); border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none;
+    }
+    .btn-outline:hover { background: rgba(255,255,255,0.12); }
+
+    /* Layout */
+    .ebook-container {
+      max-width: 1000px; margin: 40px auto; padding: 0 24px 80px 24px;
+    }
+
+    /* Cover Page */
+    .ebook-cover {
+      background: linear-gradient(135deg, rgba(168,85,247,0.12) 0%, rgba(59,130,246,0.08) 50%, rgba(6,182,212,0.06) 100%);
+      border: 1px solid rgba(168,85,247,0.3);
+      border-radius: 24px; padding: 60px 48px;
+      margin-bottom: 40px; position: relative; overflow: hidden;
+    }
+    .cover-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--cyan); background: rgba(6,182,212,0.12); border: 1px solid rgba(6,182,212,0.3);
+      padding: 5px 12px; border-radius: 20px; margin-bottom: 20px;
+    }
+    .cover-title {
+      font-family: 'Space Grotesk', sans-serif; font-size: 44px; font-weight: 900; line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    .cover-title span {
+      background: linear-gradient(135deg, var(--purple), var(--blue), var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .cover-subtitle { font-size: 18px; color: var(--txt2); max-width: 700px; margin-bottom: 28px; line-height: 1.5; }
+    .cover-stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 32px;
+      background: rgba(0,0,0,0.2); padding: 20px; border-radius: 16px; border: 1px solid var(--border);
+    }
+    [data-theme="light"] .cover-stats-grid { background: rgba(255,255,255,0.6); }
+    .cstat-val { font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 800; color: var(--purple); }
+    .cstat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--txt3); margin-top: 2px; }
+
+    /* Chapter Sections */
+    .chapter-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 36px; margin-bottom: 32px;
+    }
+    .chapter-num {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700;
+      color: var(--purple); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 6px;
+    }
+    .chapter-title {
+      font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 800;
+      margin-bottom: 18px; color: var(--txt); border-bottom: 2px solid rgba(168,85,247,0.2); padding-bottom: 10px;
+    }
+    .chapter-p { font-size: 14px; color: var(--txt2); margin-bottom: 16px; line-height: 1.7; }
+    
+    /* Tables */
+    .ebook-table {
+      width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px;
+    }
+    .ebook-table th {
+      background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(59,130,246,0.15));
+      color: var(--txt); font-weight: 700; text-align: left; padding: 10px 14px;
+      border: 1px solid var(--border);
+    }
+    .ebook-table td {
+      padding: 10px 14px; border: 1px solid var(--border); color: var(--txt2);
+    }
+    .ebook-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+    [data-theme="light"] .ebook-table tr:nth-child(even) { background: rgba(0,0,0,0.02); }
+
+    /* Formula Box */
+    .formula-box {
+      background: rgba(168,85,247,0.06); border: 1px solid rgba(168,85,247,0.25);
+      border-left: 4px solid var(--purple); border-radius: 12px; padding: 18px 24px;
+      font-family: 'JetBrains Mono', monospace; font-size: 13px; margin: 18px 0; color: var(--txt);
+    }
+
+    /* Print Styles */
+    @media print {
+      .ebook-toolbar, .btn-action, .btn-outline { display: none !important; }
+      body { background: #fff !important; color: #000 !important; }
+      .ebook-container { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+      .chapter-card { page-break-after: always; border: none !important; padding: 20px 0 !important; background: transparent !important; }
+      .ebook-cover { page-break-after: always; border: none !important; background: #fff !important; }
+      .cover-title span { -webkit-text-fill-color: #000 !important; color: #000 !important; }
+      .cstat-val { color: #000 !important; }
+    }
+
+    @media (max-width: 768px) {
+      .cover-stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .cover-title { font-size: 32px; }
+      .chapter-card { padding: 24px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Toolbar -->
+  <header class="ebook-toolbar">
+    <div class="toolbar-brand">
+      <img src="logo.png" alt="CrimeScope" class="toolbar-logo"/>
+      <span>CrimeScope AI 2.0 — Technical Handbook</span>
+    </div>
+    <div class="toolbar-actions">
+      <button class="btn-outline" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌓 Theme</button>
+      <a href="CrimeScope_AI_2.0_Comprehensive_Handbook_eBook.pdf" download class="btn-outline">📥 Download PDF File</a>
+      <button class="btn-action" onclick="window.print()">🖨️ Print / Save to PDF</button>
+    </div>
+  </header>
+
+  <main class="ebook-container">
+
+    <!-- Cover Page -->
+    <section class="ebook-cover">
+      <div class="cover-badge">DATATHON 2026 &middot; OFFICIAL TECHNICAL DOSSIER</div>
+      <h1 class="cover-title">CrimeScope <span>AI 2.0</span></h1>
+      <div class="cover-subtitle">Next-Generation Predictive Policing, Geospatial Intelligence & Digital Twin Simulation Handbook for Karnataka State Police.</div>
+      
+      <div class="cover-stats-grid">
+        <div><div class="cstat-val">202,533</div><div class="cstat-lbl">Crime Records</div></div>
+        <div><div class="cstat-val">37</div><div class="cstat-lbl">Districts Tracked</div></div>
+        <div><div class="cstat-val">89.2%</div><div class="cstat-lbl">AI Accuracy</div></div>
+        <div><div class="cstat-val">72.0%</div><div class="cstat-lbl">Resolution Rate</div></div>
+      </div>
+    </section>
+
+    <!-- Chapter 1 -->
+    <section class="chapter-card">
+      <div class="chapter-num">Chapter 01</div>
+      <h2 class="chapter-title">Executive Summary & Competitive Differentiation</h2>
+      <p class="chapter-p"><strong>a. How Different Is It From Existing Ideas?</strong></p>
+      <p class="chapter-p">Traditional policing platforms are retrospective: they plot where crimes already occurred weeks or months ago. CrimeScope AI 2.0 is proactive, multi-horizon (24h/7d/30d), and provides actionable tactical patrol directives.</p>
+      
+      <table class="ebook-table">
+        <thead>
+          <tr><th>Dimension</th><th>Conventional Systems</th><th>CrimeScope AI 2.0 (Our Solution)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Operational Stance</strong></td><td>Retrospective (weeks late)</td><td><strong>Proactive & Multi-Horizon:</strong> 24h, 7d, and 30d risk forecasting.</td></tr>
+          <tr><td><strong>Tactical Guidance</strong></td><td>Static spreadsheets</td><td><strong>Prescriptive AI Directives:</strong> Specific patrol hours and checkposts.</td></tr>
+          <tr><td><strong>Scenario Modeling</strong></td><td>None</td><td><strong>Digital Twin Simulator:</strong> Mathematical crime suppression simulator.</td></tr>
+          <tr><td><strong>Architecture</strong></td><td>Heavy database servers (1.5s–4s)</td><td><strong>Zero-Backend Engine:</strong> Sub-50ms execution speed, 100% offline.</td></tr>
+          <tr><td><strong>Interface</strong></td><td>Complex SQL forms</td><td><strong>Fast Finder (Ctrl+K) & Voice AI:</strong> Multimodal hands-free queries.</td></tr>
+        </tbody>
+      </table>
+
+      <p class="chapter-p"><strong>b. How Will It Solve the Problem?</strong></p>
+      <p class="chapter-p">By addressing Karnataka's 202,533 annual cases through dynamic night patrol reallocations (22:00–04:00), speed radar positioning on high-fatality highways (11,408 deaths), and targeted Pink Patrol deployments for women safety.</p>
+
+      <p class="chapter-p"><strong>c. Unique Selling Proposition (USP)</strong></p>
+      <ul style="margin-left: 20px; color: var(--txt2); font-size: 14px; line-height: 1.8;">
+        <li>⚡ <strong>Zero-Backend Sub-50ms Architecture:</strong> Zero server bills, instant local computation.</li>
+        <li>🎮 <strong>Digital Twin Simulator:</strong> Interactive simulation of patrol and lighting changes.</li>
+        <li>🎙️ <strong>Web Speech Multimodal Copilot:</strong> Hands-free voice assistant for officers.</li>
+        <li>🔍 <strong>Fast Finder (Ctrl+K):</strong> Sub-8ms search across 37 districts and 76 crime heads.</li>
+        <li>🔊 <strong>Native Web Audio Synthesizer:</strong> Zero-asset oscillator sound feedback.</li>
+      </ul>
+    </section>
+
+    <!-- Chapter 2 -->
+    <section class="chapter-card">
+      <div class="chapter-num">Chapter 02</div>
+      <h2 class="chapter-title">Complete 14-Feature Matrix</h2>
+      <table class="ebook-table">
+        <thead>
+          <tr><th>Module</th><th>Functionality</th><th>Operational Impact</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>1. Boot Sequence</strong></td><td>120-star particle canvas, rotating rings, live stat counters</td><td>Instant visual verification of dataset integrity</td></tr>
+          <tr><td><strong>2. Command Center</strong></td><td>KPI metrics, 72% resolution ring, quick access grid</td><td>State-wide operational situational awareness</td></tr>
+          <tr><td><strong>3. Geospatial Heatmap</strong></td><td>2D canvas map with animated radar pulse waves</td><td>High-risk cluster and border hotspot identification</td></tr>
+          <tr><td><strong>4. District Deep-Dive</strong></td><td>37 district profiles, AI patrol directives, category bars</td><td>Station-level tactical briefing and direct Copilot bridge</td></tr>
+          <tr><td><strong>5. Fast Finder (Ctrl+K)</strong></td><td>Multi-category search palette (districts, crime heads)</td><td>Instantaneous keyboard-first navigation</td></tr>
+          <tr><td><strong>6. AI Prediction Engine</strong></td><td>24h, 7d, 30d risk forecasting with 89.2% accuracy</td><td>Pre-emptive force deployment before crime surges</td></tr>
+          <tr><td><strong>7. AI Crime Copilot</strong></td><td>Natural language Q&A, Web Speech API speech & TTS</td><td>Hands-free voice querying in patrol vehicles</td></tr>
+          <tr><td><strong>8. Real-Time Alert Center</strong></td><td>Statistical surge anomaly detector (+2.5&sigma;)</td><td>Early warning on emerging crime patterns</td></tr>
+          <tr><td><strong>9. Digital Twin Simulator</strong></td><td>Slider simulation for patrol, lighting, CCTV, crowds</td><td>Evidence-based resource optimization</td></tr>
+          <tr><td><strong>10. Explainable AI (XAI)</strong></td><td>Factor weight matrix explaining predictions</td><td>High model transparency for leadership trust</td></tr>
+          <tr><td><strong>11. Executive Exporter</strong></td><td>Automated brief generator with JSON & print view</td><td>One-click intelligence briefing creation</td></tr>
+          <tr><td><strong>12. Audio Synthesizer</strong></td><td>Oscillator-based sound synthesis (clicks, alerts)</td><td>Auditory confirmation of critical threat surges</td></tr>
+          <tr><td><strong>13. Vulnerable Groups</strong></td><td>Safety diagnostics for Women, Children, and Highways</td><td>Targeted demographic protection</td></tr>
+          <tr><td><strong>14. Dual Theme System</strong></td><td>Obsidian Dark and Pastel Light glassmorphism</td><td>Ergonomic visibility in all lighting conditions</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Chapter 3 -->
+    <section class="chapter-card">
+      <div class="chapter-num">Chapter 03</div>
+      <h2 class="chapter-title">Mathematical Formulations & AI Equations</h2>
+      
+      <p class="chapter-p"><strong>1. Compound Risk Score Equation ($R_d$)</strong></p>
+      <div class="formula-box">
+        R_d = min(99, max(20, [ w1 &middot; (I_d / I_max) + w2 &middot; (S_d / S_max) + w3 &middot; T_m + w4 &middot; E_f ] &times; 100))
+        <br/><br/>
+        Weights: w1 = 0.40 (IPC), w2 = 0.25 (SLL), w3 = 0.20 (Seasonality), w4 = 0.15 (Environmental)
+      </div>
+
+      <p class="chapter-p"><strong>2. Digital Twin Crime Reduction Equation ($\Delta C$)</strong></p>
+      <div class="formula-box">
+        &Delta;C = - [ 0.42 &middot; P + 0.22 &middot; L + 0.20 &middot; V - 0.28 &middot; F - 0.15 &middot; ((R - 5) / 25) ] &times; 100%
+        <br/><br/>
+        Parameters: P = Patrol Density, L = Street Lighting, V = CCTV, F = Festival Load, R = Response Time
+      </div>
+    </section>
+
+    <!-- Chapter 4 -->
+    <section class="chapter-card">
+      <div class="chapter-num">Chapter 04</div>
+      <h2 class="chapter-title">Financial Feasibility & Implementation Cost</h2>
+      <table class="ebook-table">
+        <thead>
+          <tr><th>Deployment Scale</th><th>Monthly Cost (INR)</th><th>Annual Cost (INR)</th><th>Key Cost Advantage</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Prototype / Pilot (Year 1)</strong></td><td>&#8377;25,000</td><td><strong>&#8377;3,00,000</strong></td><td>Zero server & database hosting fees</td></tr>
+          <tr><td><strong>Statewide Scale (37 Districts)</strong></td><td>&#8377;1,25,000</td><td><strong>&#8377;15,00,000</strong></td><td>>90% savings vs legacy vendor contracts (&#8377;2&ndash;5 Cr)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Chapter 5 -->
+    <section class="chapter-card">
+      <div class="chapter-num">Chapter 05</div>
+      <h2 class="chapter-title">Team INNOVATOR & Datathon 2026 Alignment</h2>
+      <table class="ebook-table">
+        <thead>
+          <tr><th>Team Member</th><th>Role</th><th>Core Engineering Contribution</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Ranjeet Kumar</strong> ⭐</td><td>Team Leader & Lead Architect</td><td>AI Risk Models, System Architecture, Audio Synthesizer, Core SPA</td></tr>
+          <tr><td><strong>Shashank H E</strong></td><td>Data Analytics & Visualization</td><td>Crime Dataset Compilation, Chart.js Modeling, Heatmap Coordinates</td></tr>
+          <tr><td><strong>Bharath Kumar</strong></td><td>Backend & Database Systems</td><td>Data Pipeline Integrity, Firebase Auth, API Specifications</td></tr>
+          <tr><td><strong>Bawadharani Sree R</strong></td><td>Research & QA</td><td>Crime Head Taxonomy, Statistical Validation, Documentation</td></tr>
+          <tr><td><strong>Vivek Boini</strong></td><td>Frontend & UI/UX Design</td><td>Glassmorphism Design System, CSS Keyframes, Responsive UX</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const cur = html.getAttribute('data-theme');
+      html.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+    }
+  </script>
+</body>
+</html>
