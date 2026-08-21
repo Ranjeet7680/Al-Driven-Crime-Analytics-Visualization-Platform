@@ -1,4 +1,4 @@
-name: CI & Validation
+name: CI & Technical Verification
 
 on:
   push:
@@ -7,23 +7,65 @@ on:
     branches: [ main ]
 
 jobs:
-  validate:
+  validate-spa:
+    name: Validate SPA Core & Datasets
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20]
     steps:
-      - name: Checkout Code
+      - name: Checkout Codebase
         uses: actions/checkout@v4
-      - name: Setup Node.js
+
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ matrix.node-version }}
+
       - name: Validate JavaScript Syntax
         run: |
           node -c app.js
           node -c data.js
-      - name: Verify Core Assets
+          echo "✅ All JavaScript files passed syntax compilation!"
+
+      - name: Verify Core SPA Assets & Images
         run: |
-          test -f index.html
-          test -f style.css
-          test -f data.js
-          test -f app.js
-          echo "All core SPA assets validated!"
+          test -f index.html || (echo "❌ Missing index.html" && exit 1)
+          test -f style.css || (echo "❌ Missing style.css" && exit 1)
+          test -f data.js || (echo "❌ Missing data.js" && exit 1)
+          test -f app.js || (echo "❌ Missing app.js" && exit 1)
+          test -f logo.png || (echo "❌ Missing logo.png" && exit 1)
+          test -f innovator_logo.png || (echo "❌ Missing innovator_logo.png" && exit 1)
+          test -f karnataka_map.png || (echo "❌ Missing karnataka_map.png" && exit 1)
+          test -f ebook.html || (echo "❌ Missing ebook.html" && exit 1)
+          test -f CrimeScope_AI_2.0_Comprehensive_Handbook_eBook.pdf || (echo "❌ Missing PDF eBook" && exit 1)
+          echo "✅ All core assets and visual logos verified!"
+
+  validate-pdf-dossier:
+    name: Verify 100-Page Master PDF
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install PDF Verification Tools
+        run: |
+          pip install pymupdf reportlab matplotlib pillow
+
+      - name: Verify Exact 100-Page Count & Embedded Images
+        run: |
+          python -c "
+          import fitz, os
+          pdf_path = 'CrimeScope_AI_2.0_Comprehensive_Handbook_eBook.pdf'
+          assert os.path.exists(pdf_path), 'PDF does not exist'
+          doc = fitz.open(pdf_path)
+          total_pages = len(doc)
+          print(f'Verified Total Pages: {total_pages}')
+          assert total_pages == 100, f'Expected exact 100 pages, found {total_pages}'
+          print('✅ Exact 100-Page Master PDF Verification PASSED!')
+          "

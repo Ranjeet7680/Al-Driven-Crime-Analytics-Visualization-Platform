@@ -1,0 +1,35 @@
+name: Build & Release Master PDF eBook
+
+on:
+  push:
+    paths:
+      - 'CrimeScope_AI_2.0_Comprehensive_Handbook_eBook.pdf'
+  workflow_dispatch:
+
+jobs:
+  build-and-verify-pdf:
+    name: Package 100-Page Master PDF
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          pip install reportlab pymupdf matplotlib pillow
+
+      - name: Verify PDF Integrity & 100-Page Count
+        run: |
+          python -c "import fitz; doc=fitz.open('CrimeScope_AI_2.0_Comprehensive_Handbook_eBook.pdf'); print('Total Verified Pages:', len(doc)); assert len(doc) == 100"
+
+      - name: Upload PDF eBook Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CrimeScope-AI-2.0-100-Page-Master-Handbook
+          path: CrimeScope_AI_2.0_Comprehensive_Handbook_eBook.pdf
+          retention-days: 90
