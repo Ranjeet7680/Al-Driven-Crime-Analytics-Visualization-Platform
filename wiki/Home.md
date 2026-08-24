@@ -17,7 +17,7 @@
 > **PREDICT · PREVENT · PROTECT**  
 > *Empowering Karnataka law enforcement with real-time geospatial intelligence, multi-horizon AI risk forecasting, and digital twin simulation across 202,533 verified crime records.*
 
-[🚀 Launch Live Platform](https://ranjeet7680.github.io/Al-Driven-Crime-Analytics-Visualization-Platform/) • [📖 Master Handbook PDF](https://github.com/Ranjeet7680/Al-Driven-Crime-Analytics-Visualization-Platform/raw/main/CrimeScope_AI_2.0_Comprehensive_Handbook_eBook.pdf) • [🏗️ Architecture](02-System-Architecture-&-Zero-Backend-SPA) • [📊 2025 Data](03-Karnataka-Police-2025-Dataset-&-Data-Dictionary) • [👨‍💻 Team](21-Team-INNOVATOR-&-Datathon-2026-Alignment)
+[🚀 Launch Live Platform](https://ranjeet7680.github.io/Al-Driven-Crime-Analytics-Visualization-Platform/) • [📖 Master Handbook PDF](https://github.com/Ranjeet7680/Al-Driven-Crime-Analytics-Visualization-Platform/raw/main/CrimeScope_AI_2.0_Comprehensive_Handbook_eBook.pdf) • [🏗️ Architecture](02-System-Architecture-&-Zero-Backend-SPA) • [📊 2025 Data](03-Karnataka-Police-2025-Dataset-&-Data-Dictionary) • [🏙️ City Analysis](22-City-Crime-Analysis-&-Commissionerates) • [👨‍💻 Team](21-Team-INNOVATOR-&-Datathon-2026-Alignment)
 
 </div>
 
@@ -37,6 +37,7 @@ Built upon **202,533 verified crime incidents** from the **Karnataka Police Annu
 |---|:---:|---|
 | **Total Verified Incidents** | **202,533** | 138,666 IPC offences + 63,867 Special & Local Law (SLL) cases |
 | **Jurisdictions Covered** | **37** | 6 Major Commissionerates + 31 Revenue Districts across 8 Ranges |
+| **City Commissionerate Crimes** | **71,650 (35.4%)** | Concentrated across 7 major urban police commissionerates |
 | **AI Model Confidence** | **89.2%** | Validated across temporal holdout cross-validation sets |
 | **Crime Resolution Rate** | **72.0%** | Comprehensive tracking of state-level case disposal |
 | **Client Query Velocity** | **< 50ms** | Instant sub-second calculation on client browser hardware |
@@ -47,7 +48,7 @@ Built upon **202,533 verified crime incidents** from the **Karnataka Police Annu
 
 ## 📚 Complete Wiki Documentation Index
 
-Explore the comprehensive 21-chapter technical dossier below:
+Explore the comprehensive 22-chapter technical dossier below:
 
 ```
 CrimeScope AI 2.0 Documentation Hierarchy
@@ -65,11 +66,12 @@ CrimeScope AI 2.0 Documentation Hierarchy
 │   ├── [09. AI Crime Copilot & Voice UI](09-AI-Crime-Copilot-&-Voice-Speech-Interface) — Web Speech NLP & hands-free police operation
 │   └── [10. Explainable AI (XAI) Framework](10-Explainable-AI-(XAI)-&-Feature-Attribution) — Factor decomposition & transparency matrices
 │
-├── 🛡️ Operations, Demographics & Design
+├── 🛡️ Operations, Demographics & Urban Analysis
 │   ├── [11. Vulnerable Demographics & Safety](11-Vulnerable-Demographics-&-Women-Safety-Analytics) — Women (Pink Patrol), children & highway safety
 │   ├── [12. Native Web Audio Synthesizer](12-Native-Web-Audio-Synthesizer-Engine) — Mathematical sound synthesis with zero MP3 assets
 │   ├── [13. Design System & Accessibility](13-Design-System,-Themes-&-Accessibility) — Obsidian/Pastel themes, 3D tilt & WCAG AA
-│   └── [14. 37-District Tactical Atlas](14-37-District-Tactical-Atlas-&-Intelligence-Profiles) — Complete jurisdiction profiles & directives
+│   ├── [14. 37-District Tactical Atlas](14-37-District-Tactical-Atlas-&-Intelligence-Profiles) — Complete jurisdiction profiles & directives
+│   └── [22. City Crime Analysis & Commissionerates](22-City-Crime-Analysis-&-Commissionerates) — Urban crime graphs, pie charts, and city dossiers
 │
 └── 🚀 Deployment, Operations & Governance
     ├── [15. Installation & Zero-Build Setup](15-Installation,-Deployment-&-Zero-Build-Setup) — Instant demo, local servers & GitHub Pages CI/CD

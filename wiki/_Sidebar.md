@@ -24,6 +24,7 @@
 * [🔊 12. Web Audio Synthesizer](12-Native-Web-Audio-Synthesizer-Engine)
 * [🎨 13. Design System & UI/UX](13-Design-System,-Themes-&-Accessibility)
 * [📍 14. 37-District Tactical Atlas](14-37-District-Tactical-Atlas-&-Intelligence-Profiles)
+* [🏙️ 22. City Crime Analysis](22-City-Crime-Analysis-&-Commissionerates)
 
 #### 🚀 Deployment & Governance
 * [⚙️ 15. Setup & Zero-Build Launch](15-Installation,-Deployment-&-Zero-Build-Setup)
