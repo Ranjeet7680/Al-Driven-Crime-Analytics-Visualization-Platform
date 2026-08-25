@@ -1140,6 +1140,7 @@
       <a href="#demo-section" onclick="event.preventDefault();scrollToSection('demo-section')" id="lnk-demo">Demo</a>
       <a href="#stats-section" onclick="event.preventDefault();scrollToSection('stats-section')" id="lnk-stats">Statistics</a>
       <a href="#team-section" onclick="event.preventDefault();scrollToSection('team-section')" id="lnk-team">Team</a>
+      <a href="ebook.html" target="_blank" title="100-Page Master Handbook & Technical Dossier" style="display:inline-flex;align-items:center;gap:4px;color:var(--purple,#a855f7);font-weight:700;">📖 Master eBook</a>
       <button class="nav-cta-demo" onclick="launchInstantDemo()">⚡ Instant Demo</button>
       <button class="nav-cta" onclick="enterDashboard()">Launch Platform →</button>
       <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle-landing" title="Toggle Day/Night">
@@ -1166,6 +1167,7 @@
     <a href="#demo-section" onclick="toggleLandingMenu();scrollToSection('demo-section')">Demo</a>
     <a href="#stats-section" onclick="toggleLandingMenu();scrollToSection('stats-section')">Statistics</a>
     <a href="#team-section" onclick="toggleLandingMenu();scrollToSection('team-section')">Team</a>
+    <a href="ebook.html" target="_blank" onclick="toggleLandingMenu()" style="color:var(--purple,#a855f7);font-weight:700;">📖 100-Page Master eBook</a>
     <button class="nav-cta-large" onclick="toggleLandingMenu();launchInstantDemo()">⚡ Instant Demo Mode</button>
     <button class="nav-cta-large" style="margin-top:8px;background:rgba(255,255,255,0.08)" onclick="toggleLandingMenu();enterDashboard()">Sign In / Auth →</button>
   </div>
@@ -1339,15 +1341,96 @@
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="landing-footer">
-    <div class="footer-logo">CrimeScope <span class="brand-ai">AI</span> 2.0</div>
-    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin:14px 0">
-      <img src="innovator_logo.png" alt="Innovator Team" style="width:44px;height:44px;object-fit:contain;border-radius:8px"/>
-      <span style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;letter-spacing:0.1em;background:linear-gradient(90deg,#3b82f6,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent">INNOVATOR TEAM</span>
+  <!-- MASTER PLATFORM FOOTER (LANDING PAGE) -->
+  <footer class="nexora-footer-wrap" style="max-width:1280px;margin:50px auto 30px auto;">
+    <div class="nexora-footer-inner">
+      <div class="nexora-footer-grid">
+        
+        <!-- Brand Column -->
+        <div class="nf-brand-col">
+          <div class="nf-brand-header">
+            <div class="nf-logo-box">
+              <img src="logo.png" alt="CrimeScope AI" class="nf-logo-img"/>
+            </div>
+            <div>
+              <div class="nf-brand-title">CrimeScope <span>AI 2.0</span></div>
+              <div class="nf-tagline">INTELLIGENCE &bull; INNOVATION &bull; IMPACT</div>
+            </div>
+          </div>
+          <p class="nf-desc">
+            Next-Generation Predictive Policing &amp; Digital Twin Intelligence for Karnataka State. Turning 202,533 verified crime records into predictive decisions, automated risk insights, and measurable public safety outcomes with AI.
+          </p>
+          <div class="nf-social-row">
+            <a href="https://github.com/Ranjeet7680/Al-Driven-Crime-Analytics-Visualization-Platform" target="_blank" class="nf-social-btn" title="GitHub Repository">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              GitHub
+            </a>
+            <a href="https://datathon2026.com" target="_blank" class="nf-social-btn" title="Datathon 2026 Platform">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              Datathon 2026
+            </a>
+            <a href="ebook.html" target="_blank" class="nf-social-btn" title="Master Handbook eBook">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              100p eBook
+            </a>
+          </div>
+        </div>
+
+        <!-- Platform Column -->
+        <div class="nf-nav-col">
+          <div class="nf-col-heading">PLATFORM</div>
+          <ul class="nf-link-list">
+            <li class="nf-link-item"><button onclick="enterDashboard();showPage('ai-assistant');">AI Copilot <span class="nf-badge ai">AI</span></button></li>
+            <li class="nf-link-item"><button onclick="enterDashboard();showPage('heatmap');">Hotspot Analytics</button></li>
+            <li class="nf-link-item"><button onclick="enterDashboard();showPage('explainability');">Risk Intelligence</button></li>
+            <li class="nf-link-item"><button onclick="enterDashboard();showPage('ai-prediction');">Predictive Forecasting</button></li>
+            <li class="nf-link-item"><button onclick="enterDashboard();showPage('ai-assistant');">AI Voice Copilot <span class="nf-badge voice">VOICE</span></button></li>
+            <li class="nf-link-item"><button onclick="enterDashboard();showPage('simulator');">Digital Twin Simulator <span class="nf-badge sim">SIM</span></button></li>
+          </ul>
+        </div>
+
+        <!-- Organization Column -->
+        <div class="nf-nav-col">
+          <div class="nf-col-heading">ORGANIZATION</div>
+          <ul class="nf-link-list">
+            <li class="nf-link-item"><button onclick="enterDashboard();showPage('team');">About CrimeScope</button></li>
+            <li class="nf-link-item"><button onclick="enterDashboard();showPage('team');">Team INNOVATOR</button></li>
+            <li class="nf-link-item"><button onclick="enterDashboard();showPage('vulnerable');">Women &amp; Child Safety</button></li>
+            <li class="nf-link-item"><a href="https://data.gov.in" target="_blank">Karnataka Police Data</a></li>
+            <li class="nf-link-item"><button onclick="launchInstantDemo();" class="nf-accent-link">Instant Demo &nearr;</button></li>
+          </ul>
+        </div>
+
+        <!-- Explore Column -->
+        <div class="nf-nav-col">
+          <div class="nf-col-heading">EXPLORE</div>
+          <ul class="nf-link-list">
+            <li class="nf-link-item"><button onclick="enterDashboard();showPage('district');">37-District Tactical Atlas</button></li>
+            <li class="nf-link-item"><button onclick="enterDashboard();showPage('crime-types');">City Crime Analysis <span class="nf-badge new">NEW</span></button></li>
+            <li class="nf-link-item"><button onclick="enterDashboard();showPage('trends');">Temporal Seasonality</button></li>
+            <li class="nf-link-item"><button onclick="enterDashboard();showPage('explainability');">Zero-Backend Architecture</button></li>
+            <li class="nf-link-item"><a href="CrimeScope_AI_2.0_Comprehensive_Handbook_eBook.pdf" download>Download 100p PDF</a></li>
+            <li class="nf-link-item"><a href="https://github.com/Ranjeet7680/Al-Driven-Crime-Analytics-Visualization-Platform/wiki" target="_blank" class="nf-accent-link">Official Wiki Hub &nearr;</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Sub-Footer Bar -->
+      <div class="nf-bottom-bar">
+        <div class="nf-bottom-left">
+          <span class="nf-status-dot"></span>
+          <span>&copy; 2026 CrimeScope AI 2.0 &middot; Karnataka Police Intelligence Platform. All rights reserved.</span>
+        </div>
+        <div class="nf-bottom-links">
+          <a href="#" onclick="event.preventDefault();alert('Privacy Policy: CrimeScope AI 2.0 operates with 100% client-side privacy. Zero personally identifiable citizen records are stored on external cloud servers.');">Privacy Policy</a>
+          <a href="#" onclick="event.preventDefault();alert('Terms of Service: Standard Government & Research Open Source License for Datathon 2026.');">Terms of Service</a>
+          <a href="#" onclick="event.preventDefault();alert('Security Audit: Zero-backend SPA architecture with client-side sandboxing verified.');">Security Audit</a>
+          <a href="https://github.com/Ranjeet7680/Al-Driven-Crime-Analytics-Visualization-Platform/blob/main/LICENSE" target="_blank">MIT License</a>
+        </div>
+      </div>
+
     </div>
-    <div class="footer-sub">Datathon 2026 · Karnataka Smart Policing Platform · Built with ❤️ for public safety</div>
-    <button class="btn-primary" onclick="enterDashboard()" style="margin-top:20px">Launch Platform →</button>
   </footer>
 </div>
 
@@ -1702,6 +1785,11 @@
         <div class="topbar-stat"><span class="tstat-val">138,666</span><span class="tstat-lbl">IPC 2025</span></div>
         <div class="topbar-stat"><span class="tstat-val" id="alert-count-top">12</span><span class="tstat-lbl">Alerts</span></div>
         
+        <a href="ebook.html" target="_blank" class="topbar-btn" title="Open 100-Page Master eBook & Technical Handbook" style="text-decoration:none;display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,rgba(168,85,247,0.2),rgba(59,130,246,0.2));border:1px solid rgba(168,85,247,0.4);color:var(--purple,#a855f7);font-weight:700;">
+          <span style="font-size:13px;">📖</span>
+          <span class="export-btn-text">eBook</span>
+        </a>
+        
         <button class="topbar-btn export-btn" onclick="exportExecutiveReport()" title="Export Executive Crime Intelligence Report">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           <span class="export-btn-text">Export</span>
@@ -1822,6 +1910,99 @@
             <div class="oq-sub">Patrol deployment optimization</div><div class="oq-arrow">&#8594;</div>
           </div>
         </div>
+
+        <!-- MASTER PLATFORM FOOTER (OVERVIEW EXECUTIVE SECTION) -->
+        <footer class="nexora-footer-wrap">
+          <div class="nexora-footer-inner">
+            <div class="nexora-footer-grid">
+              
+              <!-- Brand Column -->
+              <div class="nf-brand-col">
+                <div class="nf-brand-header">
+                  <div class="nf-logo-box">
+                    <img src="logo.png" alt="CrimeScope AI" class="nf-logo-img"/>
+                  </div>
+                  <div>
+                    <div class="nf-brand-title">CrimeScope <span>AI 2.0</span></div>
+                    <div class="nf-tagline">INTELLIGENCE &bull; INNOVATION &bull; IMPACT</div>
+                  </div>
+                </div>
+                <p class="nf-desc">
+                  Next-Generation Predictive Policing &amp; Digital Twin Intelligence for Karnataka State. Turning 202,533 verified crime records into predictive decisions, automated risk insights, and measurable public safety outcomes with AI.
+                </p>
+                <div class="nf-social-row">
+                  <a href="https://github.com/Ranjeet7680/Al-Driven-Crime-Analytics-Visualization-Platform" target="_blank" class="nf-social-btn" title="GitHub Repository">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    GitHub
+                  </a>
+                  <a href="https://datathon2026.com" target="_blank" class="nf-social-btn" title="Datathon 2026 Platform">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    Datathon 2026
+                  </a>
+                  <a href="ebook.html" target="_blank" class="nf-social-btn" title="Master Handbook eBook">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    100p eBook
+                  </a>
+                </div>
+              </div>
+
+              <!-- Platform Column -->
+              <div class="nf-nav-col">
+                <div class="nf-col-heading">PLATFORM</div>
+                <ul class="nf-link-list">
+                  <li class="nf-link-item"><button onclick="showPage('ai-assistant')">AI Copilot <span class="nf-badge ai">AI</span></button></li>
+                  <li class="nf-link-item"><button onclick="showPage('heatmap')">Hotspot Analytics</button></li>
+                  <li class="nf-link-item"><button onclick="showPage('explainability')">Risk Intelligence</button></li>
+                  <li class="nf-link-item"><button onclick="showPage('ai-prediction')">Predictive Forecasting</button></li>
+                  <li class="nf-link-item"><button onclick="showPage('ai-assistant')">AI Voice Copilot <span class="nf-badge voice">VOICE</span></button></li>
+                  <li class="nf-link-item"><button onclick="showPage('simulator')">Digital Twin Simulator <span class="nf-badge sim">SIM</span></button></li>
+                </ul>
+              </div>
+
+              <!-- Organization Column -->
+              <div class="nf-nav-col">
+                <div class="nf-col-heading">ORGANIZATION</div>
+                <ul class="nf-link-list">
+                  <li class="nf-link-item"><button onclick="showPage('team')">About CrimeScope</button></li>
+                  <li class="nf-link-item"><button onclick="showPage('team')">Team INNOVATOR</button></li>
+                  <li class="nf-link-item"><button onclick="showPage('vulnerable')">Women &amp; Child Safety</button></li>
+                  <li class="nf-link-item"><a href="https://data.gov.in" target="_blank">Karnataka Police Data</a></li>
+                  <li class="nf-link-item"><button onclick="exportExecutiveReport()" class="nf-accent-link">Export Dossier &nearr;</button></li>
+                  <li class="nf-link-item"><button onclick="openCommandPalette()" class="nf-accent-link">Fast Finder <kbd style="font-size:9px;opacity:0.8;">Ctrl+K</kbd></button></li>
+                </ul>
+              </div>
+
+              <!-- Explore Column -->
+              <div class="nf-nav-col">
+                <div class="nf-col-heading">EXPLORE</div>
+                <ul class="nf-link-list">
+                  <li class="nf-link-item"><button onclick="showPage('district')">37-District Tactical Atlas</button></li>
+                  <li class="nf-link-item"><button onclick="showPage('crime-types')">City Crime Analysis <span class="nf-badge new">NEW</span></button></li>
+                  <li class="nf-link-item"><button onclick="showPage('trends')">Temporal Seasonality</button></li>
+                  <li class="nf-link-item"><button onclick="showPage('explainability')">Zero-Backend Architecture</button></li>
+                  <li class="nf-link-item"><a href="CrimeScope_AI_2.0_Comprehensive_Handbook_eBook.pdf" download>Download 100p PDF</a></li>
+                  <li class="nf-link-item"><a href="https://github.com/Ranjeet7680/Al-Driven-Crime-Analytics-Visualization-Platform/wiki" target="_blank" class="nf-accent-link">Official Wiki Hub &nearr;</a></li>
+                </ul>
+              </div>
+
+            </div>
+
+            <!-- Sub-Footer Bar -->
+            <div class="nf-bottom-bar">
+              <div class="nf-bottom-left">
+                <span class="nf-status-dot"></span>
+                <span>&copy; 2026 CrimeScope AI 2.0 &middot; Karnataka Police Intelligence Platform. All rights reserved.</span>
+              </div>
+              <div class="nf-bottom-links">
+                <a href="#" onclick="event.preventDefault();alert('Privacy Policy: CrimeScope AI 2.0 operates with 100% client-side privacy. Zero personally identifiable citizen records are stored on external cloud servers.');">Privacy Policy</a>
+                <a href="#" onclick="event.preventDefault();alert('Terms of Service: Standard Government & Research Open Source License for Datathon 2026.');">Terms of Service</a>
+                <a href="#" onclick="event.preventDefault();alert('Security Audit: Zero-backend SPA architecture with client-side sandboxing verified.');">Security Audit</a>
+                <a href="https://github.com/Ranjeet7680/Al-Driven-Crime-Analytics-Visualization-Platform/blob/main/LICENSE" target="_blank">MIT License</a>
+              </div>
+            </div>
+
+          </div>
+        </footer>
       </section>
 
       <!-- PAGE: HEATMAP -->
