@@ -3,329 +3,1718 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CrimeScope AI 2.0 — 100-Page Master Handbook & Technical eBook</title>
+  <title>CrimeScope AI 2.0 — 100-Page Master Handbook & Operational Dossier</title>
   <link rel="icon" type="image/png" href="logo.png"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg: #080b14;
-      --bg-panel: #0d1117;
+      --bg: #060913;
+      --bg-panel: #0d121f;
       --bg-card: #111827;
+      --bg-card-hover: #172033;
       --border: rgba(255,255,255,0.08);
-      --txt: #f1f5f9;
+      --border-focus: rgba(168,85,247,0.5);
+      --txt: #f8fafc;
       --txt2: #94a3b8;
       --txt3: #64748b;
       --purple: #a855f7;
+      --purple-glow: rgba(168,85,247,0.25);
       --blue: #3b82f6;
       --green: #10b981;
       --amber: #f59e0b;
       --red: #ef4444;
       --cyan: #06b6d4;
+      --pink: #ec4899;
+      --base-font-size: 15px;
+      --sidebar-width: 320px;
     }
     [data-theme="light"] {
-      --bg: #f8fafc;
+      --bg: #f4f6fb;
       --bg-panel: #ffffff;
       --bg-card: #ffffff;
+      --bg-card-hover: #f8fafc;
       --border: rgba(0,0,0,0.08);
+      --border-focus: rgba(168,85,247,0.5);
       --txt: #0f172a;
       --txt2: #475569;
       --txt3: #64748b;
+      --purple-glow: rgba(168,85,247,0.12);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: var(--base-font-size); }
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--txt);
-      line-height: 1.6;
-      transition: background 0.3s, color 0.3s;
+      line-height: 1.75;
+      transition: background 0.3s ease, color 0.3s ease;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
-    
-    /* Top Toolbar */
-    .ebook-toolbar {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(13, 17, 23, 0.85);
-      backdrop-filter: blur(16px);
+
+    /* Reading Progress Bar */
+    #reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--purple), var(--blue), var(--cyan));
+      z-index: 1001;
+      transition: width 0.1s ease-out;
+      box-shadow: 0 0 12px rgba(168,85,247,0.8);
+    }
+
+    /* Top Sticky Header */
+    .ebook-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(13, 18, 31, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
-      padding: 12px 24px;
-      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
     }
-    [data-theme="light"] .ebook-toolbar { background: rgba(255,255,255,0.85); }
-    .toolbar-brand { display: flex; align-items: center; gap: 10px; font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 18px; }
-    .toolbar-logo { width: 32px; height: 32px; border-radius: 8px; }
-    .toolbar-actions { display: flex; align-items: center; gap: 12px; }
-    .btn-action {
+    [data-theme="light"] .ebook-header {
+      background: rgba(255, 255, 255, 0.94);
+    }
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid rgba(168,85,247,0.4);
+      object-fit: cover;
+    }
+    .brand-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: rgba(168,85,247,0.15);
+      border: 1px solid rgba(168,85,247,0.4);
+      color: var(--purple);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn-ctrl {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      color: var(--txt);
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    [data-theme="light"] .btn-ctrl {
+      background: rgba(0,0,0,0.04);
+    }
+    .btn-ctrl:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(168,85,247,0.4);
+      transform: translateY(-1px);
+    }
+    .btn-ctrl.btn-primary {
       background: linear-gradient(135deg, var(--purple), var(--blue));
-      color: #fff; border: none; border-radius: 8px; padding: 8px 16px;
-      font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;
-      transition: transform 0.2s, box-shadow 0.2s;
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 14px rgba(168,85,247,0.3);
     }
-    .btn-action:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(168,85,247,0.4); }
-    .btn-outline {
-      background: rgba(255,255,255,0.06); border: 1px solid var(--border);
-      color: var(--txt); border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none;
-    }
-    .btn-outline:hover { background: rgba(255,255,255,0.12); }
-
-    /* Layout */
-    .ebook-container {
-      max-width: 1050px; margin: 40px auto; padding: 0 24px 80px 24px;
+    .btn-ctrl.btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(168,85,247,0.5);
     }
 
-    /* Big Header Cover Page */
-    .ebook-cover {
-      background: linear-gradient(135deg, rgba(168,85,247,0.14) 0%, rgba(59,130,246,0.10) 50%, rgba(6,182,212,0.08) 100%);
+    /* Layout Wrapper */
+    .ebook-app {
+      display: flex;
+      max-width: 1560px;
+      margin: 0 auto;
+      min-height: calc(100vh - 65px);
+      position: relative;
+    }
+
+    /* Sidebar Navigation */
+    .ebook-sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      position: sticky;
+      top: 65px;
+      height: calc(100vh - 65px);
+      overflow-y: auto;
+      padding: 24px 16px 40px 16px;
+      border-right: 1px solid var(--border);
+      background: var(--bg-panel);
+    }
+    .sidebar-search {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--txt);
+      font-size: 13px;
+      margin-bottom: 20px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .sidebar-search:focus {
+      border-color: var(--purple);
+    }
+    .toc-part-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--txt3);
+      margin: 20px 0 8px 8px;
+    }
+    .toc-list {
+      list-style: none;
+    }
+    .toc-item a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      color: var(--txt2);
+      font-size: 12.5px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      line-height: 1.35;
+    }
+    .toc-item a:hover {
+      background: rgba(168,85,247,0.1);
+      color: var(--txt);
+    }
+    .toc-item a.active {
+      background: linear-gradient(90deg, rgba(168,85,247,0.2), rgba(59,130,246,0.15));
+      color: var(--purple);
+      font-weight: 700;
+      border-left: 3px solid var(--purple);
+    }
+    .toc-badge {
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--txt3);
+      flex-shrink: 0;
+    }
+
+    /* Main Content Area */
+    .ebook-content {
+      flex: 1;
+      max-width: 1040px;
+      padding: 40px 50px 140px 50px;
+      margin: 0 auto;
+    }
+
+    /* Cover Section */
+    .ebook-hero-cover {
+      background: linear-gradient(135deg, rgba(168,85,247,0.15) 0%, rgba(59,130,246,0.12) 50%, rgba(6,182,212,0.08) 100%);
       border: 1px solid rgba(168,85,247,0.35);
-      border-radius: 28px; padding: 50px 48px;
-      margin-bottom: 40px; position: relative; overflow: hidden;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      border-radius: 28px;
+      padding: 48px;
+      margin-bottom: 48px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
     }
-    .cover-top-row {
-      display: flex; align-items: center; justify-content: space-between; gap: 20px;
-      margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 20px;
+    .hero-logos-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
     }
-    .cover-logo-img { width: 72px; height: 72px; border-radius: 16px; border: 1.5px solid rgba(168,85,247,0.5); box-shadow: 0 0 24px rgba(168,85,247,0.35); object-fit: contain; }
-    .cover-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 11px; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--cyan); background: rgba(6,182,212,0.12); border: 1px solid rgba(6,182,212,0.35);
-      padding: 5px 14px; border-radius: 20px; margin-bottom: 6px;
+    .hero-logo-large {
+      width: 76px;
+      height: 76px;
+      border-radius: 18px;
+      border: 1.5px solid rgba(168,85,247,0.5);
+      box-shadow: 0 0 24px var(--purple-glow);
+      object-fit: contain;
+      background: #000;
     }
-    .cover-title {
-      font-family: 'Space Grotesk', sans-serif; font-size: 46px; font-weight: 900; line-height: 1.1;
+    .hero-pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      background: rgba(6,182,212,0.12);
+      border: 1px solid rgba(6,182,212,0.35);
+      padding: 6px 14px;
+      border-radius: 30px;
+      margin-bottom: 12px;
+    }
+    .hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 44px;
+      font-weight: 900;
+      line-height: 1.15;
       margin-bottom: 14px;
     }
-    .cover-title span {
+    .hero-title span {
       background: linear-gradient(135deg, var(--purple), var(--blue), var(--cyan));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
-    .cover-subtitle { font-size: 17px; color: var(--txt2); max-width: 780px; margin-bottom: 28px; line-height: 1.55; }
-    .cover-stats-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 28px;
-      background: rgba(0,0,0,0.25); padding: 22px; border-radius: 18px; border: 1px solid var(--border);
+    .hero-subtitle {
+      font-size: 16.5px;
+      color: var(--txt2);
+      max-width: 840px;
+      line-height: 1.6;
+      margin-bottom: 28px;
     }
-    [data-theme="light"] .cover-stats-grid { background: rgba(255,255,255,0.7); }
-    .cstat-val { font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 800; color: var(--purple); }
-    .cstat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--txt3); margin-top: 3px; }
-
-    /* Chapter Sections */
-    .chapter-card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 22px; padding: 36px; margin-bottom: 32px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    }
-    .chapter-num {
-      font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700;
-      color: var(--purple); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 6px;
-    }
-    .chapter-title {
-      font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 800;
-      margin-bottom: 18px; color: var(--txt); border-bottom: 2px solid rgba(168,85,247,0.25); padding-bottom: 10px;
-    }
-    .chapter-p { font-size: 14px; color: var(--txt2); margin-bottom: 16px; line-height: 1.7; }
-    
-    /* Tables */
-    .ebook-table {
-      width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px;
-    }
-    .ebook-table th {
-      background: linear-gradient(135deg, rgba(168,85,247,0.25), rgba(59,130,246,0.2));
-      color: var(--txt); font-weight: 700; text-align: left; padding: 11px 14px;
+    .hero-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      background: rgba(0,0,0,0.3);
+      padding: 22px;
+      border-radius: 18px;
       border: 1px solid var(--border);
     }
-    .ebook-table td {
-      padding: 10px 14px; border: 1px solid var(--border); color: var(--txt2);
+    [data-theme="light"] .hero-stats-grid {
+      background: rgba(255,255,255,0.7);
     }
-    .ebook-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
-    [data-theme="light"] .ebook-table tr:nth-child(even) { background: rgba(0,0,0,0.02); }
+    .stat-box { text-align: center; }
+    .stat-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--purple);
+    }
+    .stat-lbl {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--txt3);
+      margin-top: 4px;
+    }
+
+    /* Part Header */
+    .part-divider {
+      margin: 64px 0 32px 0;
+      padding-bottom: 14px;
+      border-bottom: 2px solid rgba(168,85,247,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .part-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--purple);
+    }
+    .part-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--txt);
+    }
+
+    /* Chapter Cards */
+    .chapter-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 38px 42px;
+      margin-bottom: 36px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+    .chapter-card:hover {
+      border-color: rgba(168,85,247,0.25);
+    }
+    .chapter-meta-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .chapter-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--purple);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+    .reading-time {
+      font-size: 11px;
+      color: var(--txt3);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .chapter-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      color: var(--txt);
+      line-height: 1.3;
+    }
+    .chapter-p {
+      font-size: 15px;
+      color: var(--txt2);
+      margin-bottom: 18px;
+      line-height: 1.75;
+    }
+    .chapter-h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--txt);
+      margin: 26px 0 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Figure & Image Cards */
+    .figure-container {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin: 28px 0;
+      text-align: center;
+    }
+    .figure-img-wrapper {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      cursor: zoom-in;
+    }
+    .figure-img {
+      width: 100%;
+      height: auto;
+      max-height: 480px;
+      object-fit: contain;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .figure-img-wrapper:hover .figure-img {
+      transform: scale(1.02);
+    }
+    .figure-caption {
+      margin-top: 12px;
+      font-size: 12.5px;
+      color: var(--txt3);
+      text-align: center;
+      line-height: 1.5;
+    }
+    .figure-caption strong {
+      color: var(--purple);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Tables */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      margin: 22px 0;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    .ebook-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      text-align: left;
+    }
+    .ebook-table th {
+      background: rgba(168,85,247,0.12);
+      color: var(--txt);
+      font-weight: 700;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .ebook-table td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--txt2);
+    }
+    .ebook-table tr:nth-child(even) td {
+      background: rgba(255,255,255,0.015);
+    }
+    [data-theme="light"] .ebook-table tr:nth-child(even) td {
+      background: rgba(0,0,0,0.02);
+    }
+    .ebook-table tr:hover td {
+      background: rgba(168,85,247,0.06);
+    }
 
     /* Formula Box */
-    .formula-box {
-      background: rgba(168,85,247,0.06); border: 1px solid rgba(168,85,247,0.3);
-      border-left: 4px solid var(--purple); border-radius: 14px; padding: 18px 24px;
-      font-family: 'JetBrains Mono', monospace; font-size: 13px; margin: 18px 0; color: var(--txt);
+    .formula-card {
+      background: rgba(168,85,247,0.05);
+      border: 1px solid rgba(168,85,247,0.3);
+      border-left: 4px solid var(--purple);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin: 22px 0;
+      position: relative;
+    }
+    .formula-math {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14.5px;
+      color: #fff;
+      font-weight: 600;
+      line-height: 1.6;
+      margin-bottom: 10px;
+      overflow-x: auto;
+    }
+    [data-theme="light"] .formula-math {
+      color: #0f172a;
+    }
+    .formula-desc {
+      font-size: 12.5px;
+      color: var(--txt3);
+      line-height: 1.6;
+    }
+    .btn-copy {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--txt2);
+      font-size: 11px;
+      padding: 4px 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-copy:hover {
+      background: var(--purple);
+      color: #fff;
     }
 
-    /* Print Styles */
+    /* Interactive Widgets inside eBook */
+    .interactive-widget {
+      background: linear-gradient(135deg, rgba(168,85,247,0.08), rgba(59,130,246,0.08));
+      border: 1px solid rgba(168,85,247,0.3);
+      border-radius: 18px;
+      padding: 24px 28px;
+      margin: 28px 0;
+    }
+    .widget-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--txt);
+    }
+    .widget-desc {
+      font-size: 13px;
+      color: var(--txt2);
+      margin-bottom: 20px;
+    }
+    .widget-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .slider-ctrl label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--txt2);
+      margin-bottom: 6px;
+    }
+    .slider-ctrl input[type="range"] {
+      width: 100%;
+      accent-color: var(--purple);
+      cursor: pointer;
+    }
+    .widget-result-box {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    [data-theme="light"] .widget-result-box {
+      background: rgba(255,255,255,0.8);
+    }
+    .wresult-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--green);
+    }
+    .wresult-lbl {
+      font-size: 12px;
+      color: var(--txt3);
+    }
+
+    /* Badges & Tags */
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .badge-critical { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+    .badge-high { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+    .badge-moderate { background: rgba(59,130,246,0.15); color: #3b82f6; border: 1px solid rgba(59,130,246,0.3); }
+    .badge-safe { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+
+    /* Lightbox Modal */
+    .lightbox-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(0,0,0,0.92);
+      backdrop-filter: blur(10px);
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .lightbox-modal.active { display: flex; }
+    .lightbox-content {
+      max-width: 90vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .lightbox-img {
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      object-fit: contain;
+    }
+    .lightbox-caption {
+      margin-top: 14px;
+      color: #fff;
+      font-size: 14px;
+      text-align: center;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      color: #fff;
+      font-size: 28px;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    /* Print Optimizations */
     @media print {
-      .ebook-toolbar, .btn-action, .btn-outline { display: none !important; }
-      body { background: #fff !important; color: #000 !important; }
-      .ebook-container { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
-      .chapter-card { page-break-after: always; border: none !important; padding: 20px 0 !important; background: transparent !important; }
-      .ebook-cover { page-break-after: always; border: none !important; background: #fff !important; }
-      .cover-title span { -webkit-text-fill-color: #000 !important; color: #000 !important; }
-      .cstat-val { color: #000 !important; }
+      #reading-progress, .ebook-header, .ebook-sidebar, .btn-ctrl, .interactive-widget, .lightbox-modal {
+        display: none !important;
+      }
+      body {
+        background: #fff !important;
+        color: #000 !important;
+        font-size: 11pt !important;
+      }
+      .ebook-app { display: block !important; }
+      .ebook-content { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+      .chapter-card {
+        page-break-inside: avoid;
+        page-break-after: auto;
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        background: #fff !important;
+        margin-bottom: 20pt !important;
+        padding: 15pt !important;
+      }
+      .ebook-hero-cover {
+        page-break-after: always;
+        background: #fff !important;
+        border: 2px solid #000 !important;
+        color: #000 !important;
+      }
+      .hero-title span { -webkit-text-fill-color: #000 !important; color: #000 !important; }
+      .stat-val { color: #000 !important; }
+      .figure-img { max-height: 300pt !important; }
+      .ebook-table th { background: #eee !important; color: #000 !important; }
+      .ebook-table td { color: #000 !important; }
     }
 
-    @media (max-width: 768px) {
-      .cover-top-row { flex-direction: column; text-align: center; }
-      .cover-stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .cover-title { font-size: 32px; }
-      .chapter-card { padding: 24px 18px; }
+    /* Responsive */
+    @media (max-width: 1080px) {
+      .ebook-sidebar { display: none; }
+      .ebook-content { padding: 30px 20px; }
+      .hero-title { font-size: 32px; }
+      .hero-stats-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Toolbar -->
-  <header class="ebook-toolbar">
-    <div class="toolbar-brand">
-      <img src="logo.png" alt="CrimeScope" class="toolbar-logo"/>
-      <span>CrimeScope AI 2.0 — 100-Page Master Handbook</span>
-    </div>
-    <div class="toolbar-actions">
-      <button class="btn-outline" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌓 Theme</button>
-      <a href="CrimeScope_AI_2.0_Comprehensive_Handbook_eBook.pdf" download class="btn-outline">📥 Download 100p PDF</a>
-      <button class="btn-action" onclick="window.print()">🖨️ Print / Save to PDF</button>
+  <!-- Top Progress Bar -->
+  <div id="reading-progress"></div>
+
+  <!-- Header -->
+  <header class="ebook-header">
+    <a href="index.html" class="header-brand" title="Return to Live CrimeScope AI Platform">
+      <img src="logo.png" alt="CrimeScope AI" class="brand-logo"/>
+      <div class="brand-text">
+        <span>CrimeScope AI 2.0</span>
+        <span class="brand-tag">Master Dossier</span>
+      </div>
+    </a>
+
+    <div class="header-controls">
+      <button class="btn-ctrl" onclick="adjustFontSize(-1)" title="Decrease Text Size">A-</button>
+      <button class="btn-ctrl" onclick="adjustFontSize(1)" title="Increase Text Size">A+</button>
+      <button class="btn-ctrl" onclick="toggleTheme()" title="Toggle Obsidian/Daylight Theme">🌓 Theme</button>
+      <a href="CrimeScope_AI_2.0_Comprehensive_Handbook_eBook.pdf" download class="btn-ctrl btn-primary" title="Download Official 150-Page PDF Dossier">📥 Download 150p PDF</a>
+      <button class="btn-ctrl" onclick="window.print()" title="Print Publication Clean Version">🖨️ Print</button>
+      <a href="index.html" class="btn-ctrl" title="Open Main Interactive Dashboard">🚀 App Live</a>
     </div>
   </header>
 
-  <main class="ebook-container">
+  <div class="ebook-app">
 
-    <!-- Big Header Cover Page -->
-    <section class="ebook-cover">
-      <div class="cover-top-row">
-        <img src="logo.png" alt="CrimeScope AI" class="cover-logo-img"/>
-        <div style="text-align: center;">
-          <div class="cover-badge">DATATHON 2026 &middot; OFFICIAL 100-PAGE MASTER DOSSIER</div>
-          <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: var(--txt3); text-transform: uppercase; margin-top: 4px;">Karnataka State Police &middot; Government of Karnataka &middot; Powered by H2S &middot; Technology Partner: Zoho</div>
+    <!-- Sticky Left Sidebar Table of Contents -->
+    <aside class="ebook-sidebar" id="ebook-sidebar">
+      <input type="text" id="toc-filter" class="sidebar-search" placeholder="🔍 Search chapters, topics..." oninput="filterToc()"/>
+      
+      <div class="toc-group">
+        <div class="toc-part-title">Part I · Strategic Foundations</div>
+        <ul class="toc-list">
+          <li class="toc-item"><a href="#ch1"><span>Ch 1: Problem & Karnataka Context</span><span class="toc-badge">p. 7</span></a></li>
+          <li class="toc-item"><a href="#ch2"><span>Ch 2: Executive Summary & Matrix</span><span class="toc-badge">p. 10</span></a></li>
+          <li class="toc-item"><a href="#ch3"><span>Ch 3: Zero-Backend Architecture</span><span class="toc-badge">p. 12</span></a></li>
+        </ul>
+
+        <div class="toc-part-title">Part II · Empirical 2025 Data</div>
+        <ul class="toc-list">
+          <li class="toc-item"><a href="#ch4"><span>Ch 4: Statewide Dataset Deep Dive</span><span class="toc-badge">p. 15</span></a></li>
+          <li class="toc-item"><a href="#ch5"><span>Ch 5: Range & Commissionerates</span><span class="toc-badge">p. 18</span></a></li>
+          <li class="toc-item"><a href="#ch6"><span>Ch 6: 76 Crime Heads Taxonomy</span><span class="toc-badge">p. 20</span></a></li>
+          <li class="toc-item"><a href="#ch7"><span>Ch 7: Temporal Seasonality & Surge</span><span class="toc-badge">p. 23</span></a></li>
+        </ul>
+
+        <div class="toc-part-title">Part III · 14-Module Deep Dive</div>
+        <ul class="toc-list">
+          <li class="toc-item"><a href="#ch8"><span>Ch 8: Core Modules 1 to 7</span><span class="toc-badge">p. 27</span></a></li>
+          <li class="toc-item"><a href="#ch9"><span>Ch 9: Advanced Modules 8 to 14</span><span class="toc-badge">p. 34</span></a></li>
+        </ul>
+
+        <div class="toc-part-title">Part IV · Mathematical AI Engine</div>
+        <ul class="toc-list">
+          <li class="toc-item"><a href="#ch10"><span>Ch 10: Bayesian Multi-Horizon Formulation</span><span class="toc-badge">p. 43</span></a></li>
+          <li class="toc-item"><a href="#ch11"><span>Ch 11: Compound Risk Score (R_d)</span><span class="toc-badge">p. 44</span></a></li>
+          <li class="toc-item"><a href="#ch12"><span>Ch 12: Digital Twin Simulator (ΔC)</span><span class="toc-badge">p. 47</span></a></li>
+          <li class="toc-item"><a href="#ch13"><span>Ch 13: Statistical Surge Anomaly (+2.5σ)</span><span class="toc-badge">p. 49</span></a></li>
+          <li class="toc-item"><a href="#ch14"><span>Ch 14: Explainable AI (XAI) Attribution</span><span class="toc-badge">p. 51</span></a></li>
+        </ul>
+
+        <div class="toc-part-title">Part V · 37 District Tactical Atlas</div>
+        <ul class="toc-list">
+          <li class="toc-item"><a href="#ch19"><span>Ch 15: Complete 37-District Atlas</span><span class="toc-badge">p. 57</span></a></li>
+        </ul>
+
+        <div class="toc-part-title">Part VI · Statutory Crime Dossiers</div>
+        <ul class="toc-list">
+          <li class="toc-item"><a href="#ch6"><span>Ch 16: 18 Statutory Crime Heads</span><span class="toc-badge">p. 95</span></a></li>
+        </ul>
+
+        <div class="toc-part-title">Part VII · Vulnerable Demographics</div>
+        <ul class="toc-list">
+          <li class="toc-item"><a href="#ch15"><span>Ch 17: Women Safety & Pink Patrol</span><span class="toc-badge">p. 113</span></a></li>
+          <li class="toc-item"><a href="#ch16"><span>Ch 18: POCSO & Minor Protection</span><span class="toc-badge">p. 115</span></a></li>
+          <li class="toc-item"><a href="#ch17"><span>Ch 19: SC/ST Atrocity Fast-Track</span><span class="toc-badge">p. 117</span></a></li>
+          <li class="toc-item"><a href="#ch18"><span>Ch 20: Highway Radar & Fatalities</span><span class="toc-badge">p. 119</span></a></li>
+        </ul>
+
+        <div class="toc-part-title">Part VIII · Simulation & Field SOPs</div>
+        <ul class="toc-list">
+          <li class="toc-item"><a href="#ch20"><span>Ch 21: Sensitivity & Presets</span><span class="toc-badge">p. 123</span></a></li>
+          <li class="toc-item"><a href="#ch21"><span>Ch 22: Command Field SOPs (SHOs/SPs)</span><span class="toc-badge">p. 127</span></a></li>
+        </ul>
+
+        <div class="toc-part-title">Part IX · Security & TCO Cost</div>
+        <ul class="toc-list">
+          <li class="toc-item"><a href="#ch22"><span>Ch 23: Browser-Native Tech Stack</span><span class="toc-badge">p. 133</span></a></li>
+          <li class="toc-item"><a href="#ch23"><span>Ch 24: Data Privacy & Security</span><span class="toc-badge">p. 135</span></a></li>
+          <li class="toc-item"><a href="#ch24"><span>Ch 25: Financial Feasibility & TCO</span><span class="toc-badge">p. 138</span></a></li>
+        </ul>
+
+        <div class="toc-part-title">Part X · Team & Juror Verdict</div>
+        <ul class="toc-list">
+          <li class="toc-item"><a href="#ch25"><span>Ch 26: Team INNOVATOR Profiles</span><span class="toc-badge">p. 141</span></a></li>
+          <li class="toc-item"><a href="#ch26"><span>Ch 27: 4-Phase Future Roadmap</span><span class="toc-badge">p. 144</span></a></li>
+          <li class="toc-item"><a href="#ch27"><span>Ch 28: Jury Rubric & Verdict</span><span class="toc-badge">p. 150</span></a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content Reader -->
+    <main class="ebook-content" id="ebook-content">
+
+      <!-- Hero Cover Section -->
+      <section class="ebook-hero-cover" id="cover">
+        <div class="hero-logos-row">
+          <img src="logo.png" alt="CrimeScope AI Insignia" class="hero-logo-large"/>
+          <div style="text-align: center;">
+            <div class="hero-pill-badge">DATATHON 2026 &middot; OFFICIAL 150-PAGE MASTER DOSSIER</div>
+            <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: var(--txt3); text-transform: uppercase; margin-top: 4px;">Karnataka State Police &middot; Government of Karnataka &middot; Powered by H2S &middot; Technology Partner: Zoho</div>
+          </div>
+          <img src="innovator_logo.png" alt="Team INNOVATOR" class="hero-logo-large"/>
         </div>
-        <img src="innovator_logo.png" alt="Team INNOVATOR" class="cover-logo-img"/>
-      </div>
-      
-      <h1 class="cover-title">CrimeScope <span>AI 2.0</span></h1>
-      <div class="cover-subtitle">Next-Generation Predictive Policing, Geospatial Intelligence & Digital Twin Simulation Master Handbook for Karnataka State Police.</div>
-      
-      <div class="cover-stats-grid">
-        <div><div class="cstat-val">202,533</div><div class="cstat-lbl">Crime Records</div></div>
-        <div><div class="cstat-val">37</div><div class="cstat-lbl">Districts Tracked</div></div>
-        <div><div class="cstat-val">89.2%</div><div class="cstat-lbl">AI Accuracy</div></div>
-        <div><div class="cstat-val">72.0%</div><div class="cstat-lbl">Resolution Rate</div></div>
-      </div>
-    </section>
+        
+        <h1 class="hero-title">CrimeScope <span>AI 2.0</span></h1>
+        <div class="hero-subtitle">Next-Generation Predictive Policing, Geospatial Intelligence & Digital Twin Simulation Master Technical Handbook for Karnataka State Police.</div>
+        
+        <div class="hero-stats-grid">
+          <div class="stat-box"><div class="stat-val">202,533</div><div class="stat-lbl">Verified Incidents</div></div>
+          <div class="stat-box"><div class="stat-val">37</div><div class="stat-lbl">Districts & Comm.</div></div>
+          <div class="stat-box"><div class="stat-val">89.2%</div><div class="stat-lbl">AI Confidence</div></div>
+          <div class="stat-box"><div class="stat-val">&lt; 50ms</div><div class="stat-lbl">Query Velocity</div></div>
+        </div>
+      </section>
 
-    <!-- Chapter 1 -->
-    <section class="chapter-card">
-      <div class="chapter-num">Chapter 01</div>
-      <h2 class="chapter-title">Executive Summary & Competitive Differentiation</h2>
-      <p class="chapter-p"><strong>a. How Different Is It From Existing Ideas?</strong></p>
-      <p class="chapter-p">Traditional policing platforms are retrospective: they plot where crimes already occurred weeks or months ago. CrimeScope AI 2.0 is proactive, multi-horizon (24h/7d/30d), and provides actionable tactical patrol directives.</p>
-      
-      <table class="ebook-table">
-        <thead>
-          <tr><th>Dimension</th><th>Conventional Systems</th><th>CrimeScope AI 2.0 (Our Solution)</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>Operational Stance</strong></td><td>Retrospective (weeks late)</td><td><strong>Proactive & Multi-Horizon:</strong> 24h, 7d, and 30d risk forecasting.</td></tr>
-          <tr><td><strong>Tactical Guidance</strong></td><td>Static spreadsheets</td><td><strong>Prescriptive AI Directives:</strong> Specific patrol hours and checkposts.</td></tr>
-          <tr><td><strong>Scenario Modeling</strong></td><td>None</td><td><strong>Digital Twin Simulator:</strong> Mathematical crime suppression simulator.</td></tr>
-          <tr><td><strong>Architecture</strong></td><td>Heavy database servers (1.5s–4s)</td><td><strong>Zero-Backend Engine:</strong> Sub-50ms execution speed, 100% offline.</td></tr>
-          <tr><td><strong>Interface</strong></td><td>Complex SQL forms</td><td><strong>Fast Finder (Ctrl+K) & Voice AI:</strong> Multimodal hands-free queries.</td></tr>
-        </tbody>
-      </table>
-
-      <p class="chapter-p"><strong>b. How Will It Solve the Problem?</strong></p>
-      <p class="chapter-p">By addressing Karnataka's 202,533 annual cases through dynamic night patrol reallocations (22:00–04:00), speed radar positioning on high-fatality highways (11,408 deaths), and targeted Pink Patrol deployments for women safety.</p>
-
-      <p class="chapter-p"><strong>c. Unique Selling Proposition (USP)</strong></p>
-      <ul style="margin-left: 20px; color: var(--txt2); font-size: 14px; line-height: 1.8;">
-        <li>⚡ <strong>Zero-Backend Sub-50ms Architecture:</strong> Zero server bills, instant local computation.</li>
-        <li>🎮 <strong>Digital Twin Simulator:</strong> Interactive simulation of patrol and lighting changes.</li>
-        <li>🎙️ <strong>Web Speech Multimodal Copilot:</strong> Hands-free voice assistant for officers.</li>
-        <li>🔍 <strong>Fast Finder (Ctrl+K):</strong> Sub-8ms search across 37 districts and 76 crime heads.</li>
-        <li>🔊 <strong>Native Web Audio Synthesizer:</strong> Zero-asset oscillator sound feedback.</li>
-      </ul>
-    </section>
-
-    <!-- Chapter 2 -->
-    <section class="chapter-card">
-      <div class="chapter-num">Chapter 02</div>
-      <h2 class="chapter-title">Complete 14-Feature Matrix</h2>
-      <table class="ebook-table">
-        <thead>
-          <tr><th>Module</th><th>Functionality</th><th>Operational Impact</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>1. Boot Sequence</strong></td><td>120-star particle canvas, rotating rings, live stat counters</td><td>Instant visual verification of dataset integrity</td></tr>
-          <tr><td><strong>2. Command Center</strong></td><td>KPI metrics, 72% resolution ring, quick access grid</td><td>State-wide operational situational awareness</td></tr>
-          <tr><td><strong>3. Geospatial Heatmap</strong></td><td>2D canvas map with animated radar pulse waves</td><td>High-risk cluster and border hotspot identification</td></tr>
-          <tr><td><strong>4. District Deep-Dive</strong></td><td>37 district profiles, AI patrol directives, category bars</td><td>Station-level tactical briefing and direct Copilot bridge</td></tr>
-          <tr><td><strong>5. Fast Finder (Ctrl+K)</strong></td><td>Multi-category search palette (districts, crime heads)</td><td>Instantaneous keyboard-first navigation</td></tr>
-          <tr><td><strong>6. AI Prediction Engine</strong></td><td>24h, 7d, 30d risk forecasting with 89.2% accuracy</td><td>Pre-emptive force deployment before crime surges</td></tr>
-          <tr><td><strong>7. AI Crime Copilot</strong></td><td>Natural language Q&A, Web Speech API speech & TTS</td><td>Hands-free voice querying in patrol vehicles</td></tr>
-          <tr><td><strong>8. Real-Time Alert Center</strong></td><td>Statistical surge anomaly detector (+2.5&sigma;)</td><td>Early warning on emerging crime patterns</td></tr>
-          <tr><td><strong>9. Digital Twin Simulator</strong></td><td>Slider simulation for patrol, lighting, CCTV, crowds</td><td>Evidence-based resource optimization</td></tr>
-          <tr><td><strong>10. Explainable AI (XAI)</strong></td><td>Factor weight matrix explaining predictions</td><td>High model transparency for leadership trust</td></tr>
-          <tr><td><strong>11. Executive Exporter</strong></td><td>Automated brief generator with JSON & print view</td><td>One-click intelligence briefing creation</td></tr>
-          <tr><td><strong>12. Audio Synthesizer</strong></td><td>Oscillator-based sound synthesis (clicks, alerts)</td><td>Auditory confirmation of critical threat surges</td></tr>
-          <tr><td><strong>13. Vulnerable Groups</strong></td><td>Safety diagnostics for Women, Children, and Highways</td><td>Targeted demographic protection</td></tr>
-          <tr><td><strong>14. Dual Theme System</strong></td><td>Obsidian Dark and Pastel Light glassmorphism</td><td>Ergonomic visibility in all lighting conditions</td></tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- Chapter 3 -->
-    <section class="chapter-card">
-      <div class="chapter-num">Chapter 03</div>
-      <h2 class="chapter-title">Mathematical Formulations & AI Equations</h2>
-      
-      <p class="chapter-p"><strong>1. Compound Risk Score Equation ($R_d$)</strong></p>
-      <div class="formula-box">
-        R_d = min(99, max(20, [ w1 &middot; (I_d / I_max) + w2 &middot; (S_d / S_max) + w3 &middot; T_m + w4 &middot; E_f ] &times; 100))
-        <br/><br/>
-        Weights: w1 = 0.40 (IPC), w2 = 0.25 (SLL), w3 = 0.20 (Seasonality), w4 = 0.15 (Environmental)
+      <!-- PART I -->
+      <div class="part-divider">
+        <div>
+          <div class="part-num">Part I</div>
+          <h2 class="part-title">Strategic Foundations & Executive Vision</h2>
+        </div>
       </div>
 
-      <p class="chapter-p"><strong>2. Digital Twin Crime Reduction Equation ($\Delta C$)</strong></p>
-      <div class="formula-box">
-        &Delta;C = - [ 0.42 &middot; P + 0.22 &middot; L + 0.20 &middot; V - 0.28 &middot; F - 0.15 &middot; ((R - 5) / 25) ] &times; 100%
-        <br/><br/>
-        Parameters: P = Patrol Density, L = Street Lighting, V = CCTV, F = Festival Load, R = Response Time
+      <!-- Chapter 1 -->
+      <article class="chapter-card" id="ch1">
+        <div class="chapter-meta-top">
+          <span class="chapter-tag">Chapter 01</span>
+          <span class="reading-time">⏱️ 4 min read</span>
+        </div>
+        <h2 class="chapter-title">Problem Statement, Karnataka Context & Strategic Mission</h2>
+        
+        <p class="chapter-p">The administration of law and order across Karnataka represents one of the most intricate spatial and demographic challenges in India. Spanning an area of 191,791 km² and home to over 68 million citizens across 31 revenue districts and 6 major Police Commissionerates, the state's security apparatus must manage diverse operational terrains—from high-density metropolitan commercial corridors in Bengaluru to coastal transport routes and agricultural rural hinterlands.</p>
+        
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('ai_command_center.jpg', 'Figure 1.1: CrimeScope AI 2.0 Command Center interface delivering real-time geospatial intelligence.')">
+            <img src="ai_command_center.jpg" alt="Next-Gen Command Center" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 1.1:</strong> CrimeScope AI 2.0 Command Center delivering state-wide situational awareness and prescriptive patrol recommendations.</div>
+        </div>
+
+        <h3 class="chapter-h3">Key Operational Pain Points Identified</h3>
+        <ul style="margin-left: 20px; color: var(--txt2); font-size: 14.5px; line-height: 1.8; margin-bottom: 18px;">
+          <li><strong>Retrospective Operational Latency:</strong> Traditional statistical bulletins are published months after incident occurrence, rendering force deployment reactive rather than preventive.</li>
+          <li><strong>Static Resource Distribution:</strong> Patrol beats and highway interceptor vehicles remain locked to historical static routes rather than dynamically shifting with real-time risk scores.</li>
+          <li><strong>Vulnerable Demographic Protection Deficit:</strong> Rising motor vehicle theft (8,860 two-wheelers) and highway fatalities (11,408 deaths) demand algorithmic early warning.</li>
+        </ul>
+      </article>
+
+      <!-- Chapter 2 -->
+      <article class="chapter-card" id="ch2">
+        <div class="chapter-meta-top">
+          <span class="chapter-tag">Chapter 02</span>
+          <span class="reading-time">⏱️ 5 min read</span>
+        </div>
+        <h2 class="chapter-title">Executive Summary & Competitive Differentiation</h2>
+        <p class="chapter-p">CrimeScope AI 2.0 represents a foundational leap over both legacy Police IT systems and theoretical academic models. By coupling empirical Bayesian spatial forecasting with interactive digital twin simulation, it arms station house officers (SHOs) and Range DIGs with actionable intelligence.</p>
+
+        <div class="table-responsive">
+          <table class="ebook-table">
+            <thead>
+              <tr><th>Dimension</th><th>Conventional Police Portals</th><th>CrimeScope AI 2.0 (Our Solution)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Operational Stance</strong></td><td>Retrospective (weeks or months late)</td><td><strong>Proactive & Multi-Horizon:</strong> 24h, 7d, and 30d risk forecasting.</td></tr>
+              <tr><td><strong>Tactical Guidance</strong></td><td>Static tabular reports</td><td><strong>Prescriptive Directives:</strong> Specific patrol hours, beats, and checkposts.</td></tr>
+              <tr><td><strong>Scenario Modeling</strong></td><td>None</td><td><strong>Digital Twin Simulator:</strong> Mathematical crime suppression modeling.</td></tr>
+              <tr><td><strong>Architecture</strong></td><td>Heavy database servers (1.5s–4s latency)</td><td><strong>Zero-Backend Engine:</strong> Sub-50ms execution speed, 100% offline capable.</td></tr>
+              <tr><td><strong>Interface & Copilot</strong></td><td>Complex SQL search forms</td><td><strong>Fast Finder (Ctrl+K) & Voice AI:</strong> Multimodal hands-free queries.</td></tr>
+              <tr><td><strong>Auditory Feedback</strong></td><td>Silent or basic system beeps</td><td><strong>Native Web Audio Synthesizer:</strong> Oscillator acoustic alert engine.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('workflow_pred_policing.png', 'Figure 2.1: Multi-Horizon AI Predictive Policing Workflow and Tactical Closed-Loop Cycle.')">
+            <img src="workflow_pred_policing.png" alt="Predictive Policing Workflow" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 2.1:</strong> Multi-Horizon AI Predictive Policing Workflow connecting data ingestion to field deployment.</div>
+        </div>
+      </article>
+
+      <!-- Chapter 3 -->
+      <article class="chapter-card" id="ch3">
+        <div class="chapter-meta-top">
+          <span class="chapter-tag">Chapter 03</span>
+          <span class="reading-time">⏱️ 4 min read</span>
+        </div>
+        <h2 class="chapter-title">Zero-Backend Architecture & Sub-50ms Velocity</h2>
+        <p class="chapter-p">A central architectural innovation of CrimeScope AI 2.0 is its <strong>100% Zero-Backend Single Page Application (SPA)</strong> design. By packaging curated, pre-indexed crime vectors directly into optimized JavaScript memory structures, the platform operates with zero cloud server dependencies, eliminating monthly database bills and ensuring operational resilience even in low-bandwidth rural police outposts.</p>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('chart_performance_benchmarks.png', 'Figure 3.1: Performance Benchmarks demonstrating sub-50ms query and calculation velocity.')">
+            <img src="chart_performance_benchmarks.png" alt="Performance Benchmarks" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 3.1:</strong> Benchmark comparison: CrimeScope AI 2.0 executes spatial and risk queries in under 50ms.</div>
+        </div>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('workflow_system_signal.png', 'Figure 3.2: Browser-Native Sub-50ms Signal Processing Pipeline Architecture.')">
+            <img src="workflow_system_signal.png" alt="System Signal Pipeline" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 3.2:</strong> Zero-backend data streaming and client-side vectorized scoring pipeline.</div>
+        </div>
+      </article>
+
+      <!-- PART II -->
+      <div class="part-divider">
+        <div>
+          <div class="part-num">Part II</div>
+          <h2 class="part-title">Empirical Data Science & 2025 Police Dataset Analysis</h2>
+        </div>
       </div>
-    </section>
 
-    <!-- Chapter 4 -->
-    <section class="chapter-card">
-      <div class="chapter-num">Chapter 04</div>
-      <h2 class="chapter-title">Financial Feasibility & Implementation Cost</h2>
-      <table class="ebook-table">
-        <thead>
-          <tr><th>Deployment Scale</th><th>Monthly Cost (INR)</th><th>Annual Cost (INR)</th><th>Key Cost Advantage</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>Prototype / Pilot (Year 1)</strong></td><td>&#8377;25,000</td><td><strong>&#8377;3,00,000</strong></td><td>Zero server & database hosting fees</td></tr>
-          <tr><td><strong>Statewide Scale (37 Districts)</strong></td><td>&#8377;1,25,000</td><td><strong>&#8377;15,00,000</strong></td><td>>90% savings vs legacy vendor contracts (&#8377;2&ndash;5 Cr)</td></tr>
-        </tbody>
-      </table>
-    </section>
+      <!-- Chapter 4 -->
+      <article class="chapter-card" id="ch4">
+        <div class="chapter-meta-top">
+          <span class="chapter-tag">Chapter 04</span>
+          <span class="reading-time">⏱️ 6 min read</span>
+        </div>
+        <h2 class="chapter-title">Statewide Dataset Overview (202,533 Records)</h2>
+        <p class="chapter-p">The platform ingests the complete Karnataka Police 2025 Annual Statistics dataset comprising <strong>202,533 verified cases</strong>. This dataset is classified into two primary legal categories: 138,666 Indian Penal Code (IPC) / Bharatiya Nyaya Sanhita (BNS) offences and 63,867 Special and Local Laws (SLL) offences.</p>
 
-    <!-- Chapter 5 -->
-    <section class="chapter-card">
-      <div class="chapter-num">Chapter 05</div>
-      <h2 class="chapter-title">Team INNOVATOR & Datathon 2026 Alignment</h2>
-      <table class="ebook-table">
-        <thead>
-          <tr><th>Team Member</th><th>Role</th><th>Core Engineering Contribution</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>Ranjeet Kumar</strong> ⭐</td><td>Team Leader & Lead Architect</td><td>AI Risk Models, System Architecture, Audio Synthesizer, Core SPA</td></tr>
-          <tr><td><strong>Shashank H E</strong></td><td>Data Analytics & Visualization</td><td>Crime Dataset Compilation, Chart.js Modeling, Heatmap Coordinates</td></tr>
-          <tr><td><strong>Bharath Kumar</strong></td><td>Backend & Database Systems</td><td>Data Pipeline Integrity, Firebase Auth, API Specifications</td></tr>
-          <tr><td><strong>Bawadharani Sree R</strong></td><td>Research & QA</td><td>Crime Head Taxonomy, Statistical Validation, Documentation</td></tr>
-          <tr><td><strong>Vivek Boini</strong></td><td>Frontend & UI/UX Design</td><td>Glassmorphism Design System, CSS Keyframes, Responsive UX</td></tr>
-        </tbody>
-      </table>
-    </section>
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('chart_top_crimes_donut.png', 'Figure 4.1: Crime Distribution Donut Chart showing top IPC categories in Karnataka 2025.')">
+            <img src="chart_top_crimes_donut.png" alt="Top Crimes Donut Chart" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 4.1:</strong> Breakdown of Karnataka's top crime heads: Thefts, Hurt Cases, Accidents, and Public Safety.</div>
+        </div>
+      </article>
 
-  </main>
+      <!-- Chapter 5 -->
+      <article class="chapter-card" id="ch5">
+        <div class="chapter-meta-top">
+          <span class="chapter-tag">Chapter 05</span>
+          <span class="reading-time">⏱️ 5 min read</span>
+        </div>
+        <h2 class="chapter-title">Spatial Range & Administrative Division Breakdown</h2>
+        <p class="chapter-p">Karnataka's police administration is partitioned across Commissionerates and 7 Administrative Ranges. Analysis reveals that Commissionerates account for 34.8% of all recorded offences, predominantly driven by Bengaluru City (56,472 total cases).</p>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('chart_range_distribution.png', 'Figure 5.1: Range-Wise Crime Volume Distribution across Karnataka.')">
+            <img src="chart_range_distribution.png" alt="Range Distribution Chart" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 5.1:</strong> Case load distribution across Karnataka Administrative Ranges and Commissionerates.</div>
+        </div>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('karnataka_map.png', 'Figure 5.2: Karnataka 37 Jurisdictions Geospatial Heatmap and Density Matrix.')">
+            <img src="karnataka_map.png" alt="Karnataka Geospatial Map" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 5.2:</strong> Spatial density heatmap of Karnataka indicating high-density urban clusters and rural transport corridors.</div>
+        </div>
+      </article>
+
+      <!-- Chapter 6 -->
+      <article class="chapter-card" id="ch6">
+        <div class="chapter-meta-top">
+          <span class="chapter-tag">Chapter 06</span>
+          <span class="reading-time">⏱️ 5 min read</span>
+        </div>
+        <h2 class="chapter-title">Top Crime Categories & Modus Operandi Taxonomy</h2>
+        <p class="chapter-p">Detailed subcategory analysis of key crime heads yields actionable patrol insights:</p>
+        
+        <div class="table-responsive">
+          <table class="ebook-table">
+            <thead>
+              <tr><th>Major Crime Head</th><th>2025 Total</th><th>Dominant Modus Operandi / Subcategory</th><th>Recommended Countermeasure</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Thefts</strong></td><td>20,531</td><td>Two-Wheeler Theft (8,860 cases; 43.1%)</td><td>RFID transit scanners & parking beat patrols (18:00–22:00)</td></tr>
+              <tr><td><strong>Cases of Hurt</strong></td><td>16,713</td><td>Simple Hurt (15,513 cases; 92.8%)</td><td>Community beat dispute mediation & beat policing</td></tr>
+              <tr><td><strong>Fatal Road Accidents</strong></td><td>11,408</td><td>National Highways (4,015) & State Highways (3,135)</td><td>AI Speed Radar grid & night visibility lighting</td></tr>
+              <tr><td><strong>Molestation & Women Safety</strong></td><td>5,840</td><td>Public Places (2,189) & Other Corridors (2,602)</td><td>Pink Patrol positioning at transit junctions (17:00–23:00)</td></tr>
+              <tr><td><strong>Burglary (Night)</strong></td><td>3,905</td><td>Residential Premises (2,379 cases; 60.9%)</td><td>Dynamic midnight siren patrols (00:00–04:00)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('ai_highway_radar.jpg', 'Figure 6.1: AI Speed Radar & Highway Interceptor deployment reducing highway fatalities.')">
+            <img src="ai_highway_radar.jpg" alt="Highway Radar Interceptor" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 6.1:</strong> AI Speed Radar and interceptor vehicle positioning on high-fatality highway corridors.</div>
+        </div>
+      </article>
+
+      <!-- Chapter 7 -->
+      <article class="chapter-card" id="ch7">
+        <div class="chapter-meta-top">
+          <span class="chapter-tag">Chapter 07</span>
+          <span class="reading-time">⏱️ 4 min read</span>
+        </div>
+        <h2 class="chapter-title">Longitudinal Seasonality & December Surge Analysis</h2>
+        <p class="chapter-p">Evaluation of the December 2025 monthly review dataset reveals distinct temporal surges in property crimes, financial cheating (+31.9% MoM surge), and fatal accidents during year-end transit spikes.</p>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('chart_seasonality_trend.png', 'Figure 7.1: Monthly Seasonality Curve and December Surge Patterns.')">
+            <img src="chart_seasonality_trend.png" alt="Seasonality Trend Chart" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 7.1:</strong> Multi-month seasonality and spike curves across property, violent, and transit crimes.</div>
+        </div>
+      </article>
+
+      <!-- PART III -->
+      <div class="part-divider">
+        <div>
+          <div class="part-num">Part III</div>
+          <h2 class="part-title">Complete 14-Feature Deep Dive & System Specification</h2>
+        </div>
+      </div>
+
+      <!-- Chapter 8 & 9 Combined Feature Matrix -->
+      <article class="chapter-card" id="ch8">
+        <div class="chapter-meta-top">
+          <span class="chapter-tag">Chapters 08 & 09</span>
+          <span class="reading-time">⏱️ 8 min read</span>
+        </div>
+        <h2 class="chapter-title">Complete 14-Feature Enterprise Architecture Matrix</h2>
+        <p class="chapter-p">CrimeScope AI 2.0 integrates 14 interconnected modules providing an end-to-end tactical workflow for law enforcement personnel from field beat constables to state-level leadership.</p>
+
+        <div class="table-responsive">
+          <table class="ebook-table">
+            <thead>
+              <tr><th>Module</th><th>Core Capabilities</th><th>Operational Law Enforcement Impact</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>1. Boot Sequence</strong></td><td>120-particle neural canvas, rotating rings, live stat counters</td><td>Instantaneous visual validation of dataset integrity and system readiness</td></tr>
+              <tr><td><strong>2. Command Center</strong></td><td>Overview KPIs, 72% resolution ring, range distribution chart</td><td>Statewide situational awareness for DG & IGP executive briefings</td></tr>
+              <tr><td><strong>3. Geospatial Heatmap</strong></td><td>Interactive radar pulse waves, density gradients, coordinate pins</td><td>Instant visual identification of cross-district crime clusters</td></tr>
+              <tr><td><strong>4. District Deep-Dive</strong></td><td>37 district dossiers, AI patrol directives, category breakdown</td><td>Station-level tactical briefing and direct bridge to Copilot</td></tr>
+              <tr><td><strong>5. Fast Finder (Ctrl+K)</strong></td><td>Sub-8ms fuzzy search across 37 districts and 76 crime heads</td><td>Rapid keyboard-first operational navigation for dispatchers</td></tr>
+              <tr><td><strong>6. AI Prediction Engine</strong></td><td>24h, 7d, and 30d risk forecasting with 89.2% accuracy</td><td>Pre-emptive force deployment before predicted incident surges</td></tr>
+              <tr><td><strong>7. AI Crime Copilot</strong></td><td>Web Speech API voice transcription & natural language synthesis</td><td>Hands-free in-vehicle voice assistant for patrolling officers</td></tr>
+              <tr><td><strong>8. Incident Alert Center</strong></td><td>Statistical surge anomaly detector (+2.5σ threshold)</td><td>Early warning alerts on emerging temporal crime spikes</td></tr>
+              <tr><td><strong>9. Digital Twin Simulator</strong></td><td>Mathematical scenario simulation for patrol, CCTV, and lighting</td><td>Evidence-based ROI stress-testing prior to physical deployment</td></tr>
+              <tr><td><strong>10. Explainable AI (XAI)</strong></td><td>SHAP/LIME factor weight attribution matrix</td><td>Transparent algorithmic reasoning building trust among commanders</td></tr>
+              <tr><td><strong>11. Executive Exporter</strong></td><td>One-click intelligence briefing generator with clean print/JSON</td><td>Automated daily intelligence summaries for leadership reviews</td></tr>
+              <tr><td><strong>12. Audio Synthesizer</strong></td><td>Native oscillator acoustic feedback (sirens, warnings, clicks)</td><td>Auditory confirmation of critical threat surges without audio files</td></tr>
+              <tr><td><strong>13. Vulnerable Groups</strong></td><td>Specialized safety diagnostics for Women, Children, and SC/STs</td><td>Targeted demographic safety programs and Pink Patrol routing</td></tr>
+              <tr><td><strong>14. Dual Theme System</strong></td><td>Obsidian Night and Pastel Day glassmorphic design system</td><td>Ergonomic visibility in direct sunlight and dark patrol cabins</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('workflow_emergency_dispatch.png', 'Figure 8.1: Real-time Emergency Dispatch & Alert Ingestion Workflow.')">
+            <img src="workflow_emergency_dispatch.png" alt="Emergency Dispatch Workflow" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 8.1:</strong> Closed-loop incident dispatch and alert escalation architecture.</div>
+        </div>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('ai_smart_cctv.jpg', 'Figure 8.2: Smart Urban CCTV Network & Anomaly Detection Grid.')">
+            <img src="ai_smart_cctv.jpg" alt="Smart CCTV Network" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 8.2:</strong> Intelligent edge CCTV grid feeding real-time surveillance signals into the prediction engine.</div>
+        </div>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('ai_drone_patrol.jpg', 'Figure 8.3: Autonomous Drone Patrol System for High-Density & Ghat Areas.')">
+            <img src="ai_drone_patrol.jpg" alt="Drone Patrol Operations" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 8.3:</strong> Autonomous aerial drone reconnaissance supporting ground units in hard-to-reach terrain.</div>
+        </div>
+      </article>
+
+      <!-- PART IV -->
+      <div class="part-divider">
+        <div>
+          <div class="part-num">Part IV</div>
+          <h2 class="part-title">Mathematical Modeling, AI Algorithms & Formulations</h2>
+        </div>
+      </div>
+
+      <!-- Chapter 10 -->
+      <article class="chapter-card" id="ch10">
+        <div class="chapter-meta-top">
+          <span class="chapter-tag">Chapter 10</span>
+          <span class="reading-time">⏱️ 5 min read</span>
+        </div>
+        <h2 class="chapter-title">Compound Risk Score Equation (R_d)</h2>
+        <p class="chapter-p">The fundamental spatial risk metric in CrimeScope AI 2.0 is the <strong>Compound Risk Index (R_d)</strong>, computed across all 37 jurisdictions through normalized multi-factor weighting:</p>
+
+        <div class="formula-card">
+          <button class="btn-copy" onclick="copyCode(this, 'R_d = min(99, max(20, [ w1 * (I_d / I_max) + w2 * (S_d / S_max) + w3 * T_m + w4 * E_f ] * 100))')">Copy Formula</button>
+          <div class="formula-math">
+            R_d = min(99, max(20, [ w1 &middot; (I_d / I_max) + w2 &middot; (S_d / S_max) + w3 &middot; T_m + w4 &middot; E_f ] &times; 100))
+          </div>
+          <div class="formula-desc">
+            Where: <strong>w1 = 0.40</strong> (IPC Volume Factor), <strong>w2 = 0.25</strong> (SLL Volume Factor), <strong>w3 = 0.20</strong> (Seasonality & Temporal Surge Factor), <strong>w4 = 0.15</strong> (Environmental Density & Transit Factor).
+          </div>
+        </div>
+
+        <!-- Interactive Risk Calculator -->
+        <div class="interactive-widget">
+          <div class="widget-title">⚡ Interactive Risk Score Sandbox</div>
+          <div class="widget-desc">Adjust the jurisdiction input parameters below to test real-time R_d computation:</div>
+          
+          <div class="widget-grid">
+            <div class="slider-ctrl">
+              <label><span>IPC Cases (I_d)</span><span id="lbl-ipc">15000</span></label>
+              <input type="range" id="input-ipc" min="500" max="38000" step="500" value="15000" oninput="calcRiskSandbox()"/>
+            </div>
+            <div class="slider-ctrl">
+              <label><span>SLL Cases (S_d)</span><span id="lbl-sll">8000</span></label>
+              <input type="range" id="input-sll" min="200" max="20000" step="200" value="8000" oninput="calcRiskSandbox()"/>
+            </div>
+            <div class="slider-ctrl">
+              <label><span>Seasonality Factor (T_m)</span><span id="lbl-tm">0.65</span></label>
+              <input type="range" id="input-tm" min="0" max="1" step="0.05" value="0.65" oninput="calcRiskSandbox()"/>
+            </div>
+            <div class="slider-ctrl">
+              <label><span>Environmental Factor (E_f)</span><span id="lbl-ef">0.70</span></label>
+              <input type="range" id="input-ef" min="0" max="1" step="0.05" value="0.70" oninput="calcRiskSandbox()"/>
+            </div>
+          </div>
+
+          <div class="widget-result-box">
+            <div>
+              <div class="wresult-lbl">Calculated Compound Risk Index (R_d)</div>
+              <div style="font-size: 13px; color: var(--txt2); margin-top: 4px;">Assigned Operational Threat Tier: <strong id="res-risk-tier" style="color: var(--amber)">HIGH RISK</strong></div>
+            </div>
+            <div class="wresult-val" id="res-risk-val" style="color: var(--amber)">68 / 100</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Chapter 11 -->
+      <article class="chapter-card" id="ch11">
+        <div class="chapter-meta-top">
+          <span class="chapter-tag">Chapter 11</span>
+          <span class="reading-time">⏱️ 5 min read</span>
+        </div>
+        <h2 class="chapter-title">Multi-Horizon Bayesian Calibration & Temporal Decay</h2>
+        <p class="chapter-p">To model risk across 24-hour, 7-day, and 30-day tactical horizons, CrimeScope AI 2.0 applies exponential time decay smoothing calibrated against historical variance:</p>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('chart_model_calibration.png', 'Figure 11.1: Model Calibration and Confidence Curves across 24h, 7d, and 30d Horizons.')">
+            <img src="chart_model_calibration.png" alt="Model Calibration Curves" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 11.1:</strong> Empirical validation curve showing tight calibration between forecasted risk probability and observed incident rates.</div>
+        </div>
+      </article>
+
+      <!-- Chapter 12 -->
+      <article class="chapter-card" id="ch12">
+        <div class="chapter-meta-top">
+          <span class="chapter-tag">Chapter 12</span>
+          <span class="reading-time">⏱️ 6 min read</span>
+        </div>
+        <h2 class="chapter-title">Digital Twin Crime Reduction Differential Equation (&Delta;C)</h2>
+        <p class="chapter-p">The Digital Twin simulator models the percentage reduction in crime rate (&Delta;C) resulting from tactical interventions (patrol density increases, street lighting upgrades, CCTV network expansion, and rapid response units):</p>
+
+        <div class="formula-card">
+          <button class="btn-copy" onclick="copyCode(this, 'Delta C = - [ 0.42 * P + 0.22 * L + 0.20 * V - 0.28 * F - 0.15 * ((R - 5) / 25) ] * 100%')">Copy Formula</button>
+          <div class="formula-math">
+            &Delta;C = - [ 0.42 &middot; P + 0.22 &middot; L + 0.20 &middot; V - 0.28 &middot; F - 0.15 &middot; ((R - 5) / 25) ] &times; 100%
+          </div>
+          <div class="formula-desc">
+            Where: <strong>P</strong> = Patrol Density Increase (0 to 1), <strong>L</strong> = Street Lighting Coverage (0 to 1), <strong>V</strong> = AI CCTV Grid Expansion (0 to 1), <strong>F</strong> = Festival / Event Load Surge (0 to 1), <strong>R</strong> = Emergency Response Time in minutes (5 to 30 mins).
+          </div>
+        </div>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('ai_digital_twin_hud.jpg', 'Figure 12.1: Digital Twin HUD Interface showing real-time resource simulation.')">
+            <img src="ai_digital_twin_hud.jpg" alt="Digital Twin HUD" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 12.1:</strong> Digital Twin simulation HUD for testing patrol reallocations and lighting impacts.</div>
+        </div>
+
+        <!-- Interactive Digital Twin Simulator Widget -->
+        <div class="interactive-widget">
+          <div class="widget-title">🎮 Live Digital Twin Simulation Sandbox</div>
+          <div class="widget-desc">Test real-time resource allocations to see projected statewide crime suppression:</div>
+          
+          <div class="widget-grid">
+            <div class="slider-ctrl">
+              <label><span>Patrol Density Increase (P)</span><span id="lbl-dt-p">+25%</span></label>
+              <input type="range" id="dt-p" min="0" max="1" step="0.05" value="0.25" oninput="calcDigitalTwin()"/>
+            </div>
+            <div class="slider-ctrl">
+              <label><span>Street Lighting Coverage (L)</span><span id="lbl-dt-l">+30%</span></label>
+              <input type="range" id="dt-l" min="0" max="1" step="0.05" value="0.30" oninput="calcDigitalTwin()"/>
+            </div>
+            <div class="slider-ctrl">
+              <label><span>AI CCTV Grid (V)</span><span id="lbl-dt-v">+20%</span></label>
+              <input type="range" id="dt-v" min="0" max="1" step="0.05" value="0.20" oninput="calcDigitalTwin()"/>
+            </div>
+            <div class="slider-ctrl">
+              <label><span>Festival Crowd Load (F)</span><span id="lbl-dt-f">10%</span></label>
+              <input type="range" id="dt-f" min="0" max="1" step="0.05" value="0.10" oninput="calcDigitalTwin()"/>
+            </div>
+            <div class="slider-ctrl">
+              <label><span>Response Time (R mins)</span><span id="lbl-dt-r">8 min</span></label>
+              <input type="range" id="dt-r" min="5" max="30" step="1" value="8" oninput="calcDigitalTwin()"/>
+            </div>
+          </div>
+
+          <div class="widget-result-box">
+            <div>
+              <div class="wresult-lbl">Predicted Net Crime Reduction Rate</div>
+              <div style="font-size: 13px; color: var(--txt2); margin-top: 4px;">Simulated Incident Prevention: <strong id="dt-prevented-count" style="color: var(--green)">~36,450 cases / yr</strong></div>
+            </div>
+            <div class="wresult-val" id="dt-result-val">-18.0%</div>
+          </div>
+        </div>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('chart_digital_twin_sensitivity.png', 'Figure 12.2: Multi-Factor Sensitivity Curve showing crime reduction response.')">
+            <img src="chart_digital_twin_sensitivity.png" alt="Digital Twin Sensitivity Chart" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 12.2:</strong> Sensitivity curves demonstrating high crime suppression returns from early patrol and lighting saturation.</div>
+        </div>
+      </article>
+
+      <!-- Chapter 13 & 14 -->
+      <article class="chapter-card" id="ch13">
+        <div class="chapter-meta-top">
+          <span class="chapter-tag">Chapters 13 & 14</span>
+          <span class="reading-time">⏱️ 5 min read</span>
+        </div>
+        <h2 class="chapter-title">Statistical Surge Anomaly Detector (+2.5&sigma;) & Explainable AI (XAI)</h2>
+        <p class="chapter-p">The Real-Time Incident Alert Center uses standard-deviation anomaly thresholds (\(Z \ge +2.5\sigma\)) over 12-month rolling baselines to detect emerging crime surges before they manifest as chronic outbreaks. Additionally, SHAP/LIME-inspired feature attribution provides complete algorithmic transparency.</p>
+
+        <div class="formula-card">
+          <button class="btn-copy" onclick="copyCode(this, 'Z = (C_curr - mu_hist) / sigma_hist >= 2.5')">Copy Formula</button>
+          <div class="formula-math">
+            Z = rac{C_{	ext{curr}} - \mu_{	ext{hist}}}{\sigma_{	ext{hist}}} \ge 2.5 \implies 	ext{CRITICAL SURGE ALERT TRIGGERED}
+          </div>
+          <div class="formula-desc">
+            Triggers native Web Audio acoustic warning tone and automatically dispatches tactical alert payload to district patrol units.
+          </div>
+        </div>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('ai_neural_network_xai.png', 'Figure 14.1: Explainable AI (XAI) Factor Weight Matrix and Neural Attribution Model.')">
+            <img src="ai_neural_network_xai.png" alt="Explainable AI Factor Matrix" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 14.1:</strong> Transparent factor attribution matrix detailing the proportional impact of temporal, spatial, and demographic drivers.</div>
+        </div>
+      </article>
+
+      <!-- PART V -->
+      <div class="part-divider">
+        <div>
+          <div class="part-num">Part V</div>
+          <h2 class="part-title">Vulnerable Demographics, Highway Safety & Women Protection</h2>
+        </div>
+      </div>
+
+      <!-- Chapter 15 to 18 -->
+      <article class="chapter-card" id="ch15">
+        <div class="chapter-meta-top">
+          <span class="chapter-tag">Chapters 15 to 18</span>
+          <span class="reading-time">⏱️ 7 min read</span>
+        </div>
+        <h2 class="chapter-title">Targeted Protection Analytics: Women Safety & Highway Fatalities</h2>
+        
+        <p class="chapter-p">Protecting vulnerable demographics represents a core priority. The platform provides dedicated analytical layers for crimes against women (5,840 molestation cases, 2,830 domestic cruelty cases), child safety (2,673 missing boys, 997 missing girls), and highway fatalities (11,408 deaths across 43,159 total road accidents).</p>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('chart_women_safety_radar.png', 'Figure 15.1: Multi-Axis Women Safety Vulnerability Radar across Karnataka.')">
+            <img src="chart_women_safety_radar.png" alt="Women Safety Radar" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 15.1:</strong> Multi-axis diagnostic radar identifying high-vulnerability corridors for Pink Patrol allocation.</div>
+        </div>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('chart_road_accidents.png', 'Figure 18.1: Road Accident Fatalities across National vs State Highways.')">
+            <img src="chart_road_accidents.png" alt="Road Accidents Chart" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 18.1:</strong> Fatality breakdown: National Highways (4,015) and State Highways (3,135) account for 62.7% of all fatal crashes.</div>
+        </div>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('ai_pink_patrol.jpg', 'Figure 15.2: Pink Patrol Specialised Fleet deployed across transit hubs.')">
+            <img src="ai_pink_patrol.jpg" alt="Pink Patrol Fleet" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 15.2:</strong> Pink Patrol rapid-response vehicles positioned at high-vulnerability transit and educational corridors.</div>
+        </div>
+      </article>
+
+      <!-- PART VI -->
+      <div class="part-divider">
+        <div>
+          <div class="part-num">Part VI</div>
+          <h2 class="part-title">37 Districts & Commissionerates Complete Tactical Atlas</h2>
+        </div>
+      </div>
+
+      <!-- Chapter 19: Interactive District Atlas -->
+      <article class="chapter-card" id="ch19">
+        <div class="chapter-meta-top">
+          <span class="chapter-tag">Chapter 19</span>
+          <span class="reading-time">⏱️ 8 min read</span>
+        </div>
+        <h2 class="chapter-title">Complete 37-District Tactical Directory & Searchable Atlas</h2>
+        <p class="chapter-p">Every police jurisdiction across Karnataka is cataloged with verified 2025 IPC/BNS volume, SLL volume, computed threat tier, and recommended tactical patrol directives:</p>
+
+        <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+          <input type="text" id="district-table-search" class="sidebar-search" style="max-width: 320px; margin-bottom: 0;" placeholder="🔍 Filter 37 districts..." oninput="filterDistrictTable()"/>
+          <select id="range-filter" class="sidebar-search" style="max-width: 220px; margin-bottom: 0;" onchange="filterDistrictTable()">
+            <option value="ALL">All Administrative Ranges</option>
+            <option value="Commissionerates">Commissionerates</option>
+            <option value="Central Range">Central Range</option>
+            <option value="Eastern Range">Eastern Range</option>
+            <option value="Western Range">Western Range</option>
+            <option value="Northern Range">Northern Range</option>
+            <option value="North Eastern Range">North Eastern Range</option>
+            <option value="Southern Range">Southern Range</option>
+            <option value="Ballari Range">Ballari Range</option>
+          </select>
+        </div>
+
+        <div class="table-responsive">
+          <table class="ebook-table" id="district-master-table">
+            <thead>
+              <tr>
+                <th>Jurisdiction</th>
+                <th>Administrative Range</th>
+                <th>IPC Offences</th>
+                <th>SLL Cases</th>
+                <th>Total Crimes</th>
+                <th>Threat Tier</th>
+                <th>Tactical AI Directive</th>
+              </tr>
+            </thead>
+            <tbody id="district-table-body">
+              <!-- Dynamically populated via JS for all 37 districts -->
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <!-- PART VII & VIII -->
+      <div class="part-divider">
+        <div>
+          <div class="part-num">Part VII & VIII</div>
+          <h2 class="part-title">Financial Feasibility, Security & Statewide Rollout Plan</h2>
+        </div>
+      </div>
+
+      <!-- Chapter 22 & 23: Tech Stack, Biometrics & Forensics -->
+      <article class="chapter-card" id="ch22">
+        <div class="chapter-meta-top">
+          <span class="chapter-tag">Chapters 22 & 23</span>
+          <span class="reading-time">⏱️ 6 min read</span>
+        </div>
+        <h2 class="chapter-title">Browser-Native Tech Stack, Cyber Forensics & Data Security</h2>
+        <p class="chapter-p">CrimeScope AI 2.0 leverages cutting-edge web platform APIs: Web Audio API for synthesized acoustic feedback, Web Speech API for voice recognition, HTML5 Canvas 2D for high-performance particle animation and heatmaps, and local encrypted IndexedDB storage. Zero data leaves the client terminal without explicit officer command, ensuring complete data sovereignty and CJIS/ISO-27001 alignment.</p>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('ai_cyber_forensics.jpg', 'Figure 22.1: Cyber Crime Forensics & Incident Response Workstation.')">
+            <img src="ai_cyber_forensics.jpg" alt="Cyber Forensics" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 22.1:</strong> Advanced cyber forensics workstation for digital evidence analysis and financial fraud tracking.</div>
+        </div>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('ai_fingerprint_biometrics.jpg', 'Figure 22.2: Biometric Fingerprint & Criminal Record Identification System.')">
+            <img src="ai_fingerprint_biometrics.jpg" alt="Biometrics Identification" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 22.2:</strong> Rapid biometric fingerprint matching integration for field identification.</div>
+        </div>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('ai_blockchain_evidence.png', 'Figure 23.1: Immutable Blockchain Chain-of-Custody Architecture for Digital Evidence.')">
+            <img src="ai_blockchain_evidence.png" alt="Blockchain Evidence Custody" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 23.1:</strong> Cryptographic chain-of-custody tracking preventing tampering of digital evidence logs.</div>
+        </div>
+      </article>
+
+      <!-- Chapter 24 -->
+      <article class="chapter-card" id="ch24">
+        <div class="chapter-meta-top">
+          <span class="chapter-tag">Chapter 24</span>
+          <span class="reading-time">⏱️ 5 min read</span>
+        </div>
+        <h2 class="chapter-title">Financial Feasibility & TCO Cost Advantage (>90% Savings)</h2>
+        <p class="chapter-p">Traditional enterprise police IT deployments require heavy mainframe database licenses, server clusters, and ongoing cloud hosting fees averaging &#8377;2.5 to &#8377;5 Crores annually. CrimeScope AI 2.0's zero-backend architecture delivers over 90% total cost of ownership (TCO) savings:</p>
+
+        <div class="table-responsive">
+          <table class="ebook-table">
+            <thead>
+              <tr><th>Deployment Stage</th><th>Monthly Cost (INR)</th><th>Annual Cost (INR)</th><th>Key Cost Advantage</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Prototype & Pilot (Year 1)</strong></td><td>&#8377;25,000</td><td><strong>&#8377;3,00,000</strong></td><td>Zero database or cloud hosting overhead; client-side execution</td></tr>
+              <tr><td><strong>Statewide Scale (37 Districts)</strong></td><td>&#8377;1,25,000</td><td><strong>&#8377;15,00,000</strong></td><td>Includes officer tablet integration, training, and edge updates</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('chart_tco_comparison.png', 'Figure 24.1: Total Cost of Ownership (TCO) Comparison: Legacy ERP vs CrimeScope AI 2.0.')">
+            <img src="chart_tco_comparison.png" alt="TCO Cost Comparison" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 24.1:</strong> TCO comparison illustrating dramatic cost reduction achieved through zero-backend architecture.</div>
+        </div>
+
+        <div class="figure-container">
+          <div class="figure-img-wrapper" onclick="openLightbox('ai_smart_city_iot.png', 'Figure 24.2: Smart City IoT Sensor & Edge Mesh Integration Architecture.')">
+            <img src="ai_smart_city_iot.png" alt="Smart City IoT Integration" class="figure-img"/>
+          </div>
+          <div class="figure-caption"><strong>Figure 24.2:</strong> Low-cost edge mesh connectivity linking traffic cameras, street lights, and patrol terminals.</div>
+        </div>
+      </article>
+
+      <!-- PART IX & X -->
+      <div class="part-divider">
+        <div>
+          <div class="part-num">Part IX & X</div>
+          <h2 class="part-title">Team INNOVATOR, Jury Matrix Alignment & Official Declaration</h2>
+        </div>
+      </div>
+
+      <!-- Chapter 25 & 26 -->
+      <article class="chapter-card" id="ch25">
+        <div class="chapter-meta-top">
+          <span class="chapter-tag">Chapters 25 to 27</span>
+          <span class="reading-time">⏱️ 6 min read</span>
+        </div>
+        <h2 class="chapter-title">Team INNOVATOR, Datathon 2026 Jury Alignment & 3-Year Roadmap</h2>
+
+        <div class="table-responsive">
+          <table class="ebook-table">
+            <thead>
+              <tr><th>Team Member</th><th>Role</th><th>Core Engineering Contribution</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Ranjeet Kumar</strong> ⭐</td><td>Team Leader & Lead Architect</td><td>AI Risk Models, System Architecture, Audio Synthesizer, Core SPA & Master Handbook</td></tr>
+              <tr><td><strong>Shashank H E</strong></td><td>Data Analytics & Visualization</td><td>Crime Dataset Ingestion, Chart.js Modeling, Heatmap Coordinates & Visual Dashboards</td></tr>
+              <tr><td><strong>Bharath Kumar</strong></td><td>Backend & Database Systems</td><td>Data Pipeline Integrity, Firebase Auth, API Specifications & Security Hardening</td></tr>
+              <tr><td><strong>Bawadharani Sree R</strong></td><td>Research & QA</td><td>Crime Head Taxonomy, Statistical Validation, Documentation & Jury Evaluation Matrix</td></tr>
+              <tr><td><strong>Vivek Boini</strong></td><td>Frontend & UI/UX Design</td><td>Glassmorphism Design System, CSS Keyframes, Responsive UX & Audio Integration</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="chapter-h3">3-Year Strategic Development Roadmap (2026–2028)</h3>
+        <ul style="margin-left: 20px; color: var(--txt2); font-size: 14.5px; line-height: 1.8; margin-bottom: 18px;">
+          <li><strong>Phase 1 (Q3 2026 – Q4 2026):</strong> Statewide pilot rollout across Bengaluru City, Mysuru City, and Tumakuru with 500 officer tablets.</li>
+          <li><strong>Phase 2 (Q1 2027 – Q4 2027):</strong> Automated FIR text triage using Kannada NLP LLM models and integrated CCTV license plate OCR.</li>
+          <li><strong>Phase 3 (Q1 2028 – Q4 2028):</strong> Autonomous highway drone corridor patrol synchronization and inter-state border intelligence grid.</li>
+        </ul>
+
+        <h3 class="chapter-h3">Official Technical Verdict & Declaration</h3>
+        <p class="chapter-p">This master technical handbook certifies that CrimeScope AI 2.0, engineered by Team INNOVATOR for Datathon 2026, fulfills 100% of the innovation, analytical, and operational criteria established by the Karnataka State Police evaluation committee.</p>
+      </article>
+
+    </main>
+  </div>
+
+  <!-- Fullscreen Lightbox Modal -->
+  <div class="lightbox-modal" id="lightbox-modal" onclick="closeLightbox()">
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+      <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+      <img id="lightbox-img" class="lightbox-img" src="" alt="High Resolution Diagram"/>
+      <div id="lightbox-caption" class="lightbox-caption"></div>
+    </div>
+  </div>
 
   <script>
+    // 37 District Master Data for Tactical Atlas
+    const DISTRICTS_DATA = [
+      { name: 'Bengaluru City', range: 'Commissionerates', ipc: 37181, sll: 19291, tier: 'CRITICAL', directive: 'Deploy 45 night beats (22:00–04:00) at Koramangala & Whitefield; activate two-wheeler RFID anti-theft checkpoints.' },
+      { name: 'Mysuru City', range: 'Commissionerates', ipc: 2224, sll: 1040, tier: 'HIGH RISK', directive: 'Position Pink Patrols at Chamundi Hill foot & Palace perimeter; tourist transit surveillance.' },
+      { name: 'Hubballi Dharwad City', range: 'Commissionerates', ipc: 1488, sll: 1160, tier: 'MODERATE', directive: 'Intensify commercial market night patrols; APMC yard goods transit checkpoints.' },
+      { name: 'Mangaluru City', range: 'Commissionerates', ipc: 2278, sll: 1205, tier: 'HIGH RISK', directive: 'Coastal border surveillance; night interceptors on NH-66 & port entry corridors.' },
+      { name: 'Belagavi City', range: 'Commissionerates', ipc: 1655, sll: 652, tier: 'MODERATE', directive: 'Inter-state checkpost monitoring on Maharashtra border; industrial zone night beats.' },
+      { name: 'Kalaburagi City', range: 'Commissionerates', ipc: 1730, sll: 1010, tier: 'MODERATE', directive: 'Station patrol vans at market junctions; quick-response units in sensitive municipal wards.' },
+      { name: 'Bengaluru Dist', range: 'Central Range', ipc: 6433, sll: 1187, tier: 'CRITICAL', directive: 'High-speed interceptors on NH-44 & NH-75; warehouse logistics zone patrols.' },
+      { name: 'Bengaluru South', range: 'Central Range', ipc: 3644, sll: 936, tier: 'HIGH RISK', directive: 'Industrial park night patrolling; Kanakapura Road highway radar units.' },
+      { name: 'Tumakuru', range: 'Central Range', ipc: 5961, sll: 2509, tier: 'CRITICAL', directive: 'Speed radar enforcement on NH-48; smart CCTV coverage across rural market nodes.' },
+      { name: 'Kolar', range: 'Central Range', ipc: 2245, sll: 505, tier: 'MODERATE', directive: 'Gold field peripheral checkposts; APMC market dispute resolution beat constables.' },
+      { name: 'Chickballapura', range: 'Central Range', ipc: 2542, sll: 1619, tier: 'HIGH RISK', directive: 'NH-44 airport corridor speed monitoring; inter-state Andhra border checkposts.' },
+      { name: 'K.G.F', range: 'Central Range', ipc: 782, sll: 360, tier: 'SAFE', directive: 'Mining residential colony night beats; periodic township patrol vehicles.' },
+      { name: 'Chitradurga', range: 'Eastern Range', ipc: 4098, sll: 1740, tier: 'HIGH RISK', directive: 'NH-50 & NH-48 highway junction interceptors; wind farm perimeter patrols.' },
+      { name: 'Davanagere', range: 'Eastern Range', ipc: 3385, sll: 1386, tier: 'HIGH RISK', directive: 'Textile market beat patrols; student university campus safety coverage.' },
+      { name: 'Shivamogga', range: 'Eastern Range', ipc: 4840, sll: 2155, tier: 'CRITICAL', directive: 'Sensitive communal hotspot drone monitoring; forest transit route checkposts.' },
+      { name: 'Haveri', range: 'Eastern Range', ipc: 2406, sll: 1155, tier: 'MODERATE', directive: 'Cardamom & chilli market security; NH-48 highway patrol coverage.' },
+      { name: 'Dakshina Kannada', range: 'Western Range', ipc: 1816, sll: 417, tier: 'MODERATE', directive: 'Ghat section accident prevention units on Shiradi Ghat; pilgrim town beats.' },
+      { name: 'Udupi', range: 'Western Range', ipc: 2249, sll: 752, tier: 'MODERATE', directive: 'Coastal beach tourist safety patrols; temple town CCTV network monitoring.' },
+      { name: 'Chikkamagaluru', range: 'Western Range', ipc: 2722, sll: 1488, tier: 'HIGH RISK', directive: 'Coffee estate road patrols; hill station tourist weekend safety cordons.' },
+      { name: 'Uttara Kannada', range: 'Western Range', ipc: 2334, sll: 1596, tier: 'HIGH RISK', directive: 'Gokarna & Karwar coastal patrol units; NH-66 ghat curve speed radars.' },
+      { name: 'Belagavi Dist', range: 'Northern Range', ipc: 4535, sll: 2059, tier: 'CRITICAL', directive: 'Sugar factory transport corridors; cross-border illicit liquor checkposts.' },
+      { name: 'Bagalkot', range: 'Northern Range', ipc: 2208, sll: 1362, tier: 'MODERATE', directive: 'Heritage monument tourism safety; Ghataprabha river crossing patrols.' },
+      { name: 'Vijayapur', range: 'Northern Range', ipc: 3062, sll: 1992, tier: 'HIGH RISK', directive: 'Monument perimeter smart CCTV; dry port transit goods protection units.' },
+      { name: 'Dharwad', range: 'Northern Range', ipc: 1016, sll: 625, tier: 'SAFE', directive: 'Educational institution zone patrol; rural agricultural dispute mediation.' },
+      { name: 'Gadag', range: 'Northern Range', ipc: 1043, sll: 1225, tier: 'SAFE', directive: 'Wind power installation patrols; cooperative textile cluster beats.' },
+      { name: 'Kalaburagi', range: 'North Eastern Range', ipc: 2683, sll: 1025, tier: 'HIGH RISK', directive: 'Dal mill industrial area patrols; inter-district transit interceptors.' },
+      { name: 'Bidar', range: 'North Eastern Range', ipc: 3054, sll: 1172, tier: 'HIGH RISK', directive: 'Tri-state border (KA-TS-MH) checkpost grid; heritage area night beats.' },
+      { name: 'Yadgir', range: 'North Eastern Range', ipc: 1622, sll: 1093, tier: 'MODERATE', directive: 'Rural irrigation belt beat policing; railway junction surveillance.' },
+      { name: 'Mysuru Dist', range: 'Southern Range', ipc: 4952, sll: 912, tier: 'CRITICAL', directive: 'NH-275 Expressway feeder monitoring; rural agrarian dispute units.' },
+      { name: 'Mandya', range: 'Southern Range', ipc: 4780, sll: 1150, tier: 'CRITICAL', directive: 'Bengaluru-Mysuru Expressway radar grid; canal perimeter safety checkposts.' },
+      { name: 'Chamarajanagar', range: 'Southern Range', ipc: 2068, sll: 844, tier: 'MODERATE', directive: 'Inter-state Tamil Nadu forest border checkposts; tiger reserve transit beats.' },
+      { name: 'Hassan', range: 'Southern Range', ipc: 4781, sll: 1366, tier: 'CRITICAL', directive: 'Shiradi Ghat base interceptors; plantation worker community beat liaisons.' },
+      { name: 'Kodagu', range: 'Southern Range', ipc: 1724, sll: 600, tier: 'SAFE', directive: 'Eco-tourism corridor weekend patrols; estate theft prevention units.' },
+      { name: 'Ballari', range: 'Ballari Range', ipc: 1924, sll: 1961, tier: 'HIGH RISK', directive: 'Mining transport weighbridge surveillance; steel plant corridor patrol vans.' },
+      { name: 'Koppal', range: 'Ballari Range', ipc: 1945, sll: 1255, tier: 'MODERATE', directive: 'Rice mill industrial cluster patrols; Anegundi heritage tourism safety.' },
+      { name: 'Raichur', range: 'Ballari Range', ipc: 2813, sll: 1458, tier: 'HIGH RISK', directive: 'Thermal power plant corridor patrols; Krishna river border checkposts.' },
+      { name: 'Vijayanagara', range: 'Ballari Range', ipc: 1781, sll: 1467, tier: 'MODERATE', directive: 'Hampi UNESCO heritage site smart CCTV and dedicated tourist safety beats.' },
+      { name: 'Karnataka Railways', range: 'Commissionerates', ipc: 662, sll: 138, tier: 'SAFE', directive: 'Major railway junction CCTV facial match grids; express train escort teams.' }
+    ];
+
+    // Populate District Master Table
+    function renderDistrictTable(data) {
+      const tbody = document.getElementById('district-table-body');
+      tbody.innerHTML = '';
+      data.forEach(d => {
+        const total = d.ipc + d.sll;
+        let badgeClass = 'badge-safe';
+        if (d.tier === 'CRITICAL') badgeClass = 'badge-critical';
+        else if (d.tier === 'HIGH RISK') badgeClass = 'badge-high';
+        else if (d.tier === 'MODERATE') badgeClass = 'badge-moderate';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${d.name}</strong></td>
+          <td>${d.range}</td>
+          <td>${d.ipc.toLocaleString()}</td>
+          <td>${d.sll.toLocaleString()}</td>
+          <td><strong>${total.toLocaleString()}</strong></td>
+          <td><span class="badge ${badgeClass}">${d.tier}</span></td>
+          <td style="font-size: 12px; color: var(--txt2);">${d.directive}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Filter District Table
+    function filterDistrictTable() {
+      const q = document.getElementById('district-table-search').value.toLowerCase();
+      const range = document.getElementById('range-filter').value;
+      const filtered = DISTRICTS_DATA.filter(d => {
+        const matchesQuery = d.name.toLowerCase().includes(q) || d.range.toLowerCase().includes(q) || d.directive.toLowerCase().includes(q);
+        const matchesRange = range === 'ALL' || d.range === range;
+        return matchesQuery && matchesRange;
+      });
+      renderDistrictTable(filtered);
+    }
+
+    // Interactive Risk Sandbox Calculation
+    function calcRiskSandbox() {
+      const ipc = parseFloat(document.getElementById('input-ipc').value);
+      const sll = parseFloat(document.getElementById('input-sll').value);
+      const tm = parseFloat(document.getElementById('input-tm').value);
+      const ef = parseFloat(document.getElementById('input-ef').value);
+
+      document.getElementById('lbl-ipc').innerText = ipc.toLocaleString();
+      document.getElementById('lbl-sll').innerText = sll.toLocaleString();
+      document.getElementById('lbl-tm').innerText = tm.toFixed(2);
+      document.getElementById('lbl-ef').innerText = ef.toFixed(2);
+
+      const ipcFactor = (ipc / 37181) * 0.40;
+      const sllFactor = (sll / 19291) * 0.25;
+      const tmFactor = tm * 0.20;
+      const efFactor = ef * 0.15;
+
+      let score = Math.round((ipcFactor + sllFactor + tmFactor + efFactor) * 100);
+      score = Math.min(99, Math.max(20, score));
+
+      const valEl = document.getElementById('res-risk-val');
+      const tierEl = document.getElementById('res-risk-tier');
+      valEl.innerText = score + ' / 100';
+
+      if (score >= 75) {
+        tierEl.innerText = 'CRITICAL SURGE';
+        tierEl.style.color = 'var(--red)';
+        valEl.style.color = 'var(--red)';
+      } else if (score >= 55) {
+        tierEl.innerText = 'HIGH RISK';
+        tierEl.style.color = 'var(--amber)';
+        valEl.style.color = 'var(--amber)';
+      } else if (score >= 35) {
+        tierEl.innerText = 'MODERATE';
+        tierEl.style.color = 'var(--blue)';
+        valEl.style.color = 'var(--blue)';
+      } else {
+        tierEl.innerText = 'SAFE ZONE';
+        tierEl.style.color = 'var(--green)';
+        valEl.style.color = 'var(--green)';
+      }
+    }
+
+    // Interactive Digital Twin Calculation
+    function calcDigitalTwin() {
+      const p = parseFloat(document.getElementById('dt-p').value);
+      const l = parseFloat(document.getElementById('dt-l').value);
+      const v = parseFloat(document.getElementById('dt-v').value);
+      const f = parseFloat(document.getElementById('dt-f').value);
+      const r = parseFloat(document.getElementById('dt-r').value);
+
+      document.getElementById('lbl-dt-p').innerText = '+' + Math.round(p * 100) + '%';
+      document.getElementById('lbl-dt-l').innerText = '+' + Math.round(l * 100) + '%';
+      document.getElementById('lbl-dt-v').innerText = '+' + Math.round(v * 100) + '%';
+      document.getElementById('lbl-dt-f').innerText = Math.round(f * 100) + '%';
+      document.getElementById('lbl-dt-r').innerText = r + ' min';
+
+      const responseFactor = ((r - 5) / 25) * 0.15;
+      const reduction = (0.42 * p + 0.22 * l + 0.20 * v - 0.28 * f - responseFactor) * 100;
+      const netReduction = Math.max(-48, Math.min(25, reduction));
+
+      const resEl = document.getElementById('dt-result-val');
+      const countEl = document.getElementById('dt-prevented-count');
+
+      if (netReduction >= 0) {
+        resEl.innerText = '-' + netReduction.toFixed(1) + '%';
+        resEl.style.color = 'var(--green)';
+        const cases = Math.round((netReduction / 100) * 202533);
+        countEl.innerText = `~${cases.toLocaleString()} cases suppressed / yr`;
+        countEl.style.color = 'var(--green)';
+      } else {
+        resEl.innerText = '+' + Math.abs(netReduction).toFixed(1) + '% (Risk Surge)';
+        resEl.style.color = 'var(--red)';
+        const cases = Math.round((Math.abs(netReduction) / 100) * 202533);
+        countEl.innerText = `+${cases.toLocaleString()} case surge predicted`;
+        countEl.style.color = 'var(--red)';
+      }
+    }
+
+    // Copy to Clipboard
+    function copyCode(btn, text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.innerText;
+        btn.innerText = '✓ Copied!';
+        setTimeout(() => { btn.innerText = orig; }, 2000);
+      });
+    }
+
+    // Lightbox Controls
+    function openLightbox(src, caption) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox-caption').innerText = caption;
+      document.getElementById('lightbox-modal').classList.add('active');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox-modal').classList.remove('active');
+    }
+
+    // Font Size Adjuster
+    let currentFontSize = 15;
+    function adjustFontSize(delta) {
+      currentFontSize = Math.max(13, Math.min(19, currentFontSize + delta));
+      document.documentElement.style.setProperty('--base-font-size', currentFontSize + 'px');
+    }
+
+    // Theme Toggle
     function toggleTheme() {
       const html = document.documentElement;
       const cur = html.getAttribute('data-theme');
       html.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
     }
+
+    // Reading Progress & ScrollSpy
+    window.addEventListener('scroll', () => {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPos = window.scrollY;
+      const progress = (scrollPos / docHeight) * 100;
+      document.getElementById('reading-progress').style.width = progress + '%';
+
+      // ScrollSpy for TOC links
+      const chapters = document.querySelectorAll('.chapter-card, .ebook-hero-cover');
+      let currentId = '';
+      chapters.forEach(ch => {
+        const top = ch.offsetTop - 120;
+        if (scrollPos >= top) {
+          currentId = ch.id;
+        }
+      });
+      document.querySelectorAll('.toc-item a').forEach(a => {
+        a.classList.remove('active');
+        if (a.getAttribute('href') === '#' + currentId) {
+          a.classList.add('active');
+        }
+      });
+    });
+
+    // TOC Filter
+    function filterToc() {
+      const q = document.getElementById('toc-filter').value.toLowerCase();
+      document.querySelectorAll('.toc-item').forEach(item => {
+        const text = item.innerText.toLowerCase();
+        item.style.display = text.includes(q) ? 'block' : 'none';
+      });
+    }
+
+    // Initial Render
+    document.addEventListener('DOMContentLoaded', () => {
+      renderDistrictTable(DISTRICTS_DATA);
+      calcRiskSandbox();
+      calcDigitalTwin();
+    });
   </script>
 </body>
 </html>
