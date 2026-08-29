@@ -1291,27 +1291,27 @@ function renderVulnerabilityIndex() {
 // ===================== AI CHAT ASSISTANT =====================
 const chatKnowledge = {
   responses: [
-    {keys:['safest','safe','lowest','minimum'],reply:(q)=>{
+    {keys:['safest','safe','lowest','minimum','ಸುರಕ್ಷಿತ','ನಮ್ಮ ಜಿಲ್ಲೆ','सुरक्षित'],reply:(q)=>{
       const sorted=[...CRIME_DATA.districts].filter(d=>d.ipc>0).sort((a,b)=>a.ipc-b.ipc).slice(0,5);
       return `✅ The <strong>safest districts</strong> in Karnataka (lowest IPC crimes) are:<table class="data-table-in-chat">${sorted.map((d,i)=>`<tr><td class="dt-label">${i+1}. ${d.name}</td><td class="dt-val">${d.ipc.toLocaleString('en-IN')} crimes</td></tr>`).join('')}</table><p style="margin-top:8px">These districts have significantly lower crime rates than the state average of ~3,748 IPC crimes per district.</p>`;
     }},
-    {keys:['dangerous','worst','highest','top 5 dangerous','risky'],reply:(q)=>{
+    {keys:['dangerous','worst','highest','top 5 dangerous','risky','ಅಪರಾಧ ಹೆಚ್ಚಿರುವ','खतरनाक','अपराध'],reply:(q)=>{
       const sorted=[...CRIME_DATA.districts].sort((a,b)=>b.ipc-a.ipc).slice(0,5);
       return `🔴 The <strong>5 highest-crime areas</strong> in Karnataka are:<table class="data-table-in-chat">${sorted.map((d,i)=>`<tr><td class="dt-label">${i+1}. ${d.name}</td><td class="dt-val">${d.ipc.toLocaleString('en-IN')} IPC</td></tr>`).join('')}</table><p style="margin-top:8px">Bengaluru City alone accounts for <strong>26.8%</strong> of all state IPC crimes — a critical intervention zone.</p>`;
     }},
-    {keys:['theft','steal','stolen'],reply:(q)=>`🏍️ <strong>Theft Analysis — 2025:</strong><br>Total theft cases: <strong>20,531</strong><table class="data-table-in-chat"><tr><td class="dt-label">Two-Wheeler Theft</td><td class="dt-val">8,860 (43.1%)</td></tr><tr><td class="dt-label">House Theft</td><td class="dt-val">1,936</td></tr><tr><td class="dt-label">Jewellery Theft</td><td class="dt-val">1,478</td></tr><tr><td class="dt-label">Sand Theft</td><td class="dt-val">1,293</td></tr><tr><td class="dt-label">Cattle Theft</td><td class="dt-val">544</td></tr></table><p style="margin-top:8px">📈 Theft has increased <strong>+3.8%</strong> compared to 2024. Two-wheeler theft is the single most prevalent crime sub-category in Karnataka.</p>`},
-    {keys:['bengaluru','bangalore','blr'],reply:(q)=>`🏙️ <strong>Bengaluru City Crime Summary 2025:</strong><table class="data-table-in-chat"><tr><td class="dt-label">IPC/BNS Crimes</td><td class="dt-val">37,181</td></tr><tr><td class="dt-label">SLL Crimes</td><td class="dt-val">19,291</td></tr><tr><td class="dt-label">Total Crimes</td><td class="dt-val">56,472</td></tr><tr><td class="dt-label">State IPC Share</td><td class="dt-val">26.8%</td></tr><tr><td class="dt-label">Risk Level</td><td class="dt-val" style="color:#ef4444">Critical</td></tr></table><p style="margin-top:8px">Bengaluru's crime count is <strong>10x higher</strong> than most other districts. The city's size, population density, and economic activity are primary drivers.</p>`},
-    {keys:['murder','kill','homicide'],reply:(q)=>`🔴 <strong>Murder Statistics 2025 — Karnataka:</strong><br>Total murders: <strong>1,210</strong><table class="data-table-in-chat"><tr><td class="dt-label">Sudden Quarrel</td><td class="dt-val">96 (most common)</td></tr><tr><td class="dt-label">Other Causes</td><td class="dt-val">829</td></tr><tr><td class="dt-label">Civil Disputes</td><td class="dt-val">49</td></tr><tr><td class="dt-label">Revenge/Enmity</td><td class="dt-val">45</td></tr><tr><td class="dt-label">For Gain</td><td class="dt-val">43</td></tr></table><p style="margin-top:8px">⚠️ Murder rate shows a <strong>+1.2%</strong> increase. "Sudden Quarrel" remains the primary cause — suggests need for community conflict resolution programs.</p>`},
-    {keys:['women','rape','molestation','domestic','dowry','sexual'],reply:(q)=>`👩 <strong>Women Safety Analysis 2025:</strong><table class="data-table-in-chat"><tr><td class="dt-label">Molestation</td><td class="dt-val">5,840 (+6.6%)</td></tr><tr><td class="dt-label">Cruelty by Husband</td><td class="dt-val">2,830</td></tr><tr><td class="dt-label">Rape</td><td class="dt-val">656</td></tr><tr><td class="dt-label">Dowry Deaths</td><td class="dt-val">116</td></tr><tr><td class="dt-label">Eve Teasing</td><td class="dt-val">403</td></tr></table><p style="margin-top:8px">⚡ Key insight: <strong>48.3%</strong> of rape cases involve known persons. Molestation in public places accounts for <strong>2,189</strong> cases. Women Safety Index: <strong>68/100</strong>.</p>`},
-    {keys:['accident','road','traffic','highway'],reply:(q)=>`🚗 <strong>Road Accident Analysis 2025:</strong><table class="data-table-in-chat"><tr><td class="dt-label">Fatal Accidents</td><td class="dt-val">11,408 deaths</td></tr><tr><td class="dt-label">Non-Fatal Accidents</td><td class="dt-val">31,751 cases</td></tr><tr><td class="dt-label">Other Roads (Fatal)</td><td class="dt-val">4,097 deaths</td></tr><tr><td class="dt-label">NH Fatal</td><td class="dt-val">4,015 deaths</td></tr><tr><td class="dt-label">State Highways</td><td class="dt-val">3,135 deaths</td></tr></table><p style="margin-top:8px">🚨 Road accidents are Karnataka's <strong>#1 mass harm category</strong> — totaling <strong>43,159 incidents</strong>. Other Roads are deadlier than National Highways on a per-km basis.</p>`},
-    {keys:['predict','prediction','forecast','next month','future'],reply:(q)=>`🧠 <strong>AI Crime Forecast — January 2026:</strong><table class="data-table-in-chat"><tr><td class="dt-label">Theft</td><td class="dt-val">~2,100 (+23%)</td></tr><tr><td class="dt-label">Road Accidents</td><td class="dt-val">~1,140 (+20%)</td></tr><tr><td class="dt-label">Molestation</td><td class="dt-val">~558 (+15%)</td></tr><tr><td class="dt-label">Cheating</td><td class="dt-val">~660 (+16%)</td></tr><tr><td class="dt-label">Murder</td><td class="dt-val">~122 (+21%)</td></tr></table><p style="margin-top:8px">📊 Model confidence: <strong>84%</strong>. January is predicted to be a <strong>high-risk month</strong> due to historical seasonal patterns, festival season aftermath, and economic stress indicators.</p>`},
-    {keys:['kidnapping','missing','children','child','abduction'],reply:(q)=>`🧒 <strong>Kidnapping & Missing Children 2025:</strong><table class="data-table-in-chat"><tr><td class="dt-label">Missing Boys</td><td class="dt-val">2,673 cases</td></tr><tr><td class="dt-label">Missing Girls</td><td class="dt-val">997 cases</td></tr><tr><td class="dt-label">Total Missing</td><td class="dt-val">3,670 children</td></tr><tr><td class="dt-label">Total Kidnapping</td><td class="dt-val">4,209 cases</td></tr></table><p style="margin-top:8px">⚠️ Missing children account for <strong>87.2%</strong> of all kidnapping cases. This represents a critical area for tracking infrastructure and community awareness programs.</p>`},
-    {keys:['compare','vs','versus','between'],reply:(q)=>{
+    {keys:['theft','steal','stolen','ಕಳ್ಳತನ','ಚೋರಿ','चोरी'],reply:(q)=>`🏍️ <strong>Theft Analysis — 2025:</strong><br>Total theft cases: <strong>20,531</strong><table class="data-table-in-chat"><tr><td class="dt-label">Two-Wheeler Theft</td><td class="dt-val">8,860 (43.1%)</td></tr><tr><td class="dt-label">House Theft</td><td class="dt-val">1,936</td></tr><tr><td class="dt-label">Jewellery Theft</td><td class="dt-val">1,478</td></tr><tr><td class="dt-label">Sand Theft</td><td class="dt-val">1,293</td></tr><tr><td class="dt-label">Cattle Theft</td><td class="dt-val">544</td></tr></table><p style="margin-top:8px">📈 Theft has increased <strong>+3.8%</strong> compared to 2024. Two-wheeler theft is the single most prevalent crime sub-category in Karnataka.</p>`},
+    {keys:['bengaluru','bangalore','blr','ಬೆಂಗಳೂರು','ಬೆಂಗಳೂರು ನಗರ','बेंगलुरु'],reply:(q)=>`🏙️ <strong>Bengaluru City Crime Summary 2025:</strong><table class="data-table-in-chat"><tr><td class="dt-label">IPC/BNS Crimes</td><td class="dt-val">37,181</td></tr><tr><td class="dt-label">SLL Crimes</td><td class="dt-val">19,291</td></tr><tr><td class="dt-label">Total Crimes</td><td class="dt-val">56,472</td></tr><tr><td class="dt-label">State IPC Share</td><td class="dt-val">26.8%</td></tr><tr><td class="dt-label">Risk Level</td><td class="dt-val" style="color:#ef4444">Critical</td></tr></table><p style="margin-top:8px">Bengaluru's crime count is <strong>10x higher</strong> than most other districts. The city's size, population density, and economic activity are primary drivers.</p>`},
+    {keys:['murder','kill','homicide','ಕೊಲೆ','हत्या'],reply:(q)=>`🔴 <strong>Murder Statistics 2025 — Karnataka:</strong><br>Total murders: <strong>1,210</strong><table class="data-table-in-chat"><tr><td class="dt-label">Sudden Quarrel</td><td class="dt-val">96 (most common)</td></tr><tr><td class="dt-label">Other Causes</td><td class="dt-val">829</td></tr><tr><td class="dt-label">Civil Disputes</td><td class="dt-val">49</td></tr><tr><td class="dt-label">Revenge/Enmity</td><td class="dt-val">45</td></tr><tr><td class="dt-label">For Gain</td><td class="dt-val">43</td></tr></table><p style="margin-top:8px">⚠️ Murder rate shows a <strong>+1.2%</strong> increase. "Sudden Quarrel" remains the primary cause — suggests need for community conflict resolution programs.</p>`},
+    {keys:['women','rape','molestation','domestic','dowry','sexual','ಮಹಿಳಾ','ಮಹಿಳೆಯರ','महिला','महिला सुरक्षा','பெண்கள்','మహిళల'],reply:(q)=>`👩 <strong>Women Safety Analysis 2025:</strong><table class="data-table-in-chat"><tr><td class="dt-label">Molestation</td><td class="dt-val">5,840 (+6.6%)</td></tr><tr><td class="dt-label">Cruelty by Husband</td><td class="dt-val">2,830</td></tr><tr><td class="dt-label">Rape</td><td class="dt-val">656</td></tr><tr><td class="dt-label">Dowry Deaths</td><td class="dt-val">116</td></tr><tr><td class="dt-label">Eve Teasing</td><td class="dt-val">403</td></tr></table><p style="margin-top:8px">⚡ Key insight: <strong>48.3%</strong> of rape cases involve known persons. Molestation in public places accounts for <strong>2,189</strong> cases. Women Safety Index: <strong>68/100</strong>.</p>`},
+    {keys:['accident','road','traffic','highway','ಅಪಘಾತ','ರಸ್ತೆ ಅಪಘಾತ','दुर्घटना'],reply:(q)=>`🚗 <strong>Road Accident Analysis 2025:</strong><table class="data-table-in-chat"><tr><td class="dt-label">Fatal Accidents</td><td class="dt-val">11,408 deaths</td></tr><tr><td class="dt-label">Non-Fatal Accidents</td><td class="dt-val">31,751 cases</td></tr><tr><td class="dt-label">Other Roads (Fatal)</td><td class="dt-val">4,097 deaths</td></tr><tr><td class="dt-label">NH Fatal</td><td class="dt-val">4,015 deaths</td></tr><tr><td class="dt-label">State Highways</td><td class="dt-val">3,135 deaths</td></tr></table><p style="margin-top:8px">🚨 Road accidents are Karnataka's <strong>#1 mass harm category</strong> — totaling <strong>43,159 incidents</strong>. Other Roads are deadlier than National Highways on a per-km basis.</p>`},
+    {keys:['predict','prediction','forecast','next month','future','ಮುನ್ಸೂಚನೆ','पूर्वानुमान'],reply:(q)=>`🧠 <strong>AI Crime Forecast — January 2026:</strong><table class="data-table-in-chat"><tr><td class="dt-label">Theft</td><td class="dt-val">~2,100 (+23%)</td></tr><tr><td class="dt-label">Road Accidents</td><td class="dt-val">~1,140 (+20%)</td></tr><tr><td class="dt-label">Molestation</td><td class="dt-val">~558 (+15%)</td></tr><tr><td class="dt-label">Cheating</td><td class="dt-val">~660 (+16%)</td></tr><tr><td class="dt-label">Murder</td><td class="dt-val">~122 (+21%)</td></tr></table><p style="margin-top:8px">📊 Model confidence: <strong>84%</strong>. January is predicted to be a <strong>high-risk month</strong> due to historical seasonal patterns, festival season aftermath, and economic stress indicators.</p>`},
+    {keys:['kidnapping','missing','children','child','abduction','ಅಪಹರಣ','ಮಕ್ಕಳು','अपहरण'],reply:(q)=>`🧒 <strong>Kidnapping & Missing Children 2025:</strong><table class="data-table-in-chat"><tr><td class="dt-label">Missing Boys</td><td class="dt-val">2,673 cases</td></tr><tr><td class="dt-label">Missing Girls</td><td class="dt-val">997 cases</td></tr><tr><td class="dt-label">Total Missing</td><td class="dt-val">3,670 children</td></tr><tr><td class="dt-label">Total Kidnapping</td><td class="dt-val">4,209 cases</td></tr></table><p style="margin-top:8px">⚠️ Missing children account for <strong>87.2%</strong> of all kidnapping cases. This represents a critical area for tracking infrastructure and community awareness programs.</p>`},
+    {keys:['compare','vs','versus','between','ಹೋಲಿಕೆ','तुलना'],reply:(q)=>{
       const sorted=[...CRIME_DATA.districts].sort((a,b)=>b.ipc-a.ipc).slice(0,3);
       return `📊 <strong>District Comparison (Top 3 vs Safest):</strong><table class="data-table-in-chat"><tr><td class="dt-label">Bengaluru City</td><td class="dt-val">37,181 IPC</td></tr><tr><td class="dt-label">Tumakuru</td><td class="dt-val">5,961 IPC</td></tr><tr><td class="dt-label">Bengaluru Dist</td><td class="dt-val">6,433 IPC</td></tr><tr><td class="dt-label">K.G.F</td><td class="dt-val">782 IPC (safest)</td></tr></table><p style="margin-top:8px">Bengaluru City has <strong>47x more crimes</strong> than K.G.F — demonstrating extreme geographic concentration of crime in Karnataka.</p>`;
     }},
-    {keys:['cheating','fraud','cyber'],reply:(q)=>`💻 <strong>Cheating & Fraud Analysis 2025:</strong><br>Total cheating cases: <strong>5,839</strong> — a <strong>+14.2% increase</strong> from 2024, making it the fastest-growing crime category.<br><br>Key drivers:<ul style="padding-left:16px;margin-top:8px;color:#94a3b8"><li>Rise in online financial fraud</li><li>False marriage promises (Sec 69 BNS): 236 cases</li><li>Employment/job scams increasing</li><li>Digital payment fraud surge</li></ul><p style="margin-top:8px">🔮 AI predicts cheating cases will reach <strong>6,300+</strong> in 2026 without targeted intervention.</p>`},
-    {keys:['summary','overview','total','statistics','stat'],reply:(q)=>`📊 <strong>Karnataka Crime Summary 2025:</strong><table class="data-table-in-chat"><tr><td class="dt-label">Total IPC/BNS Crimes</td><td class="dt-val">138,666</td></tr><tr><td class="dt-label">Total SLL Crimes</td><td class="dt-val">63,867</td></tr><tr><td class="dt-label">Grand Total</td><td class="dt-val">202,533</td></tr><tr><td class="dt-label">Districts Monitored</td><td class="dt-val">37</td></tr><tr><td class="dt-label">Top Crime</td><td class="dt-val">Non-Fatal Accidents (31,751)</td></tr><tr><td class="dt-label">Fastest Growing</td><td class="dt-val">Cheating (+14.2%)</td></tr><tr><td class="dt-label">Declining Crime</td><td class="dt-val">Human Trafficking (-25%)</td></tr></table>`},
+    {keys:['cheating','fraud','cyber','ವಂಚನೆ','ಸೈಬರ್','धोखाधड़ी'],reply:(q)=>`💻 <strong>Cheating & Fraud Analysis 2025:</strong><br>Total cheating cases: <strong>5,839</strong> — a <strong>+14.2% increase</strong> from 2024, making it the fastest-growing crime category.<br><br>Key drivers:<ul style="padding-left:16px;margin-top:8px;color:#94a3b8"><li>Rise in online financial fraud</li><li>False marriage promises (Sec 69 BNS): 236 cases</li><li>Employment/job scams increasing</li><li>Digital payment fraud surge</li></ul><p style="margin-top:8px">🔮 AI predicts cheating cases will reach <strong>6,300+</strong> in 2026 without targeted intervention.</p>`},
+    {keys:['summary','overview','total','statistics','stat','ಒಟ್ಟು','ಅಂಕಿಅಂಶ','सांख्यिकी'],reply:(q)=>`📊 <strong>Karnataka Crime Summary 2025:</strong><table class="data-table-in-chat"><tr><td class="dt-label">Total IPC/BNS Crimes</td><td class="dt-val">138,666</td></tr><tr><td class="dt-label">Total SLL Crimes</td><td class="dt-val">63,867</td></tr><tr><td class="dt-label">Grand Total</td><td class="dt-val">202,533</td></tr><tr><td class="dt-label">Districts Monitored</td><td class="dt-val">37</td></tr><tr><td class="dt-label">Top Crime</td><td class="dt-val">Non-Fatal Accidents (31,751)</td></tr><tr><td class="dt-label">Fastest Growing</td><td class="dt-val">Cheating (+14.2%)</td></tr><tr><td class="dt-label">Declining Crime</td><td class="dt-val">Human Trafficking (-25%)</td></tr></table>`}
   ],
   defaultReply: (q) => `I analyzed your query: "<em>${q}</em>"<br><br>I have information on: <strong>districts, theft, murder, women safety, road accidents, kidnapping, cheating, predictions, comparisons</strong>, and more.<br><br>Try asking: "Show theft statistics" or "Which district is safest?" or "Predict next month crimes"`
 };
@@ -1340,7 +1340,6 @@ function speakText(text) {
     const gender = localStorage.getItem('voiceGender') || 'female';
     const voices = window.speechSynthesis.getVoices();
     
-    // Map of app lang code to locales
     const langLocales = {
       en: 'en-IN',
       hi: 'hi-IN',
@@ -1355,95 +1354,41 @@ function speakText(text) {
     const targetLang = langLocales[lang] || 'en-IN';
     utterance.lang = targetLang;
     
+    // Default female voice tuning
     if (gender === 'female') {
-      utterance.pitch = 1.2;
+      utterance.pitch = 1.25;
+      utterance.rate = 0.98;
     } else {
       utterance.pitch = 0.85;
+      utterance.rate = 1.0;
     }
     
     let selectedVoice = null;
-    
-    // Find all voices matching the current target language safely
     const langVoices = voices.filter(v => 
-      v.lang && 
-      typeof v.lang === 'string' && 
-      v.lang.toLowerCase().startsWith(lang.toLowerCase())
+      v.lang && typeof v.lang === 'string' && v.lang.toLowerCase().startsWith(lang.toLowerCase())
     );
     
+    const femaleIdentifiers = ['female', 'zira', 'hazel', 'samantha', 'sangeeta', 'kalpana', 'heera', 'shruti', 'swara', 'priya', 'neha', 'kavya', 'ananya', 'aditi', 'woman', 'google', 'microsoft'];
+    const maleIdentifiers = ['male', 'david', 'ravi', 'george', 'mark', 'anant', 'madhur', 'hemant', 'man'];
+
     if (langVoices.length > 0) {
       if (gender === 'female') {
-        selectedVoice = langVoices.find(v => 
-          v.name && 
-          typeof v.name === 'string' && (
-            v.name.toLowerCase().includes('female') || 
-            v.name.toLowerCase().includes('zira') || 
-            v.name.toLowerCase().includes('hazel') ||
-            v.name.toLowerCase().includes('samantha') || 
-            v.name.toLowerCase().includes('sangeeta') ||
-            v.name.toLowerCase().includes('kalpana') ||
-            v.name.toLowerCase().includes('heera') ||
-            v.name.toLowerCase().includes('shruti') ||
-            v.name.toLowerCase().includes('swara') ||
-            v.name.toLowerCase().includes('priya') ||
-            v.name.toLowerCase().includes('neha')
-          )
-        );
+        selectedVoice = langVoices.find(v => v.name && femaleIdentifiers.some(id => v.name.toLowerCase().includes(id)));
       } else {
-        selectedVoice = langVoices.find(v => 
-          v.name && 
-          typeof v.name === 'string' && (
-            v.name.toLowerCase().includes('male') || 
-            v.name.toLowerCase().includes('david') || 
-            v.name.toLowerCase().includes('ravi') || 
-            v.name.toLowerCase().includes('george') ||
-            v.name.toLowerCase().includes('mark') ||
-            v.name.toLowerCase().includes('anant') ||
-            v.name.toLowerCase().includes('madhur') ||
-            v.name.toLowerCase().includes('hemant')
-          )
-        );
+        selectedVoice = langVoices.find(v => v.name && maleIdentifiers.some(id => v.name.toLowerCase().includes(id)));
       }
-      
-      // Fallback to first available language voice if gender specific not found
-      if (!selectedVoice) {
-        selectedVoice = langVoices[0];
+      if (!selectedVoice) selectedVoice = langVoices[0];
+    }
+    
+    if (!selectedVoice) {
+      if (gender === 'female') {
+        selectedVoice = voices.find(v => v.name && v.lang && femaleIdentifiers.some(id => v.name.toLowerCase().includes(id)) && v.lang.toLowerCase().startsWith('en'));
+      } else {
+        selectedVoice = voices.find(v => v.name && v.lang && maleIdentifiers.some(id => v.name.toLowerCase().includes(id)) && v.lang.toLowerCase().startsWith('en'));
       }
     }
     
-    if (selectedVoice) {
-      utterance.voice = selectedVoice;
-    } else {
-      // Fallback: search for English voices with gender safely if target language voices are unavailable
-      if (gender === 'female') {
-        selectedVoice = voices.find(v => 
-          v.name && 
-          v.lang && 
-          typeof v.name === 'string' && 
-          typeof v.lang === 'string' && (
-            v.name.toLowerCase().includes('female') || 
-            v.name.toLowerCase().includes('zira') || 
-            v.name.toLowerCase().includes('hazel') ||
-            v.name.toLowerCase().includes('samantha') || 
-            v.name.toLowerCase().includes('heera')
-          ) && v.lang.toLowerCase().startsWith('en')
-        );
-      } else {
-        selectedVoice = voices.find(v => 
-          v.name && 
-          v.lang && 
-          typeof v.name === 'string' && 
-          typeof v.lang === 'string' && (
-            v.name.toLowerCase().includes('male') || 
-            v.name.toLowerCase().includes('david') || 
-            v.name.toLowerCase().includes('ravi') || 
-            v.name.toLowerCase().includes('george')
-          ) && v.lang.toLowerCase().startsWith('en')
-        );
-      }
-      if (selectedVoice) {
-        utterance.voice = selectedVoice;
-      }
-    }
+    if (selectedVoice) utterance.voice = selectedVoice;
     
     try {
       window.speechSynthesis.speak(utterance);
@@ -1498,12 +1443,19 @@ function toggleChatVoice() {
   const btn = document.getElementById('chat-voice-btn');
   const ind = document.getElementById('voice-indicator');
   if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-    addChatMessage('Voice input is not supported in your browser. Please use Chrome.', 'bot'); return;
+    addChatMessage('Voice input is not supported in your browser. Please use Google Chrome or Edge.', 'bot');
+    return;
   }
   if (chatRecognition) { chatRecognition.stop(); chatRecognition = null; btn.classList.remove('active'); ind.classList.remove('active'); return; }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   chatRecognition = new SR();
-  chatRecognition.lang = 'en-IN'; chatRecognition.continuous = false; chatRecognition.interimResults = true;
+  
+  const lang = localStorage.getItem('appLanguage') || 'en';
+  const langLocales = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN', te: 'te-IN', ta: 'ta-IN', ml: 'ml-IN', bn: 'bn-IN', mr: 'mr-IN' };
+  chatRecognition.lang = langLocales[lang] || 'en-IN';
+  chatRecognition.continuous = false; 
+  chatRecognition.interimResults = true;
+
   chatRecognition.onresult = (e) => {
     const transcript = Array.from(e.results).map(r=>r[0].transcript).join('');
     document.getElementById('chat-input').value = transcript;
@@ -1520,7 +1472,7 @@ function toggleChatVoice() {
   btn.classList.add('active'); ind.classList.add('active');
 }
 
-// Global voice
+// Global voice command assistant
 let globalRecognition = null;
 function toggleVoice() {
   const btn = document.getElementById('voice-btn');
@@ -1528,7 +1480,13 @@ function toggleVoice() {
   if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) return;
   document.getElementById('voice-modal').classList.remove('hidden');
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  globalRecognition = new SR(); globalRecognition.lang = 'en-IN'; globalRecognition.interimResults = true;
+  globalRecognition = new SR(); 
+  
+  const lang = localStorage.getItem('appLanguage') || 'en';
+  const langLocales = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN', te: 'te-IN', ta: 'ta-IN', ml: 'ml-IN', bn: 'bn-IN', mr: 'mr-IN' };
+  globalRecognition.lang = langLocales[lang] || 'en-IN';
+  globalRecognition.interimResults = true;
+
   globalRecognition.onresult = (e) => {
     const transcript = Array.from(e.results).map(r=>r[0].transcript).join('');
     document.getElementById('voice-transcript').textContent = transcript;
@@ -1537,42 +1495,27 @@ function toggleVoice() {
       const q = transcript.toLowerCase();
       shouldSpeakResponse = true;
       
-      if (q.includes('heatmap') || q.includes('map')) {
+      if (q.includes('heatmap') || q.includes('map') || q.includes('ಸಂವೇದನಶೀಲ') || q.includes('नक्शा')) {
         showPage('heatmap');
         speakText("Opening Crime Hotspot Map");
-      } else if (q.includes('predict') || q.includes('forecast')) {
+      } else if (q.includes('predict') || q.includes('forecast') || q.includes('ಮುನ್ಸೂಚನೆ') || q.includes('पूर्वानुमान')) {
         showPage('ai-prediction');
         speakText("Opening AI Prediction Engine");
-      } else if (q.includes('alert') || q.includes('notification')) {
+      } else if (q.includes('alert') || q.includes('notification') || q.includes('ಸೂಚನೆ')) {
         showPage('alerts');
         speakText("Opening Alert Center");
-      } else if (q.includes('district') || q.includes('ranking')) {
+      } else if (q.includes('district') || q.includes('ranking') || q.includes('ಜಿಲ್ಲೆ')) {
         showPage('district');
         speakText("Opening District-wise Analysis");
-      } else if (q.includes('trend') || q.includes('pattern')) {
-        showPage('trends');
-        speakText("Opening Trends and Patterns");
-      } else if (q.includes('vulnerable') || q.includes('women') || q.includes('children')) {
+      } else if (q.includes('vulnerable') || q.includes('women') || q.includes('children') || q.includes('ಮಹಿಳೆ')) {
         showPage('vulnerable');
         speakText("Opening Vulnerable Groups Analysis");
-      } else if (q.includes('category') || q.includes('type') || q.includes('head')) {
-        showPage('crime-types');
-        speakText("Opening Crime Category Explorer");
       } else if (q.includes('simulator') || q.includes('digital twin') || q.includes('sim')) {
         showPage('simulator');
         speakText("Opening Digital Twin Simulator");
-      } else if (q.includes('explain') || q.includes('xai') || q.includes('why')) {
-        showPage('explainability');
-        speakText("Opening AI Explainability Dashboard");
-      } else if (q.includes('team') || q.includes('innovator') || q.includes('author')) {
-        showPage('team');
-        speakText("Showing Innovator Team page");
-      } else if (q.includes('overview') || q.includes('dashboard') || q.includes('main')) {
-        showPage('overview');
-        speakText("Opening Dashboard Overview");
       } else {
         showPage('ai-assistant');
-        speakText("Routing query to AI Copilot");
+        speakText("Routing voice query to AI Copilot");
         setTimeout(() => sendChat(transcript), 400);
       }
     }
