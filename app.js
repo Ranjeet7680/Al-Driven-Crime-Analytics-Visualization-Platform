@@ -3321,8 +3321,12 @@ function getAudioContext() {
 function toggleSoundFx() {
   isSoundFxEnabled = !isSoundFxEnabled;
   localStorage.setItem('crimescope-sound', isSoundFxEnabled ? 'enabled' : 'disabled');
-  const icon = document.getElementById('sound-icon');
-  if (icon) icon.textContent = isSoundFxEnabled ? '🔊' : '🔇';
+  const iconWrap = document.getElementById('sound-icon');
+  if (iconWrap) {
+    iconWrap.innerHTML = isSoundFxEnabled
+      ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`
+      : `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
+  }
   showToast(isSoundFxEnabled ? 'Sound FX Enabled' : 'Sound FX Muted', 'info');
   if (isSoundFxEnabled) playAudioFx('click');
 }
@@ -3830,8 +3834,53 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize 3D Card Tilt effects
   setTimeout(initCardParallax, 500);
 
-  // Global Keyboard Shortcuts (Ctrl+K or / to open Fast Finder)
+  // =========================================================
+  //   EXPANDED TACTICAL KEYBOARD SHORTCUTS
+  // =========================================================
+  const navPages = ['overview', 'heatmap', 'district', 'crime-types', 'trends', 'vulnerable', 'ai-prediction', 'ai-assistant', 'alerts', 'simulator', 'explainability', 'team', 'settings'];
+  let gPrefixTimer = null;
+  let gPrefixActive = false;
+
   document.addEventListener('keydown', (e) => {
+    const activeEl = document.activeElement;
+    const isEditing = activeEl && (
+      activeEl.tagName === 'INPUT' ||
+      activeEl.tagName === 'TEXTAREA' ||
+      activeEl.isContentEditable ||
+      activeEl.classList.contains('chat-input')
+    );
+
+    // 1. Always active: ESC to close any open modal
+    if (e.key === 'Escape') {
+      const paletteModal = document.getElementById('command-palette-modal');
+      const shortcutsModal = document.getElementById('shortcuts-modal');
+      const distModal = document.getElementById('district-modal');
+      const repModal = document.getElementById('report-modal');
+
+      if (shortcutsModal && !shortcutsModal.classList.contains('hidden')) {
+        closeShortcutsModal();
+        return;
+      }
+      if (paletteModal && !paletteModal.classList.contains('hidden')) {
+        closeCommandPalette();
+        return;
+      }
+      if (distModal && !distModal.classList.contains('hidden')) {
+        closeDistrictModal();
+        return;
+      }
+      if (repModal && !repModal.classList.contains('hidden')) {
+        closeReportModal();
+        return;
+      }
+      const userDrop = document.getElementById('user-dropdown');
+      if (userDrop && !userDrop.classList.contains('hidden')) {
+        userDrop.classList.add('hidden');
+        return;
+      }
+    }
+
+    // 2. Ctrl+K or Cmd+K to toggle Command Palette Fast Finder
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault();
       const modal = document.getElementById('command-palette-modal');
@@ -3840,15 +3889,144 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         openCommandPalette();
       }
+      return;
+    }
+
+    // 3. Ctrl+E or Cmd+E to Export Intelligence Report
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'e') {
+      e.preventDefault();
+      exportExecutiveReport();
+      return;
+    }
+
+    // Don't intercept single-key typing when user is typing in an input/textarea
+    if (isEditing) return;
+
+    // 4. Quick slash '/' to open Fast Finder
+    if (e.key === '/') {
+      e.preventDefault();
+      openCommandPalette();
+      return;
+    }
+
+    // 5. '?' or 'Shift+/' to toggle Keyboard Shortcuts Cheat Sheet
+    if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+      e.preventDefault();
+      toggleShortcutsModal();
+      return;
+    }
+
+    // 6. 'T' or 't' to toggle Theme (Dark/Light)
+    if (e.key.toLowerCase() === 't') {
+      e.preventDefault();
+      toggleTheme();
+      showToast("Theme switched to: " + document.documentElement.getAttribute('data-theme').toUpperCase(), "info");
+      return;
+    }
+
+    // 7. 'M' or 'm' to toggle Audio & Sound FX
+    if (e.key.toLowerCase() === 'm') {
+      e.preventDefault();
+      toggleSoundFx();
+      return;
+    }
+
+    // 8. 'B' or 'b' to toggle Sidebar collapse
+    if (e.key.toLowerCase() === 'b') {
+      e.preventDefault();
+      toggleSidebar();
+      return;
+    }
+
+    // 9. 'C' or 'c' to navigate to AI Copilot & focus input
+    if (e.key.toLowerCase() === 'c' && !gPrefixActive) {
+      e.preventDefault();
+      showPage('ai-assistant');
+      setTimeout(() => {
+        const inp = document.getElementById('chat-input');
+        if (inp) inp.focus();
+      }, 150);
+      return;
+    }
+
+    // 10. 'J' or ']' for Next Page, 'K' or '[' for Previous Page
+    if (e.key === 'j' || e.key === ']') {
+      e.preventDefault();
+      cyclePage(1);
+      return;
+    }
+    if (e.key === 'k' || e.key === '[') {
+      e.preventDefault();
+      cyclePage(-1);
+      return;
+    }
+
+    // 11. Two-key chord: 'G' then [key] (G+H = Home/Overview, G+M = Map, G+P = Prediction, G+X = Explain, G+A = Alerts, G+C = Chat)
+    if (e.key.toLowerCase() === 'g') {
+      gPrefixActive = true;
+      clearTimeout(gPrefixTimer);
+      gPrefixTimer = setTimeout(() => { gPrefixActive = false; }, 1200);
+      return;
+    }
+
+    if (gPrefixActive) {
+      gPrefixActive = false;
+      clearTimeout(gPrefixTimer);
+      const k = e.key.toLowerCase();
+      if (k === 'h') { e.preventDefault(); showPage('overview'); }
+      else if (k === 'm') { e.preventDefault(); showPage('heatmap'); }
+      else if (k === 'p') { e.preventDefault(); showPage('ai-prediction'); }
+      else if (k === 'x') { e.preventDefault(); showPage('explainability'); }
+      else if (k === 'a') { e.preventDefault(); showPage('alerts'); }
+      else if (k === 'c') { e.preventDefault(); showPage('ai-assistant'); }
+      else if (k === 's') { e.preventDefault(); showPage('simulator'); }
+      else if (k === 't') { e.preventDefault(); showPage('team'); }
     }
   });
+
+  function cyclePage(dir) {
+    const activePg = document.querySelector('.page.active');
+    if (!activePg) return;
+    const curId = activePg.id.replace('page-', '');
+    const idx = navPages.indexOf(curId);
+    if (idx === -1) return;
+    let nextIdx = (idx + dir + navPages.length) % navPages.length;
+    showPage(navPages[nextIdx]);
+    playAudioFx('pop');
+  }
 
   // Sync sound FX icon state
   const soundIcon = document.getElementById('sound-icon');
   if (soundIcon) {
-    soundIcon.textContent = isSoundFxEnabled ? '🔊' : '🔇';
+    soundIcon.innerHTML = isSoundFxEnabled
+      ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`
+      : `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
   }
 });
+
+// Modal open/close helpers for Shortcuts Cheat Sheet
+function toggleShortcutsModal() {
+  const modal = document.getElementById('shortcuts-modal');
+  if (!modal) return;
+  const isHidden = modal.classList.contains('hidden');
+  if (isHidden) {
+    openShortcutsModal();
+  } else {
+    closeShortcutsModal();
+  }
+}
+
+function openShortcutsModal() {
+  const modal = document.getElementById('shortcuts-modal');
+  if (!modal) return;
+  modal.classList.remove('hidden');
+  playAudioFx('pop');
+}
+
+function closeShortcutsModal() {
+  const modal = document.getElementById('shortcuts-modal');
+  if (modal) modal.classList.add('hidden');
+}
 
 // URL Referral Code Detector
 (function detectReferralCode() {

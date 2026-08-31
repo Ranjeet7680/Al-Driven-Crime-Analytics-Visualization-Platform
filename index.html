@@ -1682,65 +1682,104 @@
   <main class="main-content">
     <header class="topbar">
       <div class="topbar-left">
-        <button class="menu-btn" onclick="toggleSidebar()" id="menu-btn"><span></span><span></span><span></span></button>
-        <div class="page-title" id="page-title">Dashboard Overview</div>
+        <button class="menu-btn" onclick="toggleSidebar()" id="menu-btn" title="Toggle Navigation Sidebar">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="page-title-wrap">
+          <div class="page-title" id="page-title">Dashboard Overview</div>
+        </div>
         <button class="topbar-search-btn" onclick="openCommandPalette()" title="Fast Finder (Ctrl+K)">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <span class="search-btn-label">Quick Search...</span>
           <kbd class="kbd-badge">Ctrl K</kbd>
         </button>
       </div>
+
       <div class="topbar-right">
-        <div class="topbar-threat-pill" title="Real-Time State Threat Assessment">
-          <span class="threat-dot pulse-red"></span>
-          <span class="threat-text">Threat: <strong style="color:#ef4444">ELEVATED</strong></span>
-        </div>
-        <div class="live-clock-pill" id="live-ist-clock" title="Indian Standard Time">
-          <span class="clock-icon">🕒</span>
-          <span id="clock-time">--:--:-- IST</span>
-        </div>
-        <div class="topbar-stat"><span class="tstat-val">138,666</span><span class="tstat-lbl">IPC 2025</span></div>
-        <div class="topbar-stat"><span class="tstat-val" id="alert-count-top">12</span><span class="tstat-lbl">Alerts</span></div>
-        
-        <button class="topbar-btn export-btn" onclick="exportExecutiveReport()" title="Export Executive Crime Intelligence Report">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          <span class="export-btn-text">Export</span>
-        </button>
-        
-        <button class="topbar-btn sound-btn" id="sound-fx-btn" onclick="toggleSoundFx()" title="Toggle UI Sound Effects">
-          <span id="sound-icon">🔊</span>
-        </button>
-        
-        <button class="voice-btn" id="voice-btn" onclick="toggleVoice()" title="Voice Command"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4m-4 0h8"/></svg></button>
-        
-        <button class="theme-toggle-app" onclick="toggleTheme()" id="theme-toggle-app" title="Toggle Day/Night Mode">
-          <span class="tgl-track">
-            <span class="tgl-thumb"></span>
-          </span>
-          <span class="tgl-sun">☀️</span>
-          <span class="tgl-moon">🌙</span>
-        </button>
-        
-        <!-- User Profile Dropdown -->
-        <div class="user-profile" id="user-profile">
-          <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" class="user-avatar-img" id="user-avatar" onclick="toggleUserMenu()"/>
-          <div class="user-dropdown hidden" id="user-dropdown">
-            <div class="user-info-detail">
-              <div class="user-name" id="user-display-name">Guest User</div>
-              <div class="user-email" id="user-display-email">guest@example.com</div>
-            </div>
-            <hr class="dropdown-divider"/>
-            <button class="dropdown-item btn-settings" onclick="toggleUserMenu(); showPage('settings')">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px; display:inline-block; vertical-align:middle;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-              <span>Settings & Safety</span>
-            </button>
-            <button class="dropdown-item btn-signout" onclick="handleSignOut()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px; display:inline-block; vertical-align:middle;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-              <span>Sign Out</span>
-            </button>
+        <!-- Live Telemetry Section -->
+        <div class="topbar-telemetry-group">
+          <div class="topbar-threat-pill" title="Real-Time State Threat Assessment: Elevated">
+            <span class="threat-dot pulse-red"></span>
+            <span class="threat-text">Threat: <strong class="threat-highlight">ELEVATED</strong></span>
           </div>
+          <div class="live-clock-pill" id="live-ist-clock" title="Indian Standard Time (IST)">
+            <svg class="clock-svg-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span id="clock-time">--:--:-- IST</span>
+          </div>
+          <div class="topbar-stat-chip" title="Karnataka State 2025 IPC Crime Total">
+            <span class="tstat-val">138,666</span>
+            <span class="tstat-lbl">IPC 2025</span>
+          </div>
+          <button class="topbar-stat-chip alert-chip clickable" onclick="showPage('alerts')" title="Click to view 12 Active Incidents & Alerts">
+            <span class="chip-alert-dot"></span>
+            <span class="tstat-val" id="alert-count-top">12</span>
+            <span class="tstat-lbl">Alerts</span>
+          </button>
         </div>
-        <div class="live-badge"><span class="live-dot"></span>LIVE</div>
+
+        <div class="topbar-divider"></div>
+
+        <!-- Quick Actions & Tools Section -->
+        <div class="topbar-actions-group">
+          <button class="topbar-btn export-btn" onclick="exportExecutiveReport()" title="Export Executive Crime Intelligence Report">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span class="export-btn-text">Export</span>
+          </button>
+          
+          <button class="topbar-btn sound-btn" id="sound-fx-btn" onclick="toggleSoundFx()" title="Toggle UI Sound Effects">
+            <span id="sound-icon" class="sound-icon-wrap">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            </span>
+          </button>
+
+          <button class="topbar-btn keyboard-shortcuts-btn" onclick="toggleShortcutsModal()" title="Keyboard Shortcuts Guide (Press ?)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="6" y1="8" x2="6.01" y2="8"/><line x1="10" y1="8" x2="10.01" y2="8"/><line x1="14" y1="8" x2="14.01" y2="8"/><line x1="18" y1="8" x2="18.01" y2="8"/><line x1="6" y1="12" x2="6.01" y2="12"/><line x1="18" y1="12" x2="18.01" y2="12"/><line x1="7" y1="16" x2="17" y2="16"/></svg>
+          </button>
+          
+          <button class="voice-btn" id="voice-btn" onclick="toggleVoice()" title="Activate Voice Command Assistant">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4m-4 0h8"/></svg>
+          </button>
+          
+          <button class="theme-toggle-app" onclick="toggleTheme()" id="theme-toggle-app" title="Switch Theme (Obsidian Night / Pastel Day)">
+            <span class="tgl-track">
+              <span class="tgl-thumb"></span>
+            </span>
+            <span class="tgl-icon tgl-sun">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </span>
+            <span class="tgl-icon tgl-moon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </span>
+          </button>
+        </div>
+
+        <div class="topbar-divider"></div>
+
+        <!-- User Profile & System Status -->
+        <div class="topbar-user-group">
+          <div class="user-profile" id="user-profile">
+            <div class="avatar-wrapper" onclick="toggleUserMenu()" title="Account & Preferences">
+              <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" class="user-avatar-img" id="user-avatar"/>
+              <span class="user-status-dot online"></span>
+            </div>
+            <div class="user-dropdown hidden" id="user-dropdown">
+              <div class="user-info-detail">
+                <div class="user-name" id="user-display-name">Officer / Commander</div>
+                <div class="user-email" id="user-display-email">hq@ksp.gov.in</div>
+              </div>
+              <hr class="dropdown-divider"/>
+              <button class="dropdown-item btn-settings" onclick="toggleUserMenu(); showPage('settings')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px; display:inline-block; vertical-align:middle;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span>Settings & Safety</span>
+              </button>
+              <button class="dropdown-item btn-signout" onclick="handleSignOut()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px; display:inline-block; vertical-align:middle;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <span>Sign Out</span>
+              </button>
+            </div>
+          </div>
+          <div class="live-badge" title="Live Tactical Feed Active"><span class="live-dot"></span>LIVE</div>
+        </div>
       </div>
     </header>
 
@@ -2067,7 +2106,10 @@
 
       <!-- PAGE: AI EXPLAINABILITY -->
       <section class="page" id="page-explainability">
-        <div class="section-header"><h1 class="section-title">🔬 AI Explainability Center</h1><p class="section-sub">Understand exactly why our AI makes each prediction — transparent, auditable, trustworthy</p></div>
+        <div class="section-header">
+          <h1 class="section-title">🔬 AI Explainability Center</h1>
+          <p class="section-sub">Understand exactly why our AI makes each prediction — transparent, auditable, trustworthy · <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(124,58,237,0.12);color:var(--purple);border:1px solid rgba(124,58,237,0.3);padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> Powered by Zoho Catalyst QuickML</span></p>
+        </div>
         <div class="explain-layout">
           <div class="explain-selector">
             <div class="sim-section-title">Select a Prediction to Explain</div>
@@ -2745,6 +2787,48 @@
         <span><kbd>ESC</kbd> Close</span>
       </div>
       <div class="pal-brand">CrimeScope AI Fast Finder</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== KEYBOARD SHORTCUTS CHEAT SHEET MODAL (?) ===== -->
+<div id="shortcuts-modal" class="shortcuts-modal-backdrop hidden" onclick="if(event.target===this)closeShortcutsModal()">
+  <div class="shortcuts-modal">
+    <div class="shortcuts-modal-header">
+      <div class="shortcuts-title-wrap">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="6" y1="8" x2="6.01" y2="8"/><line x1="10" y1="8" x2="10.01" y2="8"/><line x1="14" y1="8" x2="14.01" y2="8"/><line x1="18" y1="8" x2="18.01" y2="8"/><line x1="6" y1="12" x2="6.01" y2="12"/><line x1="18" y1="12" x2="18.01" y2="12"/><line x1="7" y1="16" x2="17" y2="16"/></svg>
+        <h3>Tactical Keyboard Shortcuts</h3>
+      </div>
+      <button class="modal-close-btn" onclick="closeShortcutsModal()">✕</button>
+    </div>
+    <div class="shortcuts-modal-body">
+      <div class="shortcuts-group">
+        <div class="shortcuts-group-title">🎯 Navigation Shortcuts</div>
+        <div class="shortcut-row"><span class="shortcut-label">Go to Dashboard Overview</span><div class="keys"><kbd>G</kbd> then <kbd>H</kbd></div></div>
+        <div class="shortcut-row"><span class="shortcut-label">Go to Heatmap & Geospatial</span><div class="keys"><kbd>G</kbd> then <kbd>M</kbd></div></div>
+        <div class="shortcut-row"><span class="shortcut-label">Go to AI Prediction Engine</span><div class="keys"><kbd>G</kbd> then <kbd>P</kbd></div></div>
+        <div class="shortcut-row"><span class="shortcut-label">Go to AI Explainability Center</span><div class="keys"><kbd>G</kbd> then <kbd>X</kbd></div></div>
+        <div class="shortcut-row"><span class="shortcut-label">Go to Real-Time Alerts</span><div class="keys"><kbd>G</kbd> then <kbd>A</kbd></div></div>
+        <div class="shortcut-row"><span class="shortcut-label">Go to AI Copilot Assistant</span><div class="keys"><kbd>G</kbd> then <kbd>C</kbd></div></div>
+        <div class="shortcut-row"><span class="shortcut-label">Cycle to Next Page</span><div class="keys"><kbd>J</kbd> or <kbd>]</kbd></div></div>
+        <div class="shortcut-row"><span class="shortcut-label">Cycle to Previous Page</span><div class="keys"><kbd>K</kbd> or <kbd>[</kbd></div></div>
+      </div>
+
+      <div class="shortcuts-group">
+        <div class="shortcuts-group-title">⚡ Command & Tools</div>
+        <div class="shortcut-row"><span class="shortcut-label">Open Command Palette / Fast Finder</span><div class="keys"><kbd>Ctrl</kbd> + <kbd>K</kbd> or <kbd>/</kbd></div></div>
+        <div class="shortcut-row"><span class="shortcut-label">Open / Close this Shortcuts Guide</span><div class="keys"><kbd>?</kbd></div></div>
+        <div class="shortcut-row"><span class="shortcut-label">Toggle Dark / Light Theme</span><div class="keys"><kbd>T</kbd></div></div>
+        <div class="shortcut-row"><span class="shortcut-label">Toggle Audio & Sound FX</span><div class="keys"><kbd>M</kbd></div></div>
+        <div class="shortcut-row"><span class="shortcut-label">Toggle Sidebar Collapse</span><div class="keys"><kbd>B</kbd></div></div>
+        <div class="shortcut-row"><span class="shortcut-label">Focus AI Copilot Chat Input</span><div class="keys"><kbd>C</kbd></div></div>
+        <div class="shortcut-row"><span class="shortcut-label">Export Intelligence Brief</span><div class="keys"><kbd>Ctrl</kbd> + <kbd>E</kbd></div></div>
+        <div class="shortcut-row"><span class="shortcut-label">Close Any Modal / Dialog</span><div class="keys"><kbd>ESC</kbd></div></div>
+      </div>
+    </div>
+    <div class="shortcuts-modal-footer">
+      <span>Tip: Single-key shortcuts are automatically disabled while typing in text boxes.</span>
+      <button class="dm-btn primary" onclick="closeShortcutsModal()">Got It</button>
     </div>
   </div>
 </div>

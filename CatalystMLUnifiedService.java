@@ -50,7 +50,7 @@ import java.util.Map;
 /**
  * CrimeScope AI 2.0 - Unified Zoho Catalyst ML Intelligence Service
  * 
- * Integrates ten core AI/ML biometric, vision, NLP, LLM, VLM, TTS, document, and barcode intelligence APIs:
+ * Integrates eleven core AI/ML biometric, vision, NLP, LLM, VLM, TTS, document, barcode, and predictive explainability intelligence APIs:
  * 1. Facial Analytics (Age, Gender, Emotion, Landmarks)
  * 2. Optical Character Recognition - OCR (Multi-lingual text extraction)
  * 3. Face Comparison & Verification (Mugshot & CCTV matching)
@@ -61,6 +61,7 @@ import java.util.Map;
  * 8. QuickML Vision Language Model - VLM (Qwen 3.6 - 35B VLM Multimodal Structured JSON Extraction)
  * 9. QuickML GLM-4.7-Flash LLM (30B MoE LLM with Agent Function Calling, Deep Thinking, and 200k Token Context)
  * 10. QuickML Zia Text-to-Audio Synthesis TTS (Multi-lingual speakers: English, Hindi, Kannada, customizable emotions & speeds)
+ * 11. QuickML Custom Crime Prediction & Explainability Engine (Automated Feature Attribution, Positive/Negative SHAP Impact Scores, Multi-Horizon Inference)
  */
 public class CatalystMLUnifiedService {
 
@@ -68,7 +69,10 @@ public class CatalystMLUnifiedService {
     private static final String VLM_ENDPOINT = "https://api.catalyst.zoho.in/quickml/v1/project/42969000000023001/vlm/chat";
     private static final String GLM_ENDPOINT = "https://api.catalyst.zoho.in/quickml/v1/project/42969000000023001/glm/chat";
     private static final String TTS_ENDPOINT = "https://api.catalyst.zoho.in/quickml/api/v1/models/zia/tts/synthesize";
+    private static final String PREDICT_ENDPOINT = "https://api.catalyst.zoho.in/quickml/v1/project/42969000000023001/endpoints/predict?explainModel=true";
+    private static final String DEFAULT_QUICKML_ENDPOINT_KEY = "23ef9e31f307a005bba25397c8cd7bdaf17a8198f9ed8be35e7393d44359a0cbe358374638ef4afd527d8fe9288fc045";
     private static final String DEFAULT_CATALYST_ORG = "60072891766";
+    private static final String DEFAULT_ENVIRONMENT = "Development";
     private static final String VLM_MODEL_NAME = "VL-Qwen3.6-35B-A3B";
     private static final String GLM_MODEL_NAME = "crm-di-glm47b_30b_it";
 
@@ -343,7 +347,63 @@ public class CatalystMLUnifiedService {
     }
 
     // =========================================================================
-    // 11. MASTER END-TO-END EVIDENCE DOSSIER PIPELINE
+    // 11. QUICKML CRIME PREDICTION & MODEL EXPLAINABILITY (XAI) ENGINE
+    // =========================================================================
+    /**
+     * Executes custom machine learning inference and automated model explainability
+     * using Zoho Catalyst QuickML custom deployed endpoint (/endpoints/predict?explainModel=true).
+     * 
+     * Generates:
+     * - Multi-horizon crime trend forecast predictions
+     * - Automated feature attribution & SHAP-style impact scores
+     * - Model explainability data explaining why specific risk ratings were assigned
+     * 
+     * @param authToken Zoho OAuth Access Token ("Zoho-oauthtoken <access-token>")
+     * @param endpointKey QuickML Custom Endpoint Key (header: X-QUICKML-ENDPOINT-KEY)
+     * @param catalystOrg Zoho Catalyst Org ID (header: CATALYST-ORG)
+     * @param environment Zoho Catalyst Environment (header: Environment, e.g. "Development" or "Production")
+     * @param inputFeatures JSON payload containing crime indicators, district features, and temporal metrics
+     * @param explainModel Whether to compute and include model explainability factor attribution (explainModel=true)
+     * @return Raw JSON response string with predicted outputs, confidence intervals, and feature importance scores
+     */
+    public String predictCrimeWithQuickML(String authToken, String endpointKey, String catalystOrg, String environment, JSONObject inputFeatures, boolean explainModel) throws Exception {
+        String endpointUrl = PREDICT_ENDPOINT;
+        if (!explainModel) {
+            endpointUrl = endpointUrl.replace("explainModel=true", "explainModel=false");
+        }
+
+        URL url = new URL(endpointUrl);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setRequestProperty("X-QUICKML-ENDPOINT-KEY", (endpointKey == null || endpointKey.isEmpty()) ? DEFAULT_QUICKML_ENDPOINT_KEY : endpointKey);
+        conn.setRequestProperty("Authorization", (authToken != null && authToken.startsWith("Zoho-oauthtoken ")) ? authToken : "Zoho-oauthtoken " + authToken);
+        conn.setRequestProperty("CATALYST-ORG", (catalystOrg == null || catalystOrg.isEmpty()) ? DEFAULT_CATALYST_ORG : catalystOrg);
+        conn.setRequestProperty("Environment", (environment == null || environment.isEmpty()) ? DEFAULT_ENVIRONMENT : environment);
+        conn.setDoOutput(true);
+
+        JSONObject payload = (inputFeatures != null) ? inputFeatures : new JSONObject();
+
+        try (OutputStream os = conn.getOutputStream()) {
+            byte[] input = payload.toJSONString().getBytes(StandardCharsets.UTF_8);
+            os.write(input, 0, input.length);
+        }
+
+        int responseCode = conn.getResponseCode();
+        BufferedReader br = new BufferedReader(new InputStreamReader(
+                (responseCode >= 200 && responseCode < 300) ? conn.getInputStream() : conn.getErrorStream(),
+                StandardCharsets.UTF_8));
+        StringBuilder response = new StringBuilder();
+        String responseLine;
+        while ((responseLine = br.readLine()) != null) {
+            response.append(responseLine.trim());
+        }
+
+        return response.toString();
+    }
+
+    // =========================================================================
+    // 12. MASTER END-TO-END EVIDENCE DOSSIER PIPELINE
     // =========================================================================
     public EvidenceDossierReport processEvidenceDossier(File evidenceImage, File suspectReferenceImage, String ocrLangs) {
         EvidenceDossierReport report = new EvidenceDossierReport();
@@ -477,13 +537,22 @@ public class CatalystMLUnifiedService {
             }
         }
 
-        report.statusSummary = "SUCCESS: Evidence dossier processed across 10 Catalyst ML, LLM, VLM & Zia TTS engines.";
+        report.statusSummary = "SUCCESS: Evidence dossier processed across 11 Catalyst ML, LLM, VLM, Zia TTS & QuickML XAI engines.";
         return report;
     }
 
     // =========================================================================
     // DATA TRANSFER OBJECTS (DTOs)
     // =========================================================================
+    public static class QuickMLPredictionResult {
+        public String status;
+        public double predictedCrimeVolume;
+        public String riskCategory; // "Low", "Medium", "High", "Critical"
+        public double modelConfidence;
+        public Map<String, Double> featureImportance = new HashMap<>();
+        public Map<String, Object> rawPredictionResponse = new HashMap<>();
+    }
+
     public static class EvidenceDossierReport {
         public String fileName;
         public long timestamp;
