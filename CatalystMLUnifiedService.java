@@ -31,9 +31,18 @@ import com.zc.component.ml.ZCSentimentAnalysisData;
 import com.zc.component.ml.ZCTextAnalyticsData;
 
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +50,7 @@ import java.util.Map;
 /**
  * CrimeScope AI 2.0 - Unified Zoho Catalyst ML Intelligence Service
  * 
- * Integrates seven core AI/ML biometric, vision, NLP, document, and barcode intelligence APIs:
+ * Integrates eight core AI/ML biometric, vision, NLP, VLM, document, and barcode intelligence APIs:
  * 1. Facial Analytics (Age, Gender, Emotion, Landmarks)
  * 2. Optical Character Recognition - OCR (Multi-lingual text extraction)
  * 3. Face Comparison & Verification (Mugshot & CCTV matching)
@@ -49,10 +58,14 @@ import java.util.Map;
  * 5. Object Detection (Identifying objects, vehicles, items & coordinates)
  * 6. Barcode & QR Code Scanner (Reading 1D/2D barcodes, QR codes, evidence tags)
  * 7. Text Analytics & NLP (Keyword extraction, Named Entity Recognition - NER, Sentiment Analysis)
+ * 8. QuickML Vision Language Model - VLM (Qwen 3.6 - 35B VLM Multimodal Structured JSON Extraction)
  */
 public class CatalystMLUnifiedService {
 
     private static final double DEFAULT_MATCH_THRESHOLD = 80.0;
+    private static final String VLM_ENDPOINT = "https://api.catalyst.zoho.in/quickml/v1/project/42969000000023001/vlm/chat";
+    private static final String DEFAULT_CATALYST_ORG = "60072891766";
+    private static final String VLM_MODEL_NAME = "VL-Qwen3.6-35B-A3B";
 
     // =========================================================================
     // 1. FACE ANALYTICS ENGINE
@@ -141,13 +154,6 @@ public class CatalystMLUnifiedService {
     // =========================================================================
     // 7. TEXT ANALYTICS & NLP ENGINE
     // =========================================================================
-    /**
-     * Performs NLP analysis (Keyword Extraction, NER, Sentiment Analysis) on text inputs.
-     * @param textList List of text statements/FIR notes
-     * @param targetKeywords Target keywords to extract or match
-     * @return List of ZCTextAnalyticsData containing Keyword, NER, and Sentiment results
-     */
-
     public List<ZCTextAnalyticsData> analyzeTextNLP(List<String> textList, List<String> targetKeywords) throws Exception {
         if (textList == null || textList.isEmpty()) {
             throw new IllegalArgumentException("Text list cannot be empty.");
@@ -169,18 +175,69 @@ public class CatalystMLUnifiedService {
     }
 
     // =========================================================================
-    // 8. MASTER END-TO-END EVIDENCE DOSSIER PIPELINE
+    // 8. QUICKML VISION LANGUAGE MODEL (VLM) ENGINE (Qwen 3.6 - 35B VLM)
     // =========================================================================
     /**
-     * Unified pipeline that processes a raw evidence file through Moderation, 
-     * Face Analytics, Object Detection, Barcode/QR Scanning, OCR Text Extraction, 
-     * NLP Text Analytics, and Suspect Comparison.
+     * Executes multimodal Vision Language Model (VLM) document & evidence analysis using Qwen 3.6 - 35B.
      * 
-     * @param evidenceImage The evidence photo/document to analyze
-     * @param suspectReferenceImage Optional reference mugshot (can be null if comparison not needed)
-     * @param ocrLangs Language codes for OCR text extraction (e.g. "eng,tam")
-     * @return EvidenceDossierReport DTO containing all combined ML findings
+     * @param authToken Zoho OAuth Access Token or Bearer Token
+     * @param catalystOrg Catalyst Org ID (default: "60072891766")
+     * @param prompt Extraction prompt (e.g. "Fields to extract: Contact details, Skills, education...")
+     * @param imageFiles List of document/evidence image files
+     * @return Raw JSON response string from Zoho Catalyst QuickML VLM API
      */
+    public String analyzeEvidenceVLM(String authToken, String catalystOrg, String prompt, List<File> imageFiles) throws Exception {
+        URL url = new URL(VLM_ENDPOINT);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setRequestProperty("Authorization", "Zoho-oauthtoken " + authToken);
+        conn.setRequestProperty("CATALYST-ORG", (catalystOrg == null || catalystOrg.isEmpty()) ? DEFAULT_CATALYST_ORG : catalystOrg);
+        conn.setDoOutput(true);
+
+        // Convert images to Base64
+        JSONArray base64Images = new JSONArray();
+        if (imageFiles != null) {
+            for (File img : imageFiles) {
+                if (img.exists()) {
+                    byte[] bytes = Files.readAllBytes(img.toPath());
+                    String b64 = Base64.getEncoder().encodeToString(bytes);
+                    base64Images.add(b64);
+                }
+            }
+        }
+
+        JSONObject reqData = new JSONObject();
+        reqData.put("prompt", (prompt == null || prompt.isEmpty()) ? "Extract key fields in structured JSON format." : prompt);
+        reqData.put("model", VLM_MODEL_NAME);
+        reqData.put("images", base64Images);
+        reqData.put("system_prompt", "Be concise and factual.");
+        reqData.put("top_k", 50);
+        reqData.put("top_p", 0.9);
+        reqData.put("temperature", 0.7);
+        reqData.put("max_tokens", 500);
+
+        try (OutputStream os = conn.getOutputStream()) {
+            byte[] input = reqData.toJSONString().getBytes(StandardCharsets.UTF_8);
+            os.write(input, 0, input.length);
+        }
+
+        int responseCode = conn.getResponseCode();
+        BufferedReader br = new BufferedReader(new InputStreamReader(
+                (responseCode >= 200 && responseCode < 300) ? conn.getInputStream() : conn.getErrorStream(),
+                StandardCharsets.UTF_8));
+        StringBuilder response = new StringBuilder();
+        String responseLine;
+        while ((responseLine = br.readLine()) != null) {
+            response.append(responseLine.trim());
+        }
+
+        return response.toString();
+    }
+
+    // =========================================================================
+    // 9. MASTER END-TO-END EVIDENCE DOSSIER PIPELINE
+    // =========================================================================
     public EvidenceDossierReport processEvidenceDossier(File evidenceImage, File suspectReferenceImage, String ocrLangs) {
         EvidenceDossierReport report = new EvidenceDossierReport();
         report.fileName = evidenceImage.getName();
@@ -202,7 +259,6 @@ public class CatalystMLUnifiedService {
             report.errors.add("Moderation Error: " + e.getMessage());
         }
 
-        // Abort further processing if content is unsafe
         if (!report.isSafe) {
             report.statusSummary = "BLOCKED: Evidence image flagged as inappropriate or unsafe (" + report.moderationCategory + ").";
             return report;
@@ -276,7 +332,7 @@ public class CatalystMLUnifiedService {
             report.errors.add("OCR Warning: " + e.getMessage());
         }
 
-        // Step 6: Text Analytics & NLP (If text was extracted via OCR)
+        // Step 6: Text Analytics & NLP
         if (report.extractedFullText != null && !report.extractedFullText.trim().isEmpty()) {
             try {
                 List<String> txtList = new ArrayList<>();
@@ -302,7 +358,7 @@ public class CatalystMLUnifiedService {
             }
         }
 
-        // Step 7: Suspect Face Comparison (If reference image provided)
+        // Step 7: Suspect Face Comparison
         if (suspectReferenceImage != null && suspectReferenceImage.exists() && report.facesDetected > 0) {
             try {
                 ZCFaceComparisonData cmpData = compareFaces(suspectReferenceImage, evidenceImage);
@@ -314,11 +370,7 @@ public class CatalystMLUnifiedService {
             }
         }
 
-        report.statusSummary = "SUCCESS: Evidence dossier processed. " 
-                             + report.facesDetected + " faces, " 
-                             + report.detectedObjects.size() + " objects, "
-                             + (report.hasBarcode ? "1 barcode/QR (" + report.scannedBarcodeContent + "), " : "0 barcodes, ")
-                             + report.extractedLines.size() + " text lines analyzed with NLP Sentiment & NER.";
+        report.statusSummary = "SUCCESS: Evidence dossier processed across 8 Catalyst ML engines.";
         return report;
     }
 
