@@ -317,14 +317,36 @@ This repository is configured with an automated GitHub Action ([`.github/workflo
 
 ---
 
-## ⌨️ Keyboard Shortcuts Cheat Sheet
+## ⌨️ Tactical Keyboard Shortcuts Cheat Sheet
 
-| Key Combination | Action | Context |
+CrimeScope AI 2.0 provides an exhaustive, power-user tactical keyboard navigation suite for hands-free operations:
+
+### Navigation Chords ("Go To" Sequences)
+| Key Sequence | Destination Page | Context |
 |---|---|---|
-| <kbd>Ctrl</kbd> + <kbd>K</kbd> / <kbd>Cmd</kbd> + <kbd>K</kbd> | **Open Fast Finder (Command Palette)** | Global anywhere in the application |
-| <kbd>Esc</kbd> | **Dismiss Active Modal / Overlay** | Command Palette, District Modal, Report |
-| <kbd>↓</kbd> / <kbd>↑</kbd> | **Cycle Search Results** | Inside Fast Finder search results |
-| <kbd>Enter</kbd> | **Execute Selected Action / Open District** | Inside Fast Finder search results |
+| <kbd>G</kbd> then <kbd>H</kbd> | **Home / Dashboard Overview** | Instant return to root overview |
+| <kbd>G</kbd> then <kbd>M</kbd> | **Geospatial Hotspot Map** | Statewide radar cluster view |
+| <kbd>G</kbd> then <kbd>P</kbd> | **AI Prediction Engine** | Multi-horizon risk forecasts |
+| <kbd>G</kbd> then <kbd>X</kbd> | **AI Explainability Center** | Factor attribution & SHAP insights |
+| <kbd>G</kbd> then <kbd>A</kbd> | **Real-Time Incident Alerts** | Active threat & anomaly board |
+| <kbd>G</kbd> then <kbd>C</kbd> | **AI Copilot Assistant** | Opens AI chat interface |
+| <kbd>G</kbd> then <kbd>S</kbd> | **Policy Simulator** | Digital twin scenario modeling |
+| <kbd>G</kbd> then <kbd>T</kbd> | **Meet Our Team** | Innovator team profiles |
+| <kbd>J</kbd> or <kbd>]</kbd> | **Cycle Next Page** | Forward page sequence |
+| <kbd>K</kbd> or <kbd>[</kbd> | **Cycle Previous Page** | Backward page sequence |
+
+### Quick Commands & Actions
+| Key Combination | Action | Operational Context |
+|---|---|---|
+| <kbd>Ctrl</kbd> + <kbd>K</kbd> / <kbd>Cmd</kbd> + <kbd>K</kbd> | **Open Fast Finder** | Rapid search across 37 districts & crimes |
+| <kbd>/</kbd> | **Quick Fast Finder** | Single-key trigger (outside text fields) |
+| <kbd>?</kbd> / <kbd>Shift</kbd> + <kbd>/</kbd> | **Open Shortcuts Cheat Sheet** | Tactical modal help screen |
+| <kbd>T</kbd> | **Toggle Theme** | Obsidian Night 🌙 ↔ Pastel Day ☀️ |
+| <kbd>M</kbd> | **Toggle Audio Sound FX** | Mute 🔇 ↔ Web Audio Synthesizer 🔊 |
+| <kbd>B</kbd> | **Toggle Sidebar Navigation** | Expand / collapse navigation rail |
+| <kbd>C</kbd> | **Focus AI Copilot Input** | Jump directly into conversational chat |
+| <kbd>Ctrl</kbd> + <kbd>E</kbd> | **Export Executive Report** | Generate printable / JSON brief |
+| <kbd>Esc</kbd> | **Dismiss Active Modal** | Closes any modal, dropdown, or palette |
 
 ---
 
@@ -335,6 +357,8 @@ CrimeScope AI 2.0 Technology Stack
 ├── 🎨 User Interface     : Semantic HTML5, CSS3 Custom Properties, Glassmorphism, CSS Grid/Flexbox
 ├── ⚙️ Client Engine      : Vanilla JavaScript (ES6+), Web Audio API, Web Speech API
 ├── 📊 Visualizations     : Chart.js 4.4.0 (Line, Bar, Donut, Stacked, Radar) + HTML5 2D Canvas
+├── ☁️ Cloud & Serverless : Zoho Catalyst Functions (Python 3.11), AppSail Containerized Web Service
+├── 🧠 QuickML AI Suite   : 11 ML Engines (GLM-4.7 Flash, Qwen 3.6 VLM, Zia Biometrics, Multi-Horizon XAI)
 ├── 🔤 Typography         : Space Grotesk (Display), Inter (Body UI), JetBrains Mono (Data/Metrics)
 ├── 🔐 Security & Auth    : Firebase Authentication Client Layer + Instant Demo Bypass Mode
 ├── 📦 Continuous Integration : GitHub Actions (deploy-pages.yml, ci.yml)
