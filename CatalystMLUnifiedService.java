@@ -2,6 +2,9 @@ package com.crimescope.ml;
 
 import com.zc.component.ml.ZCAge;
 import com.zc.component.ml.ZCAnalyseMode;
+import com.zc.component.ml.ZCBarcodeData;
+import com.zc.component.ml.ZCBarcodeFormat;
+import com.zc.component.ml.ZCBarcodeOptions;
 import com.zc.component.ml.ZCContent;
 import com.zc.component.ml.ZCFaceAnalysisData;
 import com.zc.component.ml.ZCFaceAnalyticsOptions;
@@ -32,12 +35,13 @@ import java.util.Map;
 /**
  * CrimeScope AI 2.0 - Unified Zoho Catalyst ML Intelligence Service
  * 
- * Integrates five core AI/ML biometric, vision, and document intelligence APIs:
+ * Integrates six core AI/ML biometric, vision, document, and barcode intelligence APIs:
  * 1. Facial Analytics (Age, Gender, Emotion, Landmarks)
  * 2. Optical Character Recognition - OCR (Multi-lingual text extraction)
  * 3. Face Comparison & Verification (Mugshot & CCTV matching)
  * 4. Image Moderation (Content safety & explicit media screening)
  * 5. Object Detection (Identifying objects, vehicles, items & coordinates)
+ * 6. Barcode & QR Code Scanner (Reading 1D/2D barcodes, QR codes, evidence tags)
  */
 public class CatalystMLUnifiedService {
 
@@ -105,11 +109,6 @@ public class CatalystMLUnifiedService {
     // =========================================================================
     // 5. OBJECT DETECTION ENGINE
     // =========================================================================
-    /**
-     * Detects objects, items, vehicles, and their coordinates within an image.
-     * @param imageFile Input image file
-     * @return List of ZCObjectDetectionData objects containing objectType, confidence, and objectPoints
-     */
     public List<ZCObjectDetectionData> detectObjects(File imageFile) throws Exception {
         if (imageFile == null || !imageFile.exists()) {
             throw new IllegalArgumentException("Image file does not exist.");
@@ -119,11 +118,31 @@ public class CatalystMLUnifiedService {
     }
 
     // =========================================================================
-    // 6. MASTER END-TO-END EVIDENCE DOSSIER PIPELINE
+    // 6. BARCODE & QR CODE SCANNER ENGINE
+    // =========================================================================
+    /**
+     * Scans 1D and 2D barcodes, QR codes, and evidence tags from an image file.
+     * @param imageFile Input image file containing barcodes or QR codes
+     * @return ZCBarcodeData containing barcode content and format
+     */
+    public ZCBarcodeData scanBarcode(File imageFile) throws Exception {
+        if (imageFile == null || !imageFile.exists()) {
+            throw new IllegalArgumentException("Barcode image file does not exist.");
+        }
+
+        ZCBarcodeOptions options = ZCBarcodeOptions.getInstance()
+                .setFormat(ZCBarcodeFormat.ALL);
+
+        return ZCML.getInstance().scanBarcode(imageFile, options);
+    }
+
+    // =========================================================================
+    // 7. MASTER END-TO-END EVIDENCE DOSSIER PIPELINE
     // =========================================================================
     /**
      * Unified pipeline that processes a raw evidence file through Moderation, 
-     * Face Analytics, Object Detection, OCR Extraction, and Suspect Comparison.
+     * Face Analytics, Object Detection, Barcode/QR Scanning, OCR Text Extraction, 
+     * and Suspect Comparison.
      * 
      * @param evidenceImage The evidence photo/document to analyze
      * @param suspectReferenceImage Optional reference mugshot (can be null if comparison not needed)
@@ -196,7 +215,18 @@ public class CatalystMLUnifiedService {
             report.errors.add("Object Detection Warning: " + e.getMessage());
         }
 
-        // Step 4: Multi-Lingual OCR Text Extraction
+        // Step 4: Barcode & QR Code Scanning
+        try {
+            ZCBarcodeData bcData = scanBarcode(evidenceImage);
+            if (bcData != null && bcData.getContent() != null && !bcData.getContent().isEmpty()) {
+                report.scannedBarcodeContent = bcData.getContent();
+                report.hasBarcode = true;
+            }
+        } catch (Exception e) {
+            report.errors.add("Barcode Scan Warning: " + e.getMessage());
+        }
+
+        // Step 5: Multi-Lingual OCR Text Extraction
         try {
             ZCContent ocrContent = extractOCRText(evidenceImage, ocrLangs);
             report.extractedFullText = ocrContent.text;
@@ -214,7 +244,7 @@ public class CatalystMLUnifiedService {
             report.errors.add("OCR Warning: " + e.getMessage());
         }
 
-        // Step 5: Suspect Face Comparison (If reference image provided)
+        // Step 6: Suspect Face Comparison (If reference image provided)
         if (suspectReferenceImage != null && suspectReferenceImage.exists() && report.facesDetected > 0) {
             try {
                 ZCFaceComparisonData cmpData = compareFaces(suspectReferenceImage, evidenceImage);
@@ -228,7 +258,8 @@ public class CatalystMLUnifiedService {
 
         report.statusSummary = "SUCCESS: Evidence dossier processed. " 
                              + report.facesDetected + " faces, " 
-                             + report.detectedObjects.size() + " objects, and "
+                             + report.detectedObjects.size() + " objects, "
+                             + (report.hasBarcode ? "1 barcode/QR (" + report.scannedBarcodeContent + "), " : "0 barcodes, ")
                              + report.extractedLines.size() + " text lines analyzed.";
         return report;
     }
@@ -248,6 +279,9 @@ public class CatalystMLUnifiedService {
         public List<FaceDetail> analyzedFaces = new ArrayList<>();
 
         public List<DetectedObjectDetail> detectedObjects = new ArrayList<>();
+
+        public boolean hasBarcode = false;
+        public String scannedBarcodeContent = "";
 
         public String extractedFullText = "";
         public List<String> extractedLines = new ArrayList<>();
