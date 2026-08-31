@@ -4,13 +4,13 @@ import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChang
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyD-9zZzfheMpd71Tn74oTyKTeCld_-RBU4",
-  authDomain: "al-driven-crime-anal-lbbcplfo.firebaseapp.com",
-  projectId: "al-driven-crime-anal-lbbcplfo",
-  storageBucket: "al-driven-crime-anal-lbbcplfo.firebasestorage.app",
-  messagingSenderId: "258283061207",
-  appId: "1:258283061207:web:ee834f3f21a0f6cf0ad592",
-  measurementId: "G-44XKXV7FLF"
+  apiKey: "AIzaSyBZCEY8EaB1JqjVkJHZdO4tex0X5-qtlw4",
+  authDomain: "true-carrer-ai.firebaseapp.com",
+  projectId: "true-carrer-ai",
+  storageBucket: "true-carrer-ai.firebasestorage.app",
+  messagingSenderId: "306160123485",
+  appId: "1:306160123485:web:853495a2865b44640217b4",
+  measurementId: "G-5BXL092K2V"
 };
 
 // Initialize Firebase

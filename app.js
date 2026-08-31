@@ -338,7 +338,7 @@ function launchInstantDemo() {
   document.getElementById('main-app').classList.remove('hidden');
 
   playAudioFx('success');
-  showToast('⚡ Instant Demo Mode Activated — Welcome Evaluator!', 'success');
+  showToast('⚡ Instant Demo Access Activated — Welcome Evaluator!', 'success');
 
   if (window.location.hash) {
     history.replaceState(null, '', window.location.pathname);
@@ -347,33 +347,30 @@ function launchInstantDemo() {
 }
 
 function enterDashboard() {
-  if (currentUser) {
-    document.getElementById('landing-page').classList.add('hidden');
-    document.getElementById('login-page').classList.add('hidden');
-    document.getElementById('main-app').classList.remove('hidden');
-    // Clean URL hash to avoid 'file://' security warnings
-    if (window.location.hash) {
-      history.replaceState(null, '', window.location.pathname);
-    }
-    setTimeout(() => { showPage('overview'); }, 100);
-  } else {
-    // Redirect to login page
-    document.getElementById('landing-page').classList.add('hidden');
-    document.getElementById('main-app').classList.add('hidden');
-    document.getElementById('login-page').classList.remove('hidden');
+  if (!currentUser) {
+    currentUser = {
+      displayName: 'Datathon Evaluator',
+      email: 'evaluator@datathon2026.gov.in',
+      photoURL: 'https://www.w3schools.com/howto/img_avatar.png'
+    };
+    localStorage.setItem('profileName', 'Datathon Evaluator');
+    localStorage.setItem('profileEmail', 'evaluator@datathon2026.gov.in');
     
-    // Auto-switch to Sign Up mode if there is a pending referral code and not already in sign-up mode
-    const pendingRef = sessionStorage.getItem('pendingReferralCode');
-    if (pendingRef && !isSignUpMode) {
-      toggleAuthMode();
-    }
-    
-    // Initialize the animated canvas on first show
-    if (!window._lpCanvasInit) {
-      window._lpCanvasInit = true;
-      setTimeout(() => initLoginCanvas(), 50);
-    }
+    const nameEl = document.getElementById('user-display-name');
+    const emailEl = document.getElementById('user-display-email');
+    if (nameEl) nameEl.textContent = 'Datathon Evaluator';
+    if (emailEl) emailEl.textContent = 'evaluator@datathon2026.gov.in';
+    showToast('⚡ Instant Demo Access — Command Deck Activated', 'success');
   }
+
+  document.getElementById('landing-page').classList.add('hidden');
+  document.getElementById('login-page').classList.add('hidden');
+  document.getElementById('main-app').classList.remove('hidden');
+
+  if (window.location.hash) {
+    history.replaceState(null, '', window.location.pathname);
+  }
+  setTimeout(() => { showPage('overview'); }, 100);
 }
 
 function goBackToWelcome() {
