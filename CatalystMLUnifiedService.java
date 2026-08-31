@@ -17,6 +17,8 @@ import com.zc.component.ml.ZCImageModerationOptions;
 import com.zc.component.ml.ZCImageModerationPrediction;
 import com.zc.component.ml.ZCLine;
 import com.zc.component.ml.ZCML;
+import com.zc.component.ml.ZCObjectDetectionData;
+import com.zc.component.ml.ZCObjectPoints;
 import com.zc.component.ml.ZCOCROptions;
 import com.zc.component.ml.ZCOCRModelType;
 import com.zc.component.ml.ZCParagraph;
@@ -30,11 +32,12 @@ import java.util.Map;
 /**
  * CrimeScope AI 2.0 - Unified Zoho Catalyst ML Intelligence Service
  * 
- * Integrates four core AI/ML biometric and document intelligence APIs:
+ * Integrates five core AI/ML biometric, vision, and document intelligence APIs:
  * 1. Facial Analytics (Age, Gender, Emotion, Landmarks)
  * 2. Optical Character Recognition - OCR (Multi-lingual text extraction)
  * 3. Face Comparison & Verification (Mugshot & CCTV matching)
  * 4. Image Moderation (Content safety & explicit media screening)
+ * 5. Object Detection (Identifying objects, vehicles, items & coordinates)
  */
 public class CatalystMLUnifiedService {
 
@@ -43,11 +46,6 @@ public class CatalystMLUnifiedService {
     // =========================================================================
     // 1. FACE ANALYTICS ENGINE
     // =========================================================================
-    /**
-     * Analyzes facial attributes from an image file.
-     * @param imageFile Input image containing faces
-     * @return ZCFaceAnalysisData containing face counts, age, emotion, gender, and landmarks
-     */
     public ZCFaceAnalysisData analyzeFace(File imageFile) throws Exception {
         if (imageFile == null || !imageFile.exists()) {
             throw new IllegalArgumentException("Image file does not exist.");
@@ -65,12 +63,6 @@ public class CatalystMLUnifiedService {
     // =========================================================================
     // 2. OPTICAL CHARACTER RECOGNITION (OCR) ENGINE
     // =========================================================================
-    /**
-     * Extracts multi-lingual text from documents, FIRs, or license plates.
-     * @param imageFile Input document/evidence image file
-     * @param languageCodes Comma-separated ISO language codes (e.g., "eng,tam,kan,hin")
-     * @return ZCContent containing structured text hierarchy (document, paragraphs, lines, words)
-     */
     public ZCContent extractOCRText(File imageFile, String languageCodes) throws Exception {
         if (imageFile == null || !imageFile.exists()) {
             throw new IllegalArgumentException("Document file does not exist.");
@@ -88,12 +80,6 @@ public class CatalystMLUnifiedService {
     // =========================================================================
     // 3. FACE COMPARISON & VERIFICATION ENGINE
     // =========================================================================
-    /**
-     * Compares a target suspect/query face against a reference mugshot image.
-     * @param sourceImage Reference image (e.g., criminal database mugshot)
-     * @param queryImage Target image (e.g., CCTV capture or field photo)
-     * @return ZCFaceComparisonData containing confidence score and match percentage
-     */
     public ZCFaceComparisonData compareFaces(File sourceImage, File queryImage) throws Exception {
         if (sourceImage == null || !sourceImage.exists() || queryImage == null || !queryImage.exists()) {
             throw new IllegalArgumentException("Source or query image file is invalid.");
@@ -105,11 +91,6 @@ public class CatalystMLUnifiedService {
     // =========================================================================
     // 4. IMAGE MODERATION ENGINE
     // =========================================================================
-    /**
-     * Screens evidence or public submissions for explicit, violent, or unsafe content.
-     * @param imageFile Evidence image file to be moderated
-     * @return ZCImageModerateData containing moderation category prediction & confidence scores
-     */
     public ZCImageModerateData moderateImage(File imageFile) throws Exception {
         if (imageFile == null || !imageFile.exists()) {
             throw new IllegalArgumentException("Evidence file does not exist.");
@@ -122,11 +103,27 @@ public class CatalystMLUnifiedService {
     }
 
     // =========================================================================
-    // 5. MASTER END-TO-END EVIDENCE DOSSIER PIPELINE
+    // 5. OBJECT DETECTION ENGINE
+    // =========================================================================
+    /**
+     * Detects objects, items, vehicles, and their coordinates within an image.
+     * @param imageFile Input image file
+     * @return List of ZCObjectDetectionData objects containing objectType, confidence, and objectPoints
+     */
+    public List<ZCObjectDetectionData> detectObjects(File imageFile) throws Exception {
+        if (imageFile == null || !imageFile.exists()) {
+            throw new IllegalArgumentException("Image file does not exist.");
+        }
+
+        return ZCML.getInstance().detectObjects(imageFile);
+    }
+
+    // =========================================================================
+    // 6. MASTER END-TO-END EVIDENCE DOSSIER PIPELINE
     // =========================================================================
     /**
      * Unified pipeline that processes a raw evidence file through Moderation, 
-     * Face Analytics, OCR Document Extraction, and Suspect Comparison in a single call.
+     * Face Analytics, Object Detection, OCR Extraction, and Suspect Comparison.
      * 
      * @param evidenceImage The evidence photo/document to analyze
      * @param suspectReferenceImage Optional reference mugshot (can be null if comparison not needed)
@@ -154,7 +151,7 @@ public class CatalystMLUnifiedService {
             report.errors.add("Moderation Error: " + e.getMessage());
         }
 
-        // Abort further biometric processing if content is unsafe
+        // Abort further processing if content is unsafe
         if (!report.isSafe) {
             report.statusSummary = "BLOCKED: Evidence image flagged as inappropriate or unsafe (" + report.moderationCategory + ").";
             return report;
@@ -181,7 +178,25 @@ public class CatalystMLUnifiedService {
             report.errors.add("Face Analytics Warning: " + e.getMessage());
         }
 
-        // Step 3: Multi-Lingual OCR Text Extraction
+        // Step 3: Computer Vision Object Detection
+        try {
+            List<ZCObjectDetectionData> detectedObjs = detectObjects(evidenceImage);
+            if (detectedObjs != null) {
+                for (ZCObjectDetectionData obj : detectedObjs) {
+                    DetectedObjectDetail od = new DetectedObjectDetail();
+                    od.objectType = obj.getObjectType();
+                    od.confidence = obj.getConfidence();
+                    if (obj.getObjectPoints() != null) {
+                        od.coordinates = obj.getObjectPoints().toString();
+                    }
+                    report.detectedObjects.add(od);
+                }
+            }
+        } catch (Exception e) {
+            report.errors.add("Object Detection Warning: " + e.getMessage());
+        }
+
+        // Step 4: Multi-Lingual OCR Text Extraction
         try {
             ZCContent ocrContent = extractOCRText(evidenceImage, ocrLangs);
             report.extractedFullText = ocrContent.text;
@@ -199,7 +214,7 @@ public class CatalystMLUnifiedService {
             report.errors.add("OCR Warning: " + e.getMessage());
         }
 
-        // Step 4: Suspect Face Comparison (If reference image provided)
+        // Step 5: Suspect Face Comparison (If reference image provided)
         if (suspectReferenceImage != null && suspectReferenceImage.exists() && report.facesDetected > 0) {
             try {
                 ZCFaceComparisonData cmpData = compareFaces(suspectReferenceImage, evidenceImage);
@@ -211,8 +226,10 @@ public class CatalystMLUnifiedService {
             }
         }
 
-        report.statusSummary = "SUCCESS: Evidence dossier processed. " + report.facesDetected + " faces analyzed, " 
-                             + report.extractedLines.size() + " text lines extracted.";
+        report.statusSummary = "SUCCESS: Evidence dossier processed. " 
+                             + report.facesDetected + " faces, " 
+                             + report.detectedObjects.size() + " objects, and "
+                             + report.extractedLines.size() + " text lines analyzed.";
         return report;
     }
 
@@ -229,6 +246,8 @@ public class CatalystMLUnifiedService {
 
         public long facesDetected = 0;
         public List<FaceDetail> analyzedFaces = new ArrayList<>();
+
+        public List<DetectedObjectDetail> detectedObjects = new ArrayList<>();
 
         public String extractedFullText = "";
         public List<String> extractedLines = new ArrayList<>();
@@ -248,5 +267,11 @@ public class CatalystMLUnifiedService {
         public String dominantEmotion;
         public String coordinates;
         public int landmarkCount;
+    }
+
+    public static class DetectedObjectDetail {
+        public String objectType;
+        public double confidence;
+        public String coordinates;
     }
 }
