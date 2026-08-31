@@ -18,13 +18,19 @@ import com.zc.component.ml.ZCImageModerateData;
 import com.zc.component.ml.ZCImageModerationConfidence;
 import com.zc.component.ml.ZCImageModerationOptions;
 import com.zc.component.ml.ZCImageModerationPrediction;
+import com.zc.component.ml.ZCKeywordExtractionData;
 import com.zc.component.ml.ZCLine;
 import com.zc.component.ml.ZCML;
+import com.zc.component.ml.ZCNERData;
 import com.zc.component.ml.ZCObjectDetectionData;
 import com.zc.component.ml.ZCObjectPoints;
 import com.zc.component.ml.ZCOCROptions;
 import com.zc.component.ml.ZCOCRModelType;
 import com.zc.component.ml.ZCParagraph;
+import com.zc.component.ml.ZCSentimentAnalysisData;
+import com.zc.component.ml.ZCTextAnalyticsData;
+
+import org.json.simple.JSONArray;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,13 +41,14 @@ import java.util.Map;
 /**
  * CrimeScope AI 2.0 - Unified Zoho Catalyst ML Intelligence Service
  * 
- * Integrates six core AI/ML biometric, vision, document, and barcode intelligence APIs:
+ * Integrates seven core AI/ML biometric, vision, NLP, document, and barcode intelligence APIs:
  * 1. Facial Analytics (Age, Gender, Emotion, Landmarks)
  * 2. Optical Character Recognition - OCR (Multi-lingual text extraction)
  * 3. Face Comparison & Verification (Mugshot & CCTV matching)
  * 4. Image Moderation (Content safety & explicit media screening)
  * 5. Object Detection (Identifying objects, vehicles, items & coordinates)
  * 6. Barcode & QR Code Scanner (Reading 1D/2D barcodes, QR codes, evidence tags)
+ * 7. Text Analytics & NLP (Keyword extraction, Named Entity Recognition - NER, Sentiment Analysis)
  */
 public class CatalystMLUnifiedService {
 
@@ -120,11 +127,6 @@ public class CatalystMLUnifiedService {
     // =========================================================================
     // 6. BARCODE & QR CODE SCANNER ENGINE
     // =========================================================================
-    /**
-     * Scans 1D and 2D barcodes, QR codes, and evidence tags from an image file.
-     * @param imageFile Input image file containing barcodes or QR codes
-     * @return ZCBarcodeData containing barcode content and format
-     */
     public ZCBarcodeData scanBarcode(File imageFile) throws Exception {
         if (imageFile == null || !imageFile.exists()) {
             throw new IllegalArgumentException("Barcode image file does not exist.");
@@ -137,12 +139,42 @@ public class CatalystMLUnifiedService {
     }
 
     // =========================================================================
-    // 7. MASTER END-TO-END EVIDENCE DOSSIER PIPELINE
+    // 7. TEXT ANALYTICS & NLP ENGINE
+    // =========================================================================
+    /**
+     * Performs NLP analysis (Keyword Extraction, NER, Sentiment Analysis) on text inputs.
+     * @param textList List of text statements/FIR notes
+     * @param targetKeywords Target keywords to extract or match
+     * @return List of ZCTextAnalyticsData containing Keyword, NER, and Sentiment results
+     */
+
+    public List<ZCTextAnalyticsData> analyzeTextNLP(List<String> textList, List<String> targetKeywords) throws Exception {
+        if (textList == null || textList.isEmpty()) {
+            throw new IllegalArgumentException("Text list cannot be empty.");
+        }
+
+        JSONArray textArray = new JSONArray();
+        for (String t : textList) {
+            textArray.add(t);
+        }
+
+        JSONArray keywords = new JSONArray();
+        if (targetKeywords != null) {
+            for (String k : targetKeywords) {
+                keywords.add(k);
+            }
+        }
+
+        return ZCML.getInstance().getTextAnalytics(textArray, keywords);
+    }
+
+    // =========================================================================
+    // 8. MASTER END-TO-END EVIDENCE DOSSIER PIPELINE
     // =========================================================================
     /**
      * Unified pipeline that processes a raw evidence file through Moderation, 
      * Face Analytics, Object Detection, Barcode/QR Scanning, OCR Text Extraction, 
-     * and Suspect Comparison.
+     * NLP Text Analytics, and Suspect Comparison.
      * 
      * @param evidenceImage The evidence photo/document to analyze
      * @param suspectReferenceImage Optional reference mugshot (can be null if comparison not needed)
@@ -244,7 +276,33 @@ public class CatalystMLUnifiedService {
             report.errors.add("OCR Warning: " + e.getMessage());
         }
 
-        // Step 6: Suspect Face Comparison (If reference image provided)
+        // Step 6: Text Analytics & NLP (If text was extracted via OCR)
+        if (report.extractedFullText != null && !report.extractedFullText.trim().isEmpty()) {
+            try {
+                List<String> txtList = new ArrayList<>();
+                txtList.add(report.extractedFullText);
+                List<String> keyList = new ArrayList<>();
+                keyList.add("crime"); keyList.add("theft"); keyList.add("suspect"); keyList.add("accident");
+
+                List<ZCTextAnalyticsData> taList = analyzeTextNLP(txtList, keyList);
+                if (taList != null && !taList.isEmpty()) {
+                    ZCTextAnalyticsData tad = taList.get(0);
+                    if (tad.getKeywordExtractionData() != null) {
+                        report.nlpKeywords = tad.getKeywordExtractionData().toString();
+                    }
+                    if (tad.getNERData() != null) {
+                        report.nlpNamedEntities = tad.getNERData().toString();
+                    }
+                    if (tad.getSentimentAnalysisData() != null) {
+                        report.nlpSentiment = tad.getSentimentAnalysisData().toString();
+                    }
+                }
+            } catch (Exception e) {
+                report.errors.add("NLP Analytics Warning: " + e.getMessage());
+            }
+        }
+
+        // Step 7: Suspect Face Comparison (If reference image provided)
         if (suspectReferenceImage != null && suspectReferenceImage.exists() && report.facesDetected > 0) {
             try {
                 ZCFaceComparisonData cmpData = compareFaces(suspectReferenceImage, evidenceImage);
@@ -260,7 +318,7 @@ public class CatalystMLUnifiedService {
                              + report.facesDetected + " faces, " 
                              + report.detectedObjects.size() + " objects, "
                              + (report.hasBarcode ? "1 barcode/QR (" + report.scannedBarcodeContent + "), " : "0 barcodes, ")
-                             + report.extractedLines.size() + " text lines analyzed.";
+                             + report.extractedLines.size() + " text lines analyzed with NLP Sentiment & NER.";
         return report;
     }
 
@@ -285,6 +343,10 @@ public class CatalystMLUnifiedService {
 
         public String extractedFullText = "";
         public List<String> extractedLines = new ArrayList<>();
+
+        public String nlpKeywords = "";
+        public String nlpNamedEntities = "";
+        public String nlpSentiment = "";
 
         public boolean isSuspectMatch = false;
         public double comparisonMatchScore = 0.0;
