@@ -1365,8 +1365,8 @@ function speakText(text) {
       v.lang && typeof v.lang === 'string' && v.lang.toLowerCase().startsWith(lang.toLowerCase())
     );
     
-    const femaleIdentifiers = ['female', 'zira', 'hazel', 'samantha', 'sangeeta', 'kalpana', 'heera', 'shruti', 'swara', 'priya', 'neha', 'kavya', 'ananya', 'aditi', 'woman', 'google', 'microsoft'];
-    const maleIdentifiers = ['male', 'david', 'ravi', 'george', 'mark', 'anant', 'madhur', 'hemant', 'man'];
+    const femaleIdentifiers = ['divya', 'rani', 'anu', 'vidya', 'mary', 'anna', 'beth', 'female', 'zira', 'hazel', 'samantha', 'sangeeta', 'kalpana', 'heera', 'shruti', 'swara', 'priya', 'neha', 'kavya', 'ananya', 'aditi', 'woman', 'google', 'microsoft'];
+    const maleIdentifiers = ['thomas', 'adam', 'brian', 'rohit', 'aman', 'suresh', 'chetan', 'male', 'david', 'ravi', 'george', 'mark', 'anant', 'madhur', 'hemant', 'man'];
 
     if (langVoices.length > 0) {
       if (gender === 'female') {

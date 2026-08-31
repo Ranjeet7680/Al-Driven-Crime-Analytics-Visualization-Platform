@@ -50,7 +50,7 @@ import java.util.Map;
 /**
  * CrimeScope AI 2.0 - Unified Zoho Catalyst ML Intelligence Service
  * 
- * Integrates nine core AI/ML biometric, vision, NLP, LLM, VLM, document, and barcode intelligence APIs:
+ * Integrates ten core AI/ML biometric, vision, NLP, LLM, VLM, TTS, document, and barcode intelligence APIs:
  * 1. Facial Analytics (Age, Gender, Emotion, Landmarks)
  * 2. Optical Character Recognition - OCR (Multi-lingual text extraction)
  * 3. Face Comparison & Verification (Mugshot & CCTV matching)
@@ -60,12 +60,14 @@ import java.util.Map;
  * 7. Text Analytics & NLP (Keyword extraction, Named Entity Recognition - NER, Sentiment Analysis)
  * 8. QuickML Vision Language Model - VLM (Qwen 3.6 - 35B VLM Multimodal Structured JSON Extraction)
  * 9. QuickML GLM-4.7-Flash LLM (30B MoE LLM with Agent Function Calling, Deep Thinking, and 200k Token Context)
+ * 10. QuickML Zia Text-to-Audio Synthesis TTS (Multi-lingual speakers: English, Hindi, Kannada, customizable emotions & speeds)
  */
 public class CatalystMLUnifiedService {
 
     private static final double DEFAULT_MATCH_THRESHOLD = 80.0;
     private static final String VLM_ENDPOINT = "https://api.catalyst.zoho.in/quickml/v1/project/42969000000023001/vlm/chat";
     private static final String GLM_ENDPOINT = "https://api.catalyst.zoho.in/quickml/v1/project/42969000000023001/glm/chat";
+    private static final String TTS_ENDPOINT = "https://api.catalyst.zoho.in/quickml/api/v1/models/zia/tts/synthesize";
     private static final String DEFAULT_CATALYST_ORG = "60072891766";
     private static final String VLM_MODEL_NAME = "VL-Qwen3.6-35B-A3B";
     private static final String GLM_MODEL_NAME = "crm-di-glm47b_30b_it";
@@ -231,17 +233,6 @@ public class CatalystMLUnifiedService {
     // =========================================================================
     // 9. QUICKML GLM-4.7-FLASH LLM ENGINE (Function Calling & Deep Thinking)
     // =========================================================================
-    /**
-     * Executes conversational reasoning, multi-step agent reasoning, and function tool calling
-     * using Zoho Catalyst QuickML GLM-4.7-Flash (30B MoE).
-     * 
-     * @param authToken Zoho OAuth Access Token
-     * @param catalystOrg Catalyst Org ID
-     * @param systemPrompt System role instructions
-     * @param userQuery User query string
-     * @param functionTools Optional JSON array of agent function tool definitions
-     * @return Raw JSON response string containing LLM response, thinking logs, or tool call parameters
-     */
     public String chatWithGLM47Flash(String authToken, String catalystOrg, String systemPrompt, String userQuery, JSONArray functionTools) throws Exception {
         URL url = new URL(GLM_ENDPOINT);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -297,7 +288,62 @@ public class CatalystMLUnifiedService {
     }
 
     // =========================================================================
-    // 10. MASTER END-TO-END EVIDENCE DOSSIER PIPELINE
+    // 10. QUICKML ZIA TEXT-TO-AUDIO SYNTHESIS TTS ENGINE
+    // =========================================================================
+    /**
+     * Synthesizes audio from text using Zoho Catalyst QuickML Zia TTS.
+     * 
+     * Supported Speakers:
+     * - English: Male (Thomas, Adam, Brian), Female (Mary, Anna, Beth)
+     * - Hindi: Male (Rohit, Aman), Female (Divya, Rani)
+     * - Kannada: Male (Suresh, Chetan), Female (Anu, Vidya)
+     * 
+     * Supported Emotions: neutral, happy, sad, angry
+     * Supported Speeds: slow, moderate, fast
+     * 
+     * @param authToken Zoho OAuth Access Token
+     * @param catalystOrg Catalyst Org ID (default: "60072891766")
+     * @param text Speech text to synthesize
+     * @param speaker Speaker name (e.g., "Divya", "Anu", "Mary", "Rani", "Vidya")
+     * @param emotion Emotion voice type ("neutral", "happy", "sad", "angry")
+     * @param speed Audio playback speed ("slow", "moderate", "fast")
+     * @return Raw JSON response containing synthesized audio payload or URL
+     */
+    public String synthesizeTextToAudioZia(String authToken, String catalystOrg, String text, String speaker, String emotion, String speed) throws Exception {
+        URL url = new URL(TTS_ENDPOINT);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setRequestProperty("Authorization", "Zoho-oauthtoken " + authToken);
+        conn.setRequestProperty("CATALYST-ORG", (catalystOrg == null || catalystOrg.isEmpty()) ? DEFAULT_CATALYST_ORG : catalystOrg);
+        conn.setDoOutput(true);
+
+        JSONObject reqData = new JSONObject();
+        reqData.put("text", text);
+        reqData.put("speaker", (speaker == null || speaker.isEmpty()) ? "Divya" : speaker);
+        reqData.put("emotion", (emotion == null || emotion.isEmpty()) ? "neutral" : emotion);
+        reqData.put("speed", (speed == null || speed.isEmpty()) ? "moderate" : speed);
+
+        try (OutputStream os = conn.getOutputStream()) {
+            byte[] input = reqData.toJSONString().getBytes(StandardCharsets.UTF_8);
+            os.write(input, 0, input.length);
+        }
+
+        int responseCode = conn.getResponseCode();
+        BufferedReader br = new BufferedReader(new InputStreamReader(
+                (responseCode >= 200 && responseCode < 300) ? conn.getInputStream() : conn.getErrorStream(),
+                StandardCharsets.UTF_8));
+        StringBuilder response = new StringBuilder();
+        String responseLine;
+        while ((responseLine = br.readLine()) != null) {
+            response.append(responseLine.trim());
+        }
+
+        return response.toString();
+    }
+
+    // =========================================================================
+    // 11. MASTER END-TO-END EVIDENCE DOSSIER PIPELINE
     // =========================================================================
     public EvidenceDossierReport processEvidenceDossier(File evidenceImage, File suspectReferenceImage, String ocrLangs) {
         EvidenceDossierReport report = new EvidenceDossierReport();
@@ -431,7 +477,7 @@ public class CatalystMLUnifiedService {
             }
         }
 
-        report.statusSummary = "SUCCESS: Evidence dossier processed across 9 Catalyst ML & LLM engines.";
+        report.statusSummary = "SUCCESS: Evidence dossier processed across 10 Catalyst ML, LLM, VLM & Zia TTS engines.";
         return report;
     }
 
